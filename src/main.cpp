@@ -1,9 +1,17 @@
 #include "reader.hpp"
 
 int main(){
-    ifstream file = openFile("test/data.txt");
-    while (!isEOF(file)){
-        // cout << cc; //process every char here
-        nextChar(file);
+    Reader r;
+    std::string path;
+
+    std::cout << "Input path file: ";
+    std::cin >> path;
+    while (!r.open(path)){
+        std::cout << "Input path file: ";
+        std::cin >> path;
+    }
+    while (!r.isEOF()){
+        std::cout << r.get(); //process every char here
+        r.next();
     }
 }

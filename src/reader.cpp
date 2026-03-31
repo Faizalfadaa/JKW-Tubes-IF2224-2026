@@ -1,29 +1,42 @@
 #include "reader.hpp"
 
-char cc; //(current char)
+using namespace std;
 
-ifstream openFile(string path){
-    ifstream file(path, ios::in);
+bool Reader::open(string path){
+    this->file = ifstream(path, ios::in);
     if (!file){
         cout << "Gagal membaca file\n";
-        return NULL;
+        return false;
     }
-    file.get(cc);
-    return file;
+    next();
+    return true;
 }
 
-char getCurrentChar(){
+char Reader::get(){
     return cc;
 }
 
-char nextChar(ifstream& file){
-    file.get(cc);
-    if (file.eof()){
-        file.close();
+char Reader::peek(){
+    int c = file.peek();
+
+    //Handle error jika mencapai akhir file
+    if (file.eof() || c == -1){
+        return '\0';
     }
+    return char(c);
+}
+
+char Reader::next(){
+    int c = file.get();
+    //Handle error jika mencapai EOF
+    if (c == -1){
+        return '\0';
+    }
+    cc = char(c);
+    
     return cc;
 }
 
-bool isEOF(ifstream& file){
+bool Reader::isEOF(){
     return file.eof();
 }
