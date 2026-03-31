@@ -1,11 +1,13 @@
 #pragma once
 
 #include "reader.hpp"
+#include "token.hpp"
+#include "state.hpp"
 
 class Lexer{
 private:
-    int state;
+    State state;
     std::string buffer;
 public:
-    void process(char c);
+    Token process(char c);
 };
