@@ -23,16 +23,26 @@ char Reader::peek(){
     if (file.eof() || c == -1){
         return '\0';
     }
+
+    //Ubah cc menjadi char
     return char(c);
 }
 
 char Reader::next(){
     int c = file.get();
+
     //Handle error jika mencapai EOF
     if (c == -1){
         return '\0';
     }
+
+    //Update current character
     cc = char(c);
+
+    //Skip space dan newline
+    if (cc == ' ' || cc == '\n'){
+        next();
+    }
     
     return cc;
 }
