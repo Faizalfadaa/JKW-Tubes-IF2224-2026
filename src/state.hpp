@@ -1,6 +1,7 @@
 enum class State{
     //Start State
     START,
+    UNKNOWN,
 
     //Angka
     INTCON,

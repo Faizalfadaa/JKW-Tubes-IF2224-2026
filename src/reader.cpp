@@ -39,10 +39,10 @@ char Reader::next(){
     //Update current character
     cc = char(c);
 
-    //Skip space dan newline
-    if (cc == ' ' || cc == '\n'){
-        next();
-    }
+    // //Skip space dan newline
+    // if (cc == ' ' || cc == '\n'){
+    //     next();
+    // }
     
     return cc;
 }
