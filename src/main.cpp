@@ -12,10 +12,12 @@ int main(){
         cin >> path;
     } while (!reader.open(path));
 
+    ofstream output("output.txt");
     //Proses setiap karakter
     Lexer lex(reader);
     while (!reader.isEOF()){
         Token token = lex.getNextToken();
-        cout << token.str_type() << " - " << token.lexeme << endl;
+        output << token.str_type() + "(" << token.lexeme << ")" << endl;
     }
+    output.close();
 }
