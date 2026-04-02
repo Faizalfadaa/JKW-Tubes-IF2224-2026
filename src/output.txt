@@ -1,3 +1,0 @@
-IDENT(program123)
-SEMICOLON()
-( )
