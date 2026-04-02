@@ -11,6 +11,9 @@ enum class State{
     //Start State
     START,
 
+    //Finish State
+    FINISH,
+
     //Angka
     INTCON,
     INTDOT,

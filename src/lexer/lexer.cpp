@@ -80,6 +80,7 @@ Token Lexer::processChar(char c){
             } else if (c == ' ' || c == '\n') {
                 state = State::START;
             } else {
+                state = State::UNKNOWN;
                 return Token(TokenType::UNKNOWN, lexeme);
             }
             break;
@@ -128,13 +129,53 @@ Token Lexer::processChar(char c){
         //     }
 
 
-    //Case Binary Operator
-        // case State::something:
-        //     if (something) {
+    // Case Binary Operator
+        case State::EQUALSIGN:
+            if (c == '=') {
+                state = State::EQL;
+            } else {
+                state = State::UNKNOWN;
+                return Token(TokenType::UNKNOWN, lexeme);
+            }
+            break;
 
-        //     } else {
-                
-        //     }
+        case State::EQL:
+            state = State::FINISH;
+            Token(TokenType::EQL, lexeme);
+            break;
+
+        case State::LSS:
+            if (c == '=') {
+                state = State::LEQ;
+                return Token(TokenType::LEQ, lexeme);
+            } else if (c == '>') {
+                state = State::NEQ;
+                return Token(TokenType::NEQ, lexeme);
+            } else {
+                state = State::LSS;
+                return Token(TokenType::LSS, lexeme);
+            }
+            break;
+
+        case State::GTR:
+            if (c == '=') {
+                state = State::GEQ;
+                return Token(TokenType::GEQ, lexeme);
+            } else {
+                state = State::GTR;
+                return Token(TokenType::GTR, lexeme);
+            }
+            break;
+
+        case State::COLON:
+            if (c == '=') {
+                state = State::BECOMES;
+                return Token(TokenType::BECOMES, lexeme);
+            } else {
+                state = State::COLON;
+                return Token(TokenType::COLON, lexeme);
+            }
+            break;
 
 
     //Case Single Character Symbol
