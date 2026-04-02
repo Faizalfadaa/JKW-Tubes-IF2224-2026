@@ -1,0 +1,41 @@
+Program testing;
+
+const
+  PI := 3.14;
+
+type
+  Data = record
+    x: integer;
+    y: integer;
+  end;
+
+var
+  d: Data;
+  hasil: real;
+
+procedure print;
+begin
+  writeln('Hai');
+end;
+
+function Pembagian(a, b: integer): real;
+begin
+  Pembagian := a / b;
+end;
+
+begin
+  d.x := 8;
+  d.y := 3;
+
+  hasil := Pembagian(d.x, d.y);
+
+  if d.x <> d.y then
+    print;
+
+  case d.x of
+    8:
+      writeln('delapan');
+    3:
+      writeln('tiga');
+  end;
+end.
