@@ -56,27 +56,27 @@ Token Lexer::processChar(char c){
             } else if (c == ':') {
                 state = State::COLON;
             } else if (c == '+') {
-                state = State::PLUS;
+                return Token(TokenType::PLUS, "+");
             } else if (c == '-') {
-                state = State::MINUS;
+                return Token(TokenType::MINUS, "-");
             } else if (c == '*') {
-                state = State::TIMES;
+                return Token(TokenType::TIMES, "*");
             } else if (c == '/') {
-                state = State::RDIV;
+                return Token(TokenType::RDIV, "/");
             } else if (c == '(') {
-                state = State::LPARENT;
+                state = State::LPARENT; //TODO: Mendefinisikan state LPARENT agar dapat menangani kasus kurung biasa dan komentar
             } else if (c == ')') {
-                state = State::RPARENT;
+                return Token(TokenType::RPARENT, ")");
             } else if (c == '[') {
-                state = State::LBRACK;
+                return Token(TokenType::LBRACK, "[");
             } else if (c == ']') {
-                state = State::RBRACK;
+                return Token(TokenType::RBRACK, "]");
             } else if (c == ',') {
-                state = State::COMMA;
+                return Token(TokenType::COMMA, ",");
             } else if (c == ';') {
-                state = State::SEMICOLON;
+                return Token(TokenType::SEMICOLON, ";");
             } else if (c == '.') {
-                state = State::PERIOD;
+                return Token(TokenType::PERIOD, ".");
             } else if (c == ' ' || c == '\n') {
                 state = State::START;
             } else {
