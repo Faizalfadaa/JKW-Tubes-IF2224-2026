@@ -1,20 +1,18 @@
 #include "lexer/lexer.hpp"
 
 int main(){
-    Reader r;
+    Reader reader;
     std::string path;
 
     //Input file
     do {
         std::cout << "Input path file: ";
         std::cin >> path;
-    } while (!r.open(path));
+    } while (!reader.open(path));
 
     //Proses setiap karakter
-    Lexer lex;
-    while (!r.isEOF()){
-        // std::cout << r.get(); //process every char here
-        lex.processChar(r.get());
-        r.next();
+    Lexer lex(reader);
+    while (!reader.isEOF()){
+        lex.getNextToken();
     }
 }

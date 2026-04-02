@@ -30,9 +30,24 @@ std::unordered_map<std::string, TokenType> keywordTable = {
     {"then", TokenType::THENSY},
 };
 
-Lexer::Lexer() : state(State::START), lexeme("") {}
+Lexer::Lexer(Reader& reader) : state(State::START), lexeme(""), reader(reader) {}
 
-Token Lexer::processChar(char c){
+Token Lexer::getNextToken(){
+    //Inisialisasi
+    TokenType tokenType;
+    state = State::START;
+    lexeme = "";
+
+    //Baca karakter selanjutnya hingga berada di state FINISH
+    while (state != State::FINISH && state != State::UNKNOWN){
+        // std::cout << reader.get(); //process every char here
+        tokenType = processChar(reader.get());
+        reader.next();
+    }
+    return Token(tokenType, lexeme);
+}
+
+TokenType Lexer::processChar(char c){
     //Untuk mempermudah pengecekan angka dan huruf
     bool isNumber = isdigit(c), isLetter = isalpha(c);
 
@@ -40,21 +55,63 @@ Token Lexer::processChar(char c){
     switch (state){
     //Initial state
         case State::START:
-            this->lexeme = "";
             if (isLetter){
                 state = State::IDENT;
             } else if (isNumber) {
                 state = State::INTCON;
+            } else if (c == '=') {
+                state = State::EQUALSIGN;
+            } else if (c == '<') {
+                state = State::LSS;
+            } else if (c == '>') {
+                state = State::GTR;
+            } else if (c == ':') {
+                state = State::COLON;
+            } else if (c == '+') {
+                state = State::PLUS;
+            } else if (c == '-') {
+                state = State::MINUS;
+            } else if (c == '*') {
+                state = State::TIMES;
+            } else if (c == '/') {
+                state = State::RDIV;
+            } else if (c == '(') {
+                state = State::LPARENT;
+            } else if (c == ')') {
+                state = State::RPARENT;
+            } else if (c == '[') {
+                state = State::LBRACK;
+            } else if (c == ']') {
+                state = State::RBRACK;
+            } else if (c == ',') {
+                state = State::COMMA;
+            } else if (c == ';') {
+                state = State::SEMICOLON;
+            } else if (c == '.') {
+                state = State::PERIOD;
+            } else if (c == ' ' || c == '\n') {
+                state = State::START;
+            } else {
+                state = State::UNKNOWN;
+                return TokenType::UNKNOWN;
             }
-
-            //lanjut
             break;
+
 
     //Case Letter
         case State::IDENT:
-            if (std::isblank(c)){
-                return Token(TokenType::IDENT, lexeme);
+            if (!isNumber && !isLetter){
+                //Cek apakah ada keyword di tabel yang sama dengan lexeme
+                auto it = keywordTable.find(lexeme);
+                if (it != keywordTable.end()){
+                    return it->second;//TODO state belum diurus setelah return
+                } else {
+                    return TokenType::IDENT; 
+                }
+            } else {
+                state = State::IDENT;//TODO
             }
+            break;
         
 
     //Case Number
@@ -103,13 +160,53 @@ Token Lexer::processChar(char c){
         //     }
 
 
-    //Case Binary Operator
-        // case State::something:
-        //     if (something) {
+    // Case Binary Operator
+        case State::EQUALSIGN:
+            if (c == '=') {
+                state = State::EQL;
+            } else {
+                state = State::UNKNOWN;
+                return TokenType::UNKNOWN;
+            }
+            break;
 
-        //     } else {
-                
-        //     }
+        case State::EQL:
+            state = State::FINISH;
+            TokenType::EQL;
+            break;
+
+        case State::LSS:
+            if (c == '=') {
+                state = State::LEQ;
+                return TokenType::LEQ;
+            } else if (c == '>') {
+                state = State::NEQ;
+                return TokenType::NEQ;
+            } else {
+                state = State::LSS;
+                return TokenType::LSS;
+            }
+            break;
+
+        case State::GTR:
+            if (c == '=') {
+                state = State::GEQ;
+                return TokenType::GEQ;
+            } else {
+                state = State::GTR;
+                return TokenType::GTR;
+            }
+            break;
+
+        case State::COLON:
+            if (c == '=') {
+                state = State::BECOMES;
+                return TokenType::BECOMES;
+            } else {
+                state = State::COLON;
+                return TokenType::COLON;
+            }
+            break;
 
 
     //Case Single Character Symbol
@@ -121,6 +218,6 @@ Token Lexer::processChar(char c){
         //     }
     }
 
-    lexeme.append(1, c);
-    return Token(TokenType::IDENT, lexeme);
+    lexeme += c;
+    return TokenType::NOTDETERMINED;
 }
