@@ -52,7 +52,8 @@ enum class TokenType{
     DOWNTOSY,
     THENSY,
     COMMENT,
-    UNKNOWN
+    UNKNOWN,
+    NOTDETERMINED
 };
 
 class Token{

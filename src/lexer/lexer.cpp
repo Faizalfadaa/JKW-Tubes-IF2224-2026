@@ -40,21 +40,65 @@ Token Lexer::processChar(char c){
     switch (state){
     //Initial state
         case State::START:
+            //Kosongkan buffer
             this->lexeme = "";
+
             if (isLetter){
                 state = State::IDENT;
             } else if (isNumber) {
-
+                state = State::INTCON;
+            } else if (c == '=') {
+                state = State::EQUALSIGN;
+            } else if (c == '<') {
+                state = State::LSS;
+            } else if (c == '>') {
+                state = State::GTR;
+            } else if (c == ':') {
+                state = State::COLON;
+            } else if (c == '+') {
+                state = State::PLUS;
+            } else if (c == '-') {
+                state = State::MINUS;
+            } else if (c == '*') {
+                state = State::TIMES;
+            } else if (c == '/') {
+                state = State::RDIV;
+            } else if (c == '(') {
+                state = State::LPARENT;
+            } else if (c == ')') {
+                state = State::RPARENT;
+            } else if (c == '[') {
+                state = State::LBRACK;
+            } else if (c == ']') {
+                state = State::RBRACK;
+            } else if (c == ',') {
+                state = State::COMMA;
+            } else if (c == ';') {
+                state = State::SEMICOLON;
+            } else if (c == '.') {
+                state = State::PERIOD;
+            } else if (c == ' ' || c == '\n') {
+                state = State::START;
+            } else {
+                return Token(TokenType::UNKNOWN, lexeme);
             }
-
-            //lanjut
             break;
+
 
     //Case Letter
         case State::IDENT:
-            if (std::isblank(c)){
-                return Token(TokenType::IDENT, lexeme);
+            if (!isNumber && !isLetter){
+                //Cek apakah ada keyword di tabel yang sama dengan lexeme
+                auto it = keywordTable.find(lexeme);
+                if (it != keywordTable.end()){
+                    return Token(TokenType::IDENT, lexeme); 
+                } else {
+                    return Token(it->second, lexeme);//TODO state belum diurus setelah return
+                }
+            } else {
+                state = State::IDENT;//TODO
             }
+            break;
         
 
     //Case Number
