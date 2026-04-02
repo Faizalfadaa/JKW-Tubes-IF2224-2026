@@ -16,6 +16,6 @@ int main(){
     Lexer lex(reader);
     while (!reader.isEOF()){
         Token token = lex.getNextToken();
-        cout << token.str_type() << " - " << token.lexeme << endl;
+        cout << token.str_type() << "(" << token.lexeme << ")" << endl;
     }
 }

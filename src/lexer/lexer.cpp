@@ -39,7 +39,6 @@ Token Lexer::getNextToken(){
 
     //Baca karakter selanjutnya hingga berada di state FINISH
     while (state != State::FINISH && state != State::DETERMINED && state != State::UNKNOWN && !reader.isEOF()){
-        // std::cout << reader.get(); 
         //Process every character
         tokenType = processChar(reader.get());
         if (state == State::FINISH){
@@ -119,6 +118,15 @@ TokenType Lexer::processChar(char c){
                 state = State::DETERMINED;
                 return TokenType::PERIOD;
             } 
+            else if (c == '\''){
+                state = State::OPENQUOTE;
+            }
+            else if (c == '('){
+                state = State::LPARENT;
+            }
+            else if (c == '{'){
+                state = State::COMMENTCUR;
+            }
             else if (isblank(c) || c == '\n') {
                 state = State::START;
             } 
@@ -135,6 +143,7 @@ TokenType Lexer::processChar(char c){
                 //Cek apakah ada keyword di tabel yang sama dengan lexeme
                 auto it = keywordTable.find(lexeme);
                 if (it != keywordTable.end()){
+                    state = State::FINISH;
                     return it->second;
                 } 
                 else {
@@ -157,8 +166,8 @@ TokenType Lexer::processChar(char c){
                 // state = State::INTCON;
             } 
             else {
-                state = State::UNKNOWN;
-                return TokenType::UNKNOWN;
+                state = State::FINISH;
+                return TokenType::INTCON;
             }
             break;
 
