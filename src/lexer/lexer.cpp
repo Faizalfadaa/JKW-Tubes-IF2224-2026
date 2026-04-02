@@ -36,10 +36,9 @@ Token Lexer::getNextToken(){
     //Inisialisasi
     TokenType tokenType;
     state = State::START;
-    lexeme = "";
 
     //Baca karakter selanjutnya hingga berada di state FINISH
-    while (state != State::FINISH && state != State::DETERMINED && state != State::UNKNOWN){
+    while (state != State::FINISH && state != State::DETERMINED && state != State::UNKNOWN && !reader.isEOF()){
         // std::cout << reader.get(); 
         //Process every character
         tokenType = processChar(reader.get());
@@ -59,6 +58,9 @@ TokenType Lexer::processChar(char c){
     switch (state){
     //Initial state
         case State::START:
+            //Empty buffer
+            lexeme = "";
+
             if (isLetter){
                 state = State::IDENT;
             } 
@@ -81,7 +83,7 @@ TokenType Lexer::processChar(char c){
                 state = State::DETERMINED;
                 return TokenType::PLUS;
             } 
-            else if (c == '-') {
+            else if (c == '-') {//TODO remove this
                 state = State::DETERMINED;
                 return TokenType::MINUS;
             } 
@@ -117,7 +119,7 @@ TokenType Lexer::processChar(char c){
                 state = State::DETERMINED;
                 return TokenType::PERIOD;
             } 
-            else if (c == ' ' || c == '\n') {
+            else if (isblank(c) || c == '\n') {
                 state = State::START;
             } 
             else {
