@@ -1,0 +1,27 @@
+program Lexer;
+
+var a = 0;
+var b = -2;
+var c = 0.03;
+
+Eql =
+Lss <
+Gtr >
+Colon :
+Plus+
+Minus-
+Times  *
+RDIV
+/[ ] ,. '' ( )
+<> < > <= >= == := : =
+
+not
+And 
+orConst
+or Consta
+const
+while
+fof
+downto to down to
+#
+{pagar gak bisa}
