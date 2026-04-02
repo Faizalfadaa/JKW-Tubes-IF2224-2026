@@ -1,4 +1,4 @@
-#include "lexer.hpp"
+#include "lexer/lexer.hpp"
 
 int main(){
     Reader r;
@@ -14,7 +14,7 @@ int main(){
     Lexer lex;
     while (!r.isEOF()){
         // std::cout << r.get(); //process every char here
-        lex.process(r.get());
+        lex.processChar(r.get());
         r.next();
     }
 }
