@@ -43,7 +43,6 @@ enum class State{
     OPENCUR,
     COMMENTCUR,
     LPARENT,
-    COMMENTPAR,
     COMMENTPARAST,
     COMMENTCLOSEAST
 };

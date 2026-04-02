@@ -62,9 +62,11 @@ TokenType Lexer::processChar(char c){
 
             if (isLetter){
                 state = State::IDENT;
+                lexeme += c;
             } 
             else if (isNumber) {
                 state = State::INTCON;
+                lexeme += c;
             } 
             else if (c == '=') {
                 state = State::EQUALSIGN;
@@ -120,6 +122,7 @@ TokenType Lexer::processChar(char c){
             } 
             else if (c == '\''){
                 state = State::OPENQUOTE;
+                lexeme += c;
             }
             else if (c == '('){
                 state = State::LPARENT;
@@ -151,6 +154,7 @@ TokenType Lexer::processChar(char c){
                     return TokenType::IDENT; 
                 }
             } 
+            lexeme += c;
             // else {
             //     state = State::IDENT;
             // }
@@ -169,10 +173,12 @@ TokenType Lexer::processChar(char c){
                 state = State::FINISH;
                 return TokenType::INTCON;
             }
+            lexeme += c;
             break;
 
         case State::INTDOT:
             if(isNumber) {
+                lexeme += c;
                 state = State::REALCON;
             } 
             else {
@@ -200,6 +206,7 @@ TokenType Lexer::processChar(char c){
             else {
                 state = State::CHARCON;
             }
+            lexeme += c;
             break;
 
         case State::CHARCON:
@@ -209,6 +216,7 @@ TokenType Lexer::processChar(char c){
             else {
                 state = State::STRING;
             }
+            lexeme += c;
             break;
 
         case State::CHARCLOSEQUOTE:
@@ -225,6 +233,7 @@ TokenType Lexer::processChar(char c){
             if (c == '\'') {
                 state = State::STRINGCLOSEQUOTE;
             } 
+            lexeme += c;
             break;
 
         case State::STRINGCLOSEQUOTE:
@@ -254,12 +263,13 @@ TokenType Lexer::processChar(char c){
                 state = State::DETERMINED;
                 return TokenType::COMMENT;
             }
+            lexeme += c;
             break;
         
         // Ini buat komen yang format (* *)
         case State::LPARENT:
             if (c == '*') {
-                state = State::COMMENTPAR;
+                state = State::COMMENTPARAST;
             } 
             else {
                 state = State::FINISH;
@@ -267,22 +277,26 @@ TokenType Lexer::processChar(char c){
             }
             break;
 
-        case State::COMMENTPAR:
-            if (c == '*') {
-                state = State::COMMENTPARAST;
-            }
-            break;
-
         case State::COMMENTPARAST:
+            if (c == '*') {
+                state = State::COMMENTCLOSEAST;
+            } 
+            else {
+                lexeme += c;
+            }
+
+        case State::COMMENTCLOSEAST:
             if (c == ')') {
                 state = State::DETERMINED;
                 return TokenType::COMMENT;
             } 
             else if (c == '*') {
+                lexeme += c;
                 state = State::COMMENTCLOSEAST;
             }
             else {
-                state = State::COMMENTPAR;
+                lexeme += c;
+                state = State::COMMENTPARAST;
             }
             break;
 
@@ -336,6 +350,5 @@ TokenType Lexer::processChar(char c){
         //Handled in initial state
     }
 
-    lexeme += c;
     return TokenType::NOTDETERMINED;
 }
