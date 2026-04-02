@@ -3,8 +3,31 @@
 using namespace std;
 
 std::unordered_map<std::string, TokenType> keywordTable = {
+    {"not", TokenType::NOTSY},
     {"and", TokenType::ANDSY},
-    {"else", TokenType::ARRAYSY}
+    {"or", TokenType::ORSY},
+    {"const", TokenType::CONSTSY},
+    {"type", TokenType::TYPESY},
+    {"var", TokenType::VARSY},
+    {"function", TokenType::FUNCTIONSY},
+    {"procedure", TokenType::PROCEDURESY},
+    {"array", TokenType::ARRAYSY},
+    {"record", TokenType::RECORDSY},
+    {"program", TokenType::PROGRAMSY},
+    {"begin", TokenType::BEGINSY},
+    {"if", TokenType::IFSY},
+    {"case", TokenType::CASESY},
+    {"repeat", TokenType::REPEATSY},
+    {"while", TokenType::WHILESY},
+    {"for", TokenType::FORSY},
+    {"end", TokenType::ENDSY},
+    {"else", TokenType::ELSESY},
+    {"until", TokenType::UNTILSY},
+    {"of", TokenType::OFSY},
+    {"do", TokenType::DOSY},
+    {"to", TokenType::TOSY},
+    {"downto", TokenType::DOWNTOSY},
+    {"then", TokenType::THENSY},
 };
 
 Lexer::Lexer() : state(State::START), lexeme("") {}
@@ -15,6 +38,7 @@ Token Lexer::processChar(char c){
 
     //Proses karakter sesuai dengan state saat ini
     switch (state){
+    //Initial state
         case State::START:
             this->lexeme = "";
             if (isLetter){
@@ -25,12 +49,57 @@ Token Lexer::processChar(char c){
 
             //lanjut
             break;
+
+    //Case Letter
         case State::IDENT:
             if (std::isblank(c)){
                 return Token(TokenType::IDENT, lexeme);
             }
+        
 
-        //lanjut
+    //Case Number
+        // case State::something:
+        //     if (something) {
+
+        //     } else {
+                
+        //     }
+        
+
+    //Case String & Char
+        // case State::something:
+        //     if (something) {
+
+        //     } else {
+                
+        //     }
+
+
+    //Case Comment
+        // case State::something:
+        //     if (something) {
+
+        //     } else {
+                
+        //     }
+
+
+    //Case Binary Operator
+        // case State::something:
+        //     if (something) {
+
+        //     } else {
+                
+        //     }
+
+
+    //Case Single Character Symbol
+        // case State::something:
+        //     if (something) {
+
+        //     } else {
+                
+        //     }
     }
 
     lexeme.append(1, c);
