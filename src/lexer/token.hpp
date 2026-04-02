@@ -1,0 +1,65 @@
+//List token
+enum class TokenType{
+    INTCON,
+    REALCON,
+    CHARCON,
+    STRING,
+    NOTSY,
+    PLUS,
+    MINUS,
+    TIMES,
+    IDIV,
+    RDIV,
+    IMOD,
+    ANDSY,
+    ORSY,
+    EQL,
+    NEQ,
+    GTR,
+    GEQ,
+    LSS,
+    LEQ,
+    LPARENT,
+    RPARENT,
+    LBRACK,
+    RBRACK,
+    COMMA,
+    SEMICOLON,
+    PERIOD,
+    COLON,
+    BECOMES,
+    CONSTSY,
+    TYPESY,
+    VARSY,
+    FUNCTIONSY,
+    PROCEDURESY,
+    ARRAYSY,
+    RECORDSY,
+    PROGRAMSY,
+    IDENT,
+    BEGINSY,
+    IFSY,
+    CASESY,
+    REPEATSY,
+    WHILESY,
+    FORSY,
+    ENDSY,
+    ELSESY,
+    UNTILSY,
+    OFSY,
+    DOSY,
+    TOSY,
+    DOWNTOSY,
+    THENSY,
+    COMMENT,
+    UNKNOWN
+};
+
+class Token{
+public:
+    TokenType type;
+    std::string lexeme;
+
+    //Konstruktor
+    Token(TokenType type, std::string lexeme) : type(type), lexeme(lexeme) {}
+};

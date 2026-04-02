@@ -14,8 +14,10 @@ public:
     /** @return char yang ditunjuk saat ini*/
     char get();
 
-    /** @return char selanjutnya*/
-    char peek();
+    /** @return char selanjutnya
+     * @note Tidak boleh digunakan
+    */
+    // char peek();
 
     /** @brief Membaca char selanjutnya
      *  @note Harus stop sebelum EOF
