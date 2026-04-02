@@ -153,7 +153,7 @@ Token Lexer::processChar(char c){
                 if (c == '}') {
                     state = State::CLOSECUR; 
                 } else {
-                    state = State::COMMENT;      // karakter biasa
+                    state = State::COMMENT;      
                 }
                 break;
             
