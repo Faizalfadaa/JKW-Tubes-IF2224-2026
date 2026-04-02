@@ -106,13 +106,13 @@ Token Lexer::processChar(char c){
             if (c == '\'') {
                 state = State::CLOSEQUOTE; 
             } else {
-                state = State::STRING;      // karakter biasa
+                state = State::STRING;      
             }
             break;
 
         case State::STRING:
             if (c == '\'') {
-                state = State::CLOSEQUOTE;  // ketemu petik, mungkin penutup
+                state = State::CLOSEQUOTE;  
             } else if (c == '\n') {
                 state = State::START;
                 return Token(TokenType::UNKNOWN, lexeme);
@@ -122,7 +122,6 @@ Token Lexer::processChar(char c){
 
         case State::CLOSEQUOTE:
             if (c == '\'') {
-                // Petik lagi setelah penutup = escape, lanjut baca string
                 state = State::STRING;
             } else {
                 int charCount = 0;
@@ -132,7 +131,6 @@ Token Lexer::processChar(char c){
                 while (i < endPos) {
                     charCount++;
                     i++;
-                    
                 }
                 
                 TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
