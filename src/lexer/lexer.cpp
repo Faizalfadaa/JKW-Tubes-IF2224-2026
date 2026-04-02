@@ -112,7 +112,89 @@ TokenType Lexer::processChar(char c){
                 state = State::IDENT;//TODO
             }
             break;
+
         
+        // ini buat string atau char
+        case State::OPENQUOTE:
+            if (c == '\'') {
+                state = State::CLOSEQUOTE; 
+            } else {
+                state = State::STRING;      
+            }
+            break;
+
+        case State::STRING:
+            if (c == '\'') {
+                state = State::CLOSEQUOTE;  
+            } else if (c == '\n') {
+                state = State::START;
+                return Token(TokenType::UNKNOWN, lexeme);
+            }
+            // karakter biasa: tetap STRING
+            break;
+
+        case State::CLOSEQUOTE:
+            if (c == '\'') {
+                state = State::STRING;
+            } else {
+                int charCount = 0;
+                int i = 1;  
+                int endPos = lexeme.size() - 1;  
+                
+                while (i < endPos) {
+                    charCount++;
+                    i++;
+                }
+                
+                TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
+                state = State::START;
+                return Token(type, lexeme);
+            }
+            break;
+
+
+            // Ini buat komen yang format {}
+            case State::OPENCUR:
+                if (c == '}') {
+                    state = State::CLOSECUR; 
+                } else {
+                    state = State::COMMENT;      
+                }
+                break;
+            
+            // ini komen yang format (* *)
+           case State::LPARENT:
+            if (c == '*') {
+                state = State::COMMENT;
+            } else {
+                state = State::START;
+                return Token(TokenType::LPARENT, "(");
+            }
+            break;
+
+        case State::COMMENT:
+            if (c == '*' || c == '}') {
+                state = State::CLOSECUR;
+            }
+            break;
+
+        case State::CLOSECUR:
+            if (c == ')') {
+                lexeme += c;
+                state = State::START;
+                return Token(TokenType::COMMENT, lexeme);
+            } else if (c == '*') {
+                state = State::CLOSECUR;
+            } 
+            else if (c == '}') {
+                lexeme += c;
+                state = State::START;
+                return Token(TokenType::COMMENT, lexeme);
+            }
+            else {
+                state = State::COMMENT;
+            }
+            break;
 
     //Case Number
         case State::INTCON:
