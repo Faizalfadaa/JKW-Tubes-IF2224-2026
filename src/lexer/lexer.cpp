@@ -44,7 +44,7 @@ Token Lexer::processChar(char c){
             if (isLetter){
                 state = State::IDENT;
             } else if (isNumber) {
-
+                state = State::INTCON;
             }
 
             //lanjut
@@ -58,13 +58,32 @@ Token Lexer::processChar(char c){
         
 
     //Case Number
-        // case State::something:
-        //     if (something) {
+        case State::INTCON:
+            if (isNumber) {
+                state = State::INTCON;
+            } else if (c == '.'){
+                state = State::INTDOT;
+            } else if (isalpha(c)) {
+                state = State::UNKNOWN;
+            } else if (isblank(c)) {
+                return Token(TokenType::INTCON, lexeme);
+            }
 
-        //     } else {
-                
-        //     }
-        
+        case State::INTDOT:
+            if(isNumber) {
+                state = State::REALCON;
+            } else {
+                state = State::UNKNOWN;
+            } 
+
+        case State::REALCON:
+            if(isNumber) {
+                state = State::REALCON; 
+            } else if (isLetter) {
+                state = State::UNKNOWN;
+            } else if (isblank(c)) {
+                return Token(TokenType::REALCON, lexeme);
+            }
 
     //Case String & Char
         // case State::something:
