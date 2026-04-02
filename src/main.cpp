@@ -12,12 +12,14 @@ int main(){
         cin >> path;
     } while (!reader.open(path));
 
-    ofstream output("output.txt");
+    ofstream output("test/milestone-1/output.txt");
     //Proses setiap karakter
     Lexer lex(reader);
     while (!reader.isEOF()){
         Token token = lex.getNextToken();
-        output << token.str_type() + "(" << token.lexeme << ")" << endl;
+        output << token.str_type();
+        if (token.lexeme != "") output << " (" << token.lexeme << ")";
+        output << endl;
     }
     output.close();
 }
