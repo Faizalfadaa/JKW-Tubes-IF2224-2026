@@ -91,9 +91,11 @@ enum class State{
 
 class Lexer{
 private:
+    Reader& reader;
     State state;
     std::string lexeme;
 public:
-    Token processChar(char c);
-    Lexer();
+    Token getNextToken();
+    TokenType processChar(char c);
+    Lexer(Reader& reader);
 };
