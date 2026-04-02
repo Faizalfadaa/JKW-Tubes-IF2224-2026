@@ -125,23 +125,27 @@ Token Lexer::processChar(char c){
                 // Petik lagi setelah penutup = escape, lanjut baca string
                 state = State::STRING;
             } else {
-                // std::string content = lexeme.substr(1, lexeme.size() - 2);
-                // int charCount = 0;
-                // for (size_t i = 0; i < content.size(); ) {
-                //     if (content[i] == '\'' && i+1 < content.size() && content[i+1] == '\'') {
-                //         charCount++;
-                //         i += 2;
-                //     } else {
-                //         charCount++;                                                              is this legal? 
-                //         i++;
-                //     }
-                // }
-                // TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
-                // std::string lex = lexeme;
-                // state = State::START;
-                // return Token(type, lex);
+                int charCount = 0;
+                int i = 1;  
+                int endPos = lexeme.size() - 1;  
+                
+                while (i < endPos) {
+                    if (lexeme[i] == '\'' && i + 1 < endPos && lexeme[i + 1] == '\'') {
+                        // '' = satu karakter
+                        charCount++;
+                        i += 2;
+                    } else {
+                        // karakter biasa
+                        charCount++;
+                        i++;
+                    }
+                }
+                
+                TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
+                state = State::START;
+                return Token(type, lexeme);
             }
-            break;    
+            break;
 
 
             // Ini buat komen yang format {}
@@ -164,7 +168,7 @@ Token Lexer::processChar(char c){
             break;
 
         case State::COMMENT:
-            if (c == '*') {
+            if (c == '*' || c == '}') {
                 state = State::CLOSECUR;
             }
             break;
@@ -176,7 +180,13 @@ Token Lexer::processChar(char c){
                 return Token(TokenType::COMMENT, lexeme);
             } else if (c == '*') {
                 state = State::CLOSECUR;
-            } else {
+            } 
+            else if (c == '}') {
+                lexeme += c;
+                state = State::START;
+                return Token(TokenType::COMMENT, lexeme);
+            }
+            else {
                 state = State::COMMENT;
             }
             break;
