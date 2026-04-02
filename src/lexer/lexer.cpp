@@ -144,8 +144,9 @@ TokenType Lexer::processChar(char c){
         case State::IDENT:
             if (!isNumber && !isLetter){
                 //Cek apakah ada keyword di tabel yang sama dengan lexeme
-                auto it = keywordTable.find(lexeme);
+                auto it = keywordTable.find(toLower(lexeme));
                 if (it != keywordTable.end()){
+                    lexeme = "";
                     state = State::FINISH;
                     return it->second;
                 } 
