@@ -130,15 +130,9 @@ Token Lexer::processChar(char c){
                 int endPos = lexeme.size() - 1;  
                 
                 while (i < endPos) {
-                    if (lexeme[i] == '\'' && i + 1 < endPos && lexeme[i + 1] == '\'') {
-                        // '' = satu karakter
-                        charCount++;
-                        i += 2;
-                    } else {
-                        // karakter biasa
-                        charCount++;
-                        i++;
-                    }
+                    charCount++;
+                    i++;
+                    
                 }
                 
                 TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
