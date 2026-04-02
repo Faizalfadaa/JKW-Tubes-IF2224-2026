@@ -84,9 +84,8 @@ TokenType Lexer::processChar(char c){
                 state = State::DETERMINED;
                 return TokenType::PLUS;
             } 
-            else if (c == '-') {//TODO remove this
-                state = State::DETERMINED;
-                return TokenType::MINUS;
+            else if (c == '-') {
+                state = State::MINUS;
             } 
             else if (c == '*') {
                 state = State::DETERMINED;
@@ -163,6 +162,17 @@ TokenType Lexer::processChar(char c){
 
 
     //Case Number
+        case State::MINUS:
+            if (isNumber){
+                state = State::INTCON;
+                lexeme += c;
+            } 
+            else {
+                state = State::FINISH;
+                return TokenType::MINUS;
+            }
+            break;
+
         case State::INTCON:
             if (c == '.'){
                 state = State::INTDOT;
