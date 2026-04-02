@@ -1,18 +1,21 @@
 #include "lexer/lexer.hpp"
 
+using namespace std;
+
 int main(){
     Reader reader;
-    std::string path;
+    string path;
 
     //Input file
     do {
-        std::cout << "Input path file: ";
-        std::cin >> path;
+        cout << "Input path file: ";
+        cin >> path;
     } while (!reader.open(path));
 
     //Proses setiap karakter
     Lexer lex(reader);
     while (!reader.isEOF()){
-        lex.getNextToken();
+        Token token = lex.getNextToken();
+        cout << token.str_type() << "(" << token.lexeme << ")" << endl;
     }
 }

@@ -2,6 +2,7 @@
 
 #include "reader.hpp"
 #include "token.hpp"
+#include "../utils/utils.hpp"
 #include "unordered_map"
 
 enum class State{
@@ -10,9 +11,8 @@ enum class State{
 
     //Start State
     START,
-
-    //Finish State
     FINISH,
+    DETERMINED,
 
     //Angka
     INTCON,
@@ -24,69 +24,28 @@ enum class State{
     OPENQUOTE,
     CHARCON,
     STRING,
-    INQUOTE,
-    CLOSEQUOTE,
+    CHARCLOSEQUOTE,
+    STRINGCLOSEQUOTE,
     //End symbol = '
 
     //Biner Character Symbol
     EQUALSIGN,
-    EQL,
     LSS,
-    LEQ,
-    NEQ,
     GTR,
-    GEQ,
     COLON,
-    BECOMES,
 
     //Single Character Symbol
-    PLUS,
-    MINUS,
-    TIMES,
-    RDIV,
-    LPARENT,
-    RPARENT,
-    LBRACK,
-    RBRACK,
-    COMMA,
-    SEMICOLON,
-    PERIOD,
+    //Removed
 
     //Huruf
-    ANDSY,
-    ARRAYSY,
-    BEGINSY,
-    CASESY,
-    CONSTSY,
-    IDIV,
-    DOSY,
-    DOWNTOSY,
-    ELSESY,
-    ENDSY,
-    FORSY,
-    FUNCTIONSY,
-    IFSY,
-    IMOD,
-    NOTSY,
-    OFSY,
-    ORSY,
-    PROCEDURESY,
-    PROGRAMSY,
-    RECORDSY,
-    REPEATSY,
-    THENSY,
-    TOSY,
-    TYPESY,
-    UNTILSY,
-    VARSY,
-    WHILESY,
     IDENT,
 
     //Comment
     OPENCUR,
-    COMMENT,
-    CLOSECUR,
-    //TODO: State for (*...*) comment style
+    COMMENTCUR,
+    LPARENT,
+    COMMENTPARAST,
+    COMMENTCLOSEAST
 };
 
 class Lexer{

@@ -1,0 +1,6 @@
+program hallo;
+int 123 aRrAy;
+
+iniident
+'string'
+'c'
