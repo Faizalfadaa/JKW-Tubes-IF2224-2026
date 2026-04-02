@@ -15,6 +15,7 @@ enum class State{
     DETERMINED,
 
     //Angka
+    MINUS,
     INTCON,
     INTDOT,
     REALCON,
