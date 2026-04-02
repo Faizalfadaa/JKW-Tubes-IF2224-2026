@@ -39,9 +39,13 @@ Token Lexer::getNextToken(){
     lexeme = "";
 
     //Baca karakter selanjutnya hingga berada di state FINISH
-    while (state != State::FINISH && state != State::UNKNOWN){
-        // std::cout << reader.get(); //process every char here
+    while (state != State::FINISH && state != State::DETERMINED && state != State::UNKNOWN){
+        // std::cout << reader.get(); 
+        //Process every character
         tokenType = processChar(reader.get());
+        if (state == State::FINISH){
+            break;
+        }
         reader.next();
     }
     return Token(tokenType, lexeme);
@@ -57,41 +61,66 @@ TokenType Lexer::processChar(char c){
         case State::START:
             if (isLetter){
                 state = State::IDENT;
-            } else if (isNumber) {
+            } 
+            else if (isNumber) {
                 state = State::INTCON;
-            } else if (c == '=') {
+            } 
+            else if (c == '=') {
                 state = State::EQUALSIGN;
-            } else if (c == '<') {
+            } 
+            else if (c == '<') {
                 state = State::LSS;
-            } else if (c == '>') {
+            } 
+            else if (c == '>') {
                 state = State::GTR;
-            } else if (c == ':') {
+            } 
+            else if (c == ':') {
                 state = State::COLON;
-            } else if (c == '+') {
-                return Token(TokenType::PLUS, "+");
-            } else if (c == '-') {
-                return Token(TokenType::MINUS, "-");
-            } else if (c == '*') {
-                return Token(TokenType::TIMES, "*");
-            } else if (c == '/') {
-                return Token(TokenType::RDIV, "/");
-            } else if (c == '(') {
-                state = State::LPARENT; //TODO: Mendefinisikan state LPARENT agar dapat menangani kasus kurung biasa dan komentar
-            } else if (c == ')') {
-                return Token(TokenType::RPARENT, ")");
-            } else if (c == '[') {
-                return Token(TokenType::LBRACK, "[");
-            } else if (c == ']') {
-                return Token(TokenType::RBRACK, "]");
-            } else if (c == ',') {
-                return Token(TokenType::COMMA, ",");
-            } else if (c == ';') {
-                return Token(TokenType::SEMICOLON, ";");
-            } else if (c == '.') {
-                return Token(TokenType::PERIOD, ".");
-            } else if (c == ' ' || c == '\n') {
+            } 
+            else if (c == '+') {
+                state = State::DETERMINED;
+                return TokenType::PLUS;
+            } 
+            else if (c == '-') {
+                state = State::DETERMINED;
+                return TokenType::MINUS;
+            } 
+            else if (c == '*') {
+                state = State::DETERMINED;
+                return TokenType::TIMES;
+            } 
+            else if (c == '/') {
+                state = State::DETERMINED;
+                return TokenType::RDIV;
+            } 
+            else if (c == ')') {
+                state = State::DETERMINED;
+                return TokenType::RPARENT;
+            } 
+            else if (c == '[') {
+                state = State::DETERMINED;
+                return TokenType::LBRACK;
+            } 
+            else if (c == ']') {
+                state = State::DETERMINED;
+                return TokenType::RBRACK;
+            } 
+            else if (c == ',') {
+                state = State::DETERMINED;
+                return TokenType::COMMA;
+            } 
+            else if (c == ';') {
+                state = State::DETERMINED;
+                return TokenType::SEMICOLON;
+            } 
+            else if (c == '.') {
+                state = State::DETERMINED;
+                return TokenType::PERIOD;
+            } 
+            else if (c == ' ' || c == '\n') {
                 state = State::START;
-            } else {
+            } 
+            else {
                 state = State::UNKNOWN;
                 return TokenType::UNKNOWN;
             }
@@ -104,200 +133,196 @@ TokenType Lexer::processChar(char c){
                 //Cek apakah ada keyword di tabel yang sama dengan lexeme
                 auto it = keywordTable.find(lexeme);
                 if (it != keywordTable.end()){
-                    return it->second;//TODO state belum diurus setelah return
-                } else {
+                    return it->second;
+                } 
+                else {
+                    state = State::FINISH;
                     return TokenType::IDENT; 
                 }
-            } else {
-                state = State::IDENT;//TODO
+            } 
+            // else {
+            //     state = State::IDENT;
+            // }
+            break;
+
+
+    //Case Number
+        case State::INTCON:
+            if (c == '.'){
+                state = State::INTDOT;
+            } 
+            else if (isNumber) {
+                // state = State::INTCON;
+            } 
+            else {
+                state = State::UNKNOWN;
+                return TokenType::UNKNOWN;
             }
             break;
 
-        
-        // ini buat string atau char
+        case State::INTDOT:
+            if(isNumber) {
+                state = State::REALCON;
+            } 
+            else {
+                state = State::UNKNOWN;
+                return TokenType::UNKNOWN;
+            } 
+            break;
+
+        case State::REALCON:
+            if(isNumber) {
+                // state = State::REALCON; 
+            } 
+            else {
+                state = State::FINISH;
+                return TokenType::REALCON;
+            }
+            break;
+
+
+    //Case String & Char
         case State::OPENQUOTE:
             if (c == '\'') {
-                state = State::CLOSEQUOTE; 
-            } else {
-                state = State::STRING;      
+                state = State::STRINGCLOSEQUOTE;
+            } 
+            else {
+                state = State::CHARCON;
+            }
+            break;
+
+        case State::CHARCON:
+            if (c == '\'') {
+                state = State::CHARCLOSEQUOTE;  
+            } 
+            else {
+                state = State::STRING;
+            }
+            break;
+
+        case State::CHARCLOSEQUOTE:
+            if (c == '\'') {
+                state = State::STRING;
+            } 
+            else {
+                state = State::FINISH;
+                return TokenType::CHARCON;
             }
             break;
 
         case State::STRING:
             if (c == '\'') {
-                state = State::CLOSEQUOTE;  
-            } else if (c == '\n') {
-                state = State::START;
-                return Token(TokenType::UNKNOWN, lexeme);
-            }
-            // karakter biasa: tetap STRING
+                state = State::STRINGCLOSEQUOTE;
+            } 
             break;
 
-        case State::CLOSEQUOTE:
+        case State::STRINGCLOSEQUOTE:
             if (c == '\'') {
                 state = State::STRING;
-            } else {
-                int charCount = 0;
-                int i = 1;  
-                int endPos = lexeme.size() - 1;  
-                
-                while (i < endPos) {
-                    charCount++;
-                    i++;
-                }
-                
-                TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
-                state = State::START;
-                return Token(type, lexeme);
-            }
-            break;
-
-
-            // Ini buat komen yang format {}
-            case State::OPENCUR:
-                if (c == '}') {
-                    state = State::CLOSECUR; 
-                } else {
-                    state = State::COMMENT;      
-                }
-                break;
-            
-            // ini komen yang format (* *)
-           case State::LPARENT:
-            if (c == '*') {
-                state = State::COMMENT;
-            } else {
-                state = State::START;
-                return Token(TokenType::LPARENT, "(");
-            }
-            break;
-
-        case State::COMMENT:
-            if (c == '*' || c == '}') {
-                state = State::CLOSECUR;
-            }
-            break;
-
-        case State::CLOSECUR:
-            if (c == ')') {
-                lexeme += c;
-                state = State::START;
-                return Token(TokenType::COMMENT, lexeme);
-            } else if (c == '*') {
-                state = State::CLOSECUR;
             } 
-            else if (c == '}') {
-                lexeme += c;
-                state = State::START;
-                return Token(TokenType::COMMENT, lexeme);
-            }
             else {
-                state = State::COMMENT;
+                state = State::FINISH;
+                return TokenType::STRING;
             }
-            break;
-
-    //Case Number
-        case State::INTCON:
-            if (isNumber) {
-                state = State::INTCON;
-            } else if (c == '.'){
-                state = State::INTDOT;
-            } else if (isalpha(c)) {
-                state = State::UNKNOWN;
-            } else if (isblank(c)) {
-                return Token(TokenType::INTCON, lexeme);
-            }
-
-        case State::INTDOT:
-            if(isNumber) {
-                state = State::REALCON;
-            } else {
-                state = State::UNKNOWN;
-            } 
-
-        case State::REALCON:
-            if(isNumber) {
-                state = State::REALCON; 
-            } else if (isLetter) {
-                state = State::UNKNOWN;
-            } else if (isblank(c)) {
-                return Token(TokenType::REALCON, lexeme);
-            }
-
-    //Case String & Char
-        // case State::something:
-        //     if (something) {
-
-        //     } else {
-                
-        //     }
 
 
     //Case Comment
-        // case State::something:
-        //     if (something) {
+        // Ini buat komen yang format {}
+        case State::OPENCUR:
+            if (c == '}') {
+                state = State::DETERMINED;
+                return TokenType::COMMENT;
+            } 
+            else {
+                state = State::COMMENTCUR;      
+            }
+            break;
 
-        //     } else {
-                
-        //     }
+         case State::COMMENTCUR:
+            if (c == '}') {
+                state = State::DETERMINED;
+                return TokenType::COMMENT;
+            }
+            break;
+        
+        // Ini buat komen yang format (* *)
+        case State::LPARENT:
+            if (c == '*') {
+                state = State::COMMENTPAR;
+            } 
+            else {
+                state = State::FINISH;
+                return TokenType::LPARENT;
+            }
+            break;
+
+        case State::COMMENTPAR:
+            if (c == '*') {
+                state = State::COMMENTPARAST;
+            }
+            break;
+
+        case State::COMMENTPARAST:
+            if (c == ')') {
+                state = State::DETERMINED;
+                return TokenType::COMMENT;
+            } 
+            else if (c == '*') {
+                state = State::COMMENTCLOSEAST;
+            }
+            else {
+                state = State::COMMENTPAR;
+            }
+            break;
 
 
     // Case Binary Operator
         case State::EQUALSIGN:
             if (c == '=') {
-                state = State::EQL;
+                state = State::DETERMINED;
+                return TokenType::EQL;
             } else {
                 state = State::UNKNOWN;
                 return TokenType::UNKNOWN;
             }
             break;
 
-        case State::EQL:
-            state = State::FINISH;
-            TokenType::EQL;
-            break;
-
         case State::LSS:
             if (c == '=') {
-                state = State::LEQ;
+                state = State::DETERMINED;
                 return TokenType::LEQ;
             } else if (c == '>') {
-                state = State::NEQ;
+                state = State::DETERMINED;
                 return TokenType::NEQ;
             } else {
-                state = State::LSS;
+                state = State::FINISH;
                 return TokenType::LSS;
             }
             break;
 
         case State::GTR:
             if (c == '=') {
-                state = State::GEQ;
+                state = State::DETERMINED;
                 return TokenType::GEQ;
             } else {
-                state = State::GTR;
+                state = State::FINISH;
                 return TokenType::GTR;
             }
             break;
 
         case State::COLON:
             if (c == '=') {
-                state = State::BECOMES;
+                state = State::DETERMINED;
                 return TokenType::BECOMES;
             } else {
-                state = State::COLON;
+                state = State::FINISH;
                 return TokenType::COLON;
             }
             break;
 
 
     //Case Single Character Symbol
-        // case State::something:
-        //     if (something) {
-
-        //     } else {
-                
-        //     }
+        //Handled in initial state
     }
 
     lexeme += c;
