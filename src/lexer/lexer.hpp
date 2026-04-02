@@ -2,6 +2,7 @@
 
 #include "reader.hpp"
 #include "token.hpp"
+#include "../utils/utils.hpp"
 #include "unordered_map"
 
 enum class State{
@@ -43,7 +44,6 @@ enum class State{
     OPENCUR,
     COMMENTCUR,
     LPARENT,
-    COMMENTPAR,
     COMMENTPARAST,
     COMMENTCLOSEAST
 };
