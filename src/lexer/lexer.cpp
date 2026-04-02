@@ -99,7 +99,87 @@ Token Lexer::processChar(char c){
                 state = State::IDENT;//TODO
             }
             break;
+
         
+        // ini buat string atau char
+        case State::OPENQUOTE:
+            if (c == '\'') {
+                state = State::CLOSEQUOTE; 
+            } else {
+                state = State::STRING;      // karakter biasa
+            }
+            break;
+
+        case State::STRING:
+            if (c == '\'') {
+                state = State::CLOSEQUOTE;  // ketemu petik, mungkin penutup
+            } else if (c == '\n') {
+                state = State::START;
+                return Token(TokenType::UNKNOWN, lexeme);
+            }
+            // karakter biasa: tetap STRING
+            break;
+
+        case State::CLOSEQUOTE:
+            if (c == '\'') {
+                // Petik lagi setelah penutup = escape, lanjut baca string
+                state = State::STRING;
+            } else {
+                // std::string content = lexeme.substr(1, lexeme.size() - 2);
+                // int charCount = 0;
+                // for (size_t i = 0; i < content.size(); ) {
+                //     if (content[i] == '\'' && i+1 < content.size() && content[i+1] == '\'') {
+                //         charCount++;
+                //         i += 2;
+                //     } else {
+                //         charCount++;                                                              is this legal? 
+                //         i++;
+                //     }
+                // }
+                // TokenType type = (charCount == 1) ? TokenType::CHARCON : TokenType::STRING;
+                // std::string lex = lexeme;
+                // state = State::START;
+                // return Token(type, lex);
+            }
+            break;    
+
+
+            // Ini buat komen yang format {}
+            case State::OPENCUR:
+                if (c == '}') {
+                    state = State::CLOSECUR; 
+                } else {
+                    state = State::COMMENT;      // karakter biasa
+                }
+                break;
+            
+            // ini komen yang format (* *)
+           case State::LPARENT:
+            if (c == '*') {
+                state = State::COMMENT;
+            } else {
+                state = State::START;
+                return Token(TokenType::LPARENT, "(");
+            }
+            break;
+
+        case State::COMMENT:
+            if (c == '*') {
+                state = State::CLOSECUR;
+            }
+            break;
+
+        case State::CLOSECUR:
+            if (c == ')') {
+                lexeme += c;
+                state = State::START;
+                return Token(TokenType::COMMENT, lexeme);
+            } else if (c == '*') {
+                state = State::CLOSECUR;
+            } else {
+                state = State::COMMENT;
+            }
+            break;
 
     //Case Number
         // case State::something:
