@@ -285,6 +285,7 @@ TokenType Lexer::processChar(char c){
             else {
                 lexeme += c;
             }
+            break;
 
         case State::COMMENTCLOSEAST:
             if (c == ')') {
