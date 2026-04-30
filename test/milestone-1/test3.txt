@@ -1,65 +1,27 @@
-program NormalBangetLengkapProgramnya;
+program Lexer;
 
-type
-  AngkaArray = array[5] of integer;
+var a = 0;
+var b = -2;
+var c = 0.03;
 
-  DataLoop = record
-    i: integer;
-    j: integer;
-    status: string;
-  end;
+Eql =
+Lss <
+Gtr >
+Colon :
+Plus+
+Minus-
+Times  *
+RDIV
+/[ ] ,. '' ( )
+<> < > <= >= == := : =
 
-var
-  data: DataLoop;
-  arr: AngkaArray;
-  hasil: integer;
-
-procedure TulisPesan(teks: string);
-begin
-  writeln(teks);
-end;
-
-function Hitung(x: integer): integer;
-begin
-  Hitung := (x div 3) MOD 2;
-end;
-
-begin
-  data.i := 0;
-  data.j := 0;
-  data.status := 'awal';
-
-  arr[1] := 10;
-  arr[2] := 20;
-
-  while data.i <= 10 do
-    data.i := data.i + 1;
-
-  for data.j := 10 downto 1 do
-    data.j := data.j - 1;
-
-  for data.i := 1 to 3 do
-    data.i := Hitung(data.i);
-
-  repeat
-    data.i := data.i + 1;
-  until data.i >= 10;
-
-  if data.i >= 10 then
-    data.status := 'selesai'
-  else
-    data.status := 'belum';
-
-  hasil := data.i;
-
-  case hasil of
-  0:
-    writeln('nol');
-  1:
-    writeln('satu');
-  2:
-    writeln('dua');
-  end;
-
-  TulisPesan(data.status);
-end.
+not
+And 
+orConst
+or Consta
+const
+while
+fof
+downto to down to
+#
+{pagar gak bisa}
