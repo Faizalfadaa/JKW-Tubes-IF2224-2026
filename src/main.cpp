@@ -34,4 +34,7 @@ int main(){
     }
     output.close();
 
+    // for(int i = 0; i <  parserTokens.size(); i++) {
+    //     cout << parserTokens[i].str_type() << " " << parserTokens[i].lexeme << endl;
+    // }
 }
