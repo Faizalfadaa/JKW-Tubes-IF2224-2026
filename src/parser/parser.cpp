@@ -33,10 +33,34 @@ ParseNode* Parser::match(TokenType expectedToken) {
     // error(expectedToken);
     return nullptr;
 }
+ParseNode* Parser::program() {
 
-ParseNode* Parser::program(){}
-ParseNode* Parser::programHeader(){}
-ParseNode* Parser::declarationPart(){}
+    ParseNode* node = new ParseNode("<program>");
+
+    node->addChild(programHeader());
+    node->addChild(declarationPart());
+
+    return node;
+}
+
+ParseNode* Parser::programHeader() {
+
+    ParseNode* node = new ParseNode("<program-header>");
+
+    node->addChild(match(TokenType::PROGRAMSY));
+    node->addChild(match(TokenType::IDENT));
+    node->addChild(match(TokenType::SEMICOLON));
+
+    return node;
+}
+
+ParseNode* Parser::declarationPart() {
+
+    //ini masih placeholder aja
+    ParseNode* node = new ParseNode("<declaration-part>");
+    return node;
+}
+
 ParseNode* Parser::constDeclaration(){}
 ParseNode* Parser::constant(){}
 ParseNode* Parser::typeDeclaration(){}
