@@ -1,3 +1,6 @@
+#ifndef TOKEN_HPP
+#define TOKEN_HPP
+
 //List token
 enum class TokenType{
     INTCON,
@@ -177,3 +180,5 @@ public:
         return "Error";
     }
 };
+
+#endif
