@@ -34,33 +34,49 @@ ParseNode* Parser::match(TokenType expectedToken) {
     return nullptr;
 }
 
-ParseNode* Parser::program() {
+ParseNode* Parser::program(){}
+ParseNode* Parser::programHeader(){}
+ParseNode* Parser::declarationPart(){}
+ParseNode* Parser::constDeclaration(){}
+ParseNode* Parser::constant(){}
+ParseNode* Parser::typeDeclaration(){}
+ParseNode* Parser::varDeclaration(){}
+ParseNode* Parser::identifierList(){}
+ParseNode* Parser::type(){}
+ParseNode* Parser::arrayType(){}
 
-    ParseNode* node = new ParseNode("<program>");
+ParseNode* Parser::range(){}
+ParseNode* Parser::enumerated(){}
+ParseNode* Parser::recordType(){}
+ParseNode* Parser::fieldList(){}
+ParseNode* Parser::fieldPart(){}
+ParseNode* Parser::subProgramDeclaration(){}
+ParseNode* Parser::procedureDeclaration(){}
+ParseNode* Parser::functionDeclaration(){}
+ParseNode* Parser::block(){}
+ParseNode* Parser::formalParameterList(){}
 
-    node->addChild(programHeader());
-    node->addChild(declarationPart());
+ParseNode* Parser::parameterGroup(){}
+ParseNode* Parser::compoundStatement(){}
+ParseNode* Parser::statementList(){}
+ParseNode* Parser::statement(){}
+ParseNode* Parser::assignmentStatement(){}
+ParseNode* Parser::ifStatement(){}
+ParseNode* Parser::caseStatement(){}
+ParseNode* Parser::caseBlock(){}
+ParseNode* Parser::whileStatement(){}
+ParseNode* Parser::repeatStatement(){}
 
-    return node;
-}
-
-ParseNode* Parser::programHeader() {
-
-    ParseNode* node = new ParseNode("<program-header>");
-
-    node->addChild(match(TokenType::PROGRAMSY));
-    node->addChild(match(TokenType::IDENT));
-    node->addChild(match(TokenType::SEMICOLON));
-
-    return node;
-}
-
-ParseNode* Parser::declarationPart() {
-
-    //ini masih placeholder aja
-    ParseNode* node = new ParseNode("<declaration-part>");
-    return node;
-}
+ParseNode* Parser::forStatement(){}
+ParseNode* Parser::procedureFunctionCall(){}
+ParseNode* Parser::parameterList(){}
+ParseNode* Parser::expression(){}
+ParseNode* Parser::simpleExpression(){}
+ParseNode* Parser::term(){}
+ParseNode* Parser::factor(){}
+ParseNode* Parser::relationalOperator(){}
+ParseNode* Parser::additiveOperator(){}
+ParseNode* Parser::multiplicativeOperator(){}
 
 // void Parser::error(TokenType expectedToken) {
 
