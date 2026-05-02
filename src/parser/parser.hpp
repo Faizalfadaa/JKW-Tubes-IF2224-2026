@@ -1,6 +1,7 @@
 #include "iostream"
 #include "vector"
-#include "src/lexer/token.hpp"
+#include "../lexer/token.hpp"
+#include "node.hpp"
 
 using namespace std;
 
@@ -14,7 +15,13 @@ class Parser {
         TokenType currToken;
         std::string currLexeme;
 
+        Parser(vector<Token> tokens);
         ParseNode* match(TokenType expectedToken);
+        ParseNode* program();
+        ParseNode* programHeader();
+        ParseNode* declarationPart();
+
+    // void error(TokenType expectedToken);
 
         ParseNode* program();
         ParseNode* programHeader();

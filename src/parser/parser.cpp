@@ -1,20 +1,37 @@
-#include "src/parser/parser.hpp"
+#include "parser.hpp"
+#include "node.hpp"
+
+Parser::Parser(vector<Token> tokens) {
+    parserTokens = tokens;
+    pos = 0;
+    currToken = parserTokens[pos].type;
+    currLexeme = parserTokens[pos].lexeme;
+}
 
 void Parser::advance() {
     pos++;
-    if(pos < parserTokens.size()) {
+    if(pos < (int)parserTokens.size()) {
         currToken = parserTokens[pos].type;
         currLexeme = parserTokens[pos].lexeme;
     }
 }
 
-void Parser::match(TokenType expectedToken) {
+ParseNode* Parser::match(TokenType expectedToken) {
+
     if(currToken == expectedToken) {
+        string label = parserTokens[pos].str_type();
+
+        if(currLexeme != "") {
+            label += "(" + currLexeme + ")";
+        }
+
+        ParseNode* node = new ParseNode(label);
         advance();
-        return;
+        return node;
     }
 
-
+    // error(expectedToken);
+    return nullptr;
 }
 
 ParseNode* Parser::program(){}
@@ -61,3 +78,9 @@ ParseNode* Parser::relationalOperator(){}
 ParseNode* Parser::additiveOperator(){}
 ParseNode* Parser::multiplicativeOperator(){}
 
+// void Parser::error(TokenType expectedToken) {
+
+//     //ini masih placeholder aja
+//     cout << "Syntax Error!" << endl;
+//     exit(1);
+// }

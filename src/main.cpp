@@ -1,4 +1,6 @@
 #include "lexer/lexer.hpp"
+#include "parser/parser.hpp"
+#include "parser/treeprinter.hpp"
 #include <vector>
 
 using namespace std;
@@ -33,6 +35,11 @@ int main(){
         parserTokens.push_back(token);
     }
     output.close();
+
+
+    Parser parser(parserTokens);
+    ParseNode* root = parser.program();
+    printTree(root);
 
     // for(int i = 0; i <  parserTokens.size(); i++) {
     //     cout << parserTokens[i].str_type() << " " << parserTokens[i].lexeme << endl;

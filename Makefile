@@ -2,7 +2,8 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Wno-reorder -Wno-switch
 
 TARGET = main.exe
-SRC = src/main.cpp src/lexer/lexer.cpp src/lexer/reader.cpp src/utils/utils.cpp
+SRC = src/main.cpp src/lexer/lexer.cpp src/lexer/reader.cpp src/utils/utils.cpp src/parser/parser.cpp src/parser/treeprinter.cpp
+
 
 all: $(TARGET)
 
