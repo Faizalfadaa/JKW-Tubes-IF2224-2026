@@ -1,0 +1,23 @@
+program PythonGacor;
+
+var
+  x: real;
+  y: real;
+  i: integer;
+
+begin
+  x := 5;
+  y := -6.7;
+
+  if ((NOT (x <> y) AND (x <> y)) OR (x < 0) OR (x == y)) then
+    writeln('Rhenaldy Cahyadi - 13524113')
+  else
+  begin
+    writeln('Spesifikasi kurang lengkap');
+    writeln('Deadline harus diperpanjang');
+    writeln('/n');
+  end;
+
+  for i := 1 downto -4 do
+    x := x + 1;
+end.

@@ -1,3 +1,6 @@
+#ifndef TOKEN_HPP
+#define TOKEN_HPP
+
 //List token
 enum class TokenType{
     INTCON,
@@ -63,7 +66,7 @@ public:
 
     //Konstruktor
     Token(TokenType type, std::string lexeme) : type(type), lexeme(lexeme) {}
-    std::string str_type(){  
+    std::string str_type() const {  
         switch (type){
             case TokenType::INTCON:
                 return "INTCON";
@@ -177,3 +180,5 @@ public:
         return "Error";
     }
 };
+
+#endif

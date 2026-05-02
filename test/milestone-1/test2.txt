@@ -1,0 +1,34 @@
+program TubesBasdatFauzanOtomata;
+
+const
+  rhen := 100;
+
+type
+  TubeRecord = record
+    Deadline: real;
+    Diperpanjang: string;
+    please: string;
+    JKW: string;
+  end;
+
+  TubeArray = array[10] of integer;
+
+var
+  data: TubeRecord;
+  Tubes: TubeArray;
+
+begin
+  { 
+    Tolong spesifikasinya diperjelas lagi 
+  }
+  (* Banyak banget perubahan di QNA *)
+
+  data.Deadline := -23.59;
+  data.please := 'please';
+  data.Diperpanjang := data.please;
+  data.JKW := 'Jok-';
+
+  writeln('NOT AND OR div MOD');
+  writeln('(* ini bukan comment *)', ' ', '{ ini komen kan }');
+end.
+
