@@ -69,16 +69,132 @@ ParseNode* Parser::identifierList(){}
 ParseNode* Parser::type(){}
 ParseNode* Parser::arrayType(){}
 
-ParseNode* Parser::range(){}
-ParseNode* Parser::enumerated(){}
-ParseNode* Parser::recordType(){}
-ParseNode* Parser::fieldList(){}
-ParseNode* Parser::fieldPart(){}
-ParseNode* Parser::subProgramDeclaration(){}
-ParseNode* Parser::procedureDeclaration(){}
-ParseNode* Parser::functionDeclaration(){}
-ParseNode* Parser::block(){}
-ParseNode* Parser::formalParameterList(){}
+ParseNode* Parser::range(){
+    ParseNode* node = new ParseNode("<range>");
+
+    node->addChild(constant());
+    node->addChild(match(TokenType::PERIOD));
+    node->addChild(match(TokenType::PERIOD));
+    node->addChild(constant());
+
+    return node;
+}
+
+ParseNode* Parser::enumerated(){
+    ParseNode* node = new ParseNode("<enumerated>");
+
+    node->addChild(match(TokenType::LPARENT));
+    node->addChild(match(TokenType::IDENT));
+    while (currToken == TokenType::COMMA) {
+        node->addChild(match(TokenType::COMMA));
+        node->addChild(match(TokenType::IDENT));
+    }
+    node->addChild(match(TokenType::RPARENT));
+
+    return node;
+}
+
+ParseNode* Parser::recordType(){
+    ParseNode* node = new ParseNode("<record-type>");
+
+    node->addChild(match(TokenType::RECORDSY));
+    node->addChild(fieldList());
+    node->addChild(match(TokenType::ENDSY));
+
+    return node;
+}
+
+ParseNode* Parser::fieldList(){
+    ParseNode* node = new ParseNode("<field-list>");
+
+    node->addChild(fieldPart());
+    while (currToken == TokenType::SEMICOLON) {
+        node->addChild(match(TokenType::SEMICOLON));
+        if (currToken == TokenType::ENDSY) {
+            break;
+        }
+        node->addChild(fieldPart());
+    }
+
+    return node;
+}
+
+ParseNode* Parser::fieldPart(){
+    ParseNode* node = new ParseNode("<field-part>");
+
+    node->addChild(identifierList());
+    node->addChild(match(TokenType::COLON));
+    node->addChild(type());
+
+    return node;
+}
+
+ParseNode* Parser::subProgramDeclaration(){
+    ParseNode* node = new ParseNode("<subprogram-declaration>");
+
+    if (currToken == TokenType::PROCEDURESY) {
+        node->addChild(procedureDeclaration());
+    } else if (currToken == TokenType::FUNCTIONSY) {
+        node->addChild(functionDeclaration());
+    }
+
+    return node;
+}
+
+ParseNode* Parser::procedureDeclaration(){
+    ParseNode* node = new ParseNode("<procedure-declaration>");
+
+    node->addChild(match(TokenType::PROCEDURESY));
+    node->addChild(match(TokenType::IDENT));
+    if (currToken == TokenType::LPARENT) {
+        node->addChild(formalParameterList());
+    }
+    node->addChild(match(TokenType::SEMICOLON));
+    node->addChild(block());
+    node->addChild(match(TokenType::SEMICOLON));
+
+    return node;
+}
+
+ParseNode* Parser::functionDeclaration(){
+    ParseNode* node = new ParseNode("<function-declaration>");
+
+    node->addChild(match(TokenType::FUNCTIONSY));
+    node->addChild(match(TokenType::IDENT));
+    if (currToken == TokenType::LPARENT) {
+        node->addChild(formalParameterList());
+    }
+    node->addChild(match(TokenType::COLON));
+    node->addChild(match(TokenType::IDENT));
+    node->addChild(match(TokenType::SEMICOLON));
+    node->addChild(block());
+    node->addChild(match(TokenType::SEMICOLON));
+
+    return node;
+}
+
+ParseNode* Parser::block(){
+    ParseNode* node = new ParseNode("<block>");
+
+    node->addChild(declarationPart());
+    node->addChild(compoundStatement());
+
+    return node;
+}
+
+ParseNode* Parser::formalParameterList(){
+    ParseNode* node = new ParseNode("<formal-parameter-list>");
+
+    node->addChild(match(TokenType::LPARENT));
+    node->addChild(parameterGroup());
+    while (currToken == TokenType::SEMICOLON) {
+        node->addChild(match(TokenType::SEMICOLON));
+        node->addChild(parameterGroup());
+    }
+    node->addChild(match(TokenType::RPARENT));
+
+    return node;
+}
 
 ParseNode* Parser::parameterGroup(){
     ParseNode* node = new ParseNode("<parameter-group>");
