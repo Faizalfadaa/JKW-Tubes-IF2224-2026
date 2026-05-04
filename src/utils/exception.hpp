@@ -1,7 +1,7 @@
 #include <exception>
 #include <vector>
 #include <string>
-#include "token.hpp"
+#include "../lexer/token.hpp"
 
 class ParsingError : public std::exception {
 private:
@@ -23,7 +23,7 @@ public:
 
     const char* what() const noexcept override {
         std::string output = "Syntax error: unexpected token " + Token::toString(foundToken) + ", expected ";
-        for (int i = 0; i < expectedTokens.size(); i++){
+        for (size_t i = 0; i < expectedTokens.size(); i++){
             output += Token::toString(expectedTokens.at(i));
             if (i != expectedTokens.size()-1){
                 output += ",";

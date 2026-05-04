@@ -11,7 +11,7 @@ $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
 
 run: $(TARGET)
-	.\$(TARGET)
+	./$(TARGET)
 
 clean:
 	del /Q $(TARGET)

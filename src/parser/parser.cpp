@@ -434,7 +434,7 @@ ParseNode* Parser::statement(){
     ParseNode* node = new ParseNode("<statement>");
 
     if(currToken == TokenType::IDENT) {
-        if(parserTokens[pos + 1].type == TokenType::BECOMES && pos + 1 < parserTokens.size()) {
+        if(parserTokens[pos + 1].type == TokenType::BECOMES && pos + 1 < (int) parserTokens.size()) {
             node->addChild(assignmentStatement());
         } else {
             node->addChild(procedureFunctionCall());
