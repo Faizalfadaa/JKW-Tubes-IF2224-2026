@@ -66,7 +66,12 @@ public:
 
     //Konstruktor
     Token(TokenType type, std::string lexeme) : type(type), lexeme(lexeme) {}
+
     std::string str_type() const {  
+        return toString(type);
+    }
+
+    static std::string toString(TokenType type){
         switch (type){
             case TokenType::INTCON:
                 return "INTCON";
