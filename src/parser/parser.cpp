@@ -39,6 +39,8 @@ ParseNode* Parser::program() {
 
     node->addChild(programHeader());
     node->addChild(declarationPart());
+    node->addChild(compoundStatement());
+    node->addChild(match(TokenType::PERIOD));
 
     return node;
 }
@@ -56,18 +58,190 @@ ParseNode* Parser::programHeader() {
 
 ParseNode* Parser::declarationPart() {
 
-    //ini masih placeholder aja
     ParseNode* node = new ParseNode("<declaration-part>");
+
+    while (currToken == TokenType::CONSTSY) {
+        node->addChild(constDeclaration());
+    }
+
+    while (currToken == TokenType::TYPESY) {
+        node->addChild(typeDeclaration());
+    }
+
+    while (currToken == TokenType::VARSY) {
+        node->addChild(varDeclaration());
+    }
+
+    while (
+        currToken == TokenType::PROCEDURESY ||
+        currToken == TokenType::FUNCTIONSY
+    ) {
+        node->addChild(subProgramDeclaration());
+    }
+
     return node;
 }
 
-ParseNode* Parser::constDeclaration(){}
-ParseNode* Parser::constant(){}
-ParseNode* Parser::typeDeclaration(){}
-ParseNode* Parser::varDeclaration(){}
-ParseNode* Parser::identifierList(){}
-ParseNode* Parser::type(){}
-ParseNode* Parser::arrayType(){}
+ParseNode* Parser::constDeclaration() {
+
+    ParseNode* node = new ParseNode("<const-declaration>");
+
+    node->addChild(match(TokenType::CONSTSY));
+
+    node->addChild(match(TokenType::IDENT));
+    node->addChild(match(TokenType::EQL));
+    node->addChild(constant());
+    node->addChild(match(TokenType::SEMICOLON));
+
+    while (currToken == TokenType::IDENT) {
+        node->addChild(match(TokenType::IDENT));
+        node->addChild(match(TokenType::EQL));
+        node->addChild(constant());
+        node->addChild(match(TokenType::SEMICOLON));
+    }
+
+    return node;
+}
+
+ParseNode* Parser::constant() {
+
+    ParseNode* node = new ParseNode("<constant>");
+
+    if (currToken == TokenType::CHARCON) {
+        node->addChild(match(TokenType::CHARCON));
+    }
+    else if (currToken == TokenType::STRING) {
+        node->addChild(match(TokenType::STRING));
+    }
+    else {
+
+        if (currToken == TokenType::PLUS) {
+            node->addChild(match(TokenType::PLUS));
+        }
+        else if (currToken == TokenType::MINUS) {
+            node->addChild(match(TokenType::MINUS));
+        }
+
+        if (currToken == TokenType::IDENT) {
+            node->addChild(match(TokenType::IDENT));
+        }
+        else if (currToken == TokenType::INTCON) {
+            node->addChild(match(TokenType::INTCON));
+        }
+        else if (currToken == TokenType::REALCON) {
+            node->addChild(match(TokenType::REALCON));
+        }
+    }
+
+    return node;
+}
+
+ParseNode* Parser::typeDeclaration() {
+
+    ParseNode* node = new ParseNode("<type-declaration>");
+
+    node->addChild(match(TokenType::TYPESY));
+
+    node->addChild(match(TokenType::IDENT));
+    node->addChild(match(TokenType::EQL));
+    node->addChild(type());
+    node->addChild(match(TokenType::SEMICOLON));
+
+    while (currToken == TokenType::IDENT) {
+        node->addChild(match(TokenType::IDENT));
+        node->addChild(match(TokenType::EQL));
+        node->addChild(type());
+        node->addChild(match(TokenType::SEMICOLON));
+    }
+
+    return node;
+}
+
+ParseNode* Parser::varDeclaration() {
+
+    ParseNode* node = new ParseNode("<var-declaration>");
+
+    node->addChild(match(TokenType::VARSY));
+
+    node->addChild(identifierList());
+    node->addChild(match(TokenType::COLON));
+    node->addChild(type());
+    node->addChild(match(TokenType::SEMICOLON));
+
+    while (currToken == TokenType::IDENT) {
+        node->addChild(identifierList());
+        node->addChild(match(TokenType::COLON));
+        node->addChild(type());
+        node->addChild(match(TokenType::SEMICOLON));
+    }
+
+    return node;
+}
+
+ParseNode* Parser::identifierList() {
+
+    ParseNode* node = new ParseNode("<identifier-list>");
+
+    node->addChild(match(TokenType::IDENT));
+
+    while (currToken == TokenType::COMMA) {
+        node->addChild(match(TokenType::COMMA));
+        node->addChild(match(TokenType::IDENT));
+    }
+
+    return node;
+}
+
+ParseNode* Parser::type() {
+
+    ParseNode* node = new ParseNode("<type>");
+
+    if (currToken == TokenType::IDENT) {
+        node->addChild(match(TokenType::IDENT));
+    }
+    else if (currToken == TokenType::ARRAYSY) {
+        node->addChild(arrayType());
+    }
+    else if (
+        currToken == TokenType::PLUS ||
+        currToken == TokenType::MINUS ||
+        currToken == TokenType::INTCON ||
+        currToken == TokenType::REALCON ||
+        currToken == TokenType::CHARCON ||
+        currToken == TokenType::STRING
+    ) {
+        node->addChild(range());
+    }
+    else if (currToken == TokenType::LPARENT) {
+        node->addChild(enumerated());
+    }
+    else if (currToken == TokenType::RECORDSY) {
+        node->addChild(recordType());
+    }
+
+    return node;
+}
+
+ParseNode* Parser::arrayType() {
+
+    ParseNode* node = new ParseNode("<array-type>");
+
+    node->addChild(match(TokenType::ARRAYSY));
+    node->addChild(match(TokenType::LBRACK));
+
+    if (currToken == TokenType::IDENT) {
+        node->addChild(match(TokenType::IDENT));
+    }
+    else {
+        node->addChild(range());
+    }
+
+    node->addChild(match(TokenType::RBRACK));
+    node->addChild(match(TokenType::OFSY));
+    node->addChild(type());
+
+    return node;
+}
 
 ParseNode* Parser::range(){
     ParseNode* node = new ParseNode("<range>");
