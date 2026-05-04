@@ -1,17 +1,25 @@
 #include <exception>
 #include <vector>
 #include <string>
-#include "token.hpp"
+#include "../lexer/token.hpp"
 
 class ParsingError : public std::exception {
 private:
     std::vector<TokenType> expectedTokens;
     TokenType foundToken;
+    std::string message;
 
 public:
     ParsingError(TokenType expectedToken, TokenType found){
         expectedTokens.push_back(expectedToken);
         foundToken = found;
+        message = "Syntax error: unexpected token " + Token::toString(foundToken) + ", expected ";
+        for (size_t i = 0; i < expectedTokens.size(); i++){
+            message += Token::toString(expectedTokens.at(i));
+            if (i != expectedTokens.size()-1){
+                message += ",";
+            }
+        }
     }
 
     ParsingError(std::vector<TokenType> expectedTokens, TokenType found){
@@ -22,13 +30,6 @@ public:
     }
 
     const char* what() const noexcept override {
-        std::string output = "Syntax error: unexpected token " + Token::toString(foundToken) + ", expected ";
-        for (int i = 0; i < expectedTokens.size(); i++){
-            output += Token::toString(expectedTokens.at(i));
-            if (i != expectedTokens.size()-1){
-                output += ",";
-            }
-        }
-        return output.c_str();
+        return message.c_str();
     }
 };

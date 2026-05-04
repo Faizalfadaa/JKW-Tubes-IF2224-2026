@@ -434,7 +434,7 @@ ParseNode* Parser::statement(){
     ParseNode* node = new ParseNode("<statement>");
 
     if(currToken == TokenType::IDENT) {
-        if(parserTokens[pos + 1].type == TokenType::BECOMES && pos + 1 < parserTokens.size()) {
+        if(pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::BECOMES) {
             node->addChild(assignmentStatement());
         } else {
             node->addChild(procedureFunctionCall());
@@ -567,13 +567,11 @@ ParseNode* Parser::procedureFunctionCall(){
     ParseNode* node = new ParseNode("<procedure/function-call>");
 
     node->addChild(match(TokenType::IDENT));
-    if (currToken == TokenType::LPARENT){
-        node->addChild(match(TokenType::LPARENT));
-        if (currToken != TokenType::RPARENT){
-            node->addChild(Parser::parameterList());
-        }
-        node->addChild(match(TokenType::RPARENT));
+    node->addChild(match(TokenType::LPARENT));
+    if (currToken != TokenType::RPARENT){
+        node->addChild(Parser::parameterList());
     }
+    node->addChild(match(TokenType::RPARENT));
 
     return node;
 }
@@ -594,8 +592,15 @@ ParseNode* Parser::expression(){
     ParseNode* node = new ParseNode("<expression>");
 
     node->addChild(Parser::simpleExpression());
-    if (ParseNode* temp = Parser::relationalOperator()){
-        node->addChild(temp);
+    if (
+        currToken == TokenType::EQL ||
+        currToken == TokenType::NEQ ||
+        currToken == TokenType::GTR ||
+        currToken == TokenType::GEQ ||
+        currToken == TokenType::LSS ||
+        currToken == TokenType::LEQ
+    ){
+        node->addChild(Parser::relationalOperator());
         node->addChild(Parser::simpleExpression());
     }
 
@@ -612,8 +617,12 @@ ParseNode* Parser::simpleExpression(){
         node->addChild(match(TokenType::MINUS));
     }
     node->addChild(Parser::term());
-    while (ParseNode* temp = Parser::additiveOperator()){
-        node->addChild(temp);
+    while (
+        currToken == TokenType::PLUS ||
+        currToken == TokenType::MINUS ||
+        currToken == TokenType::ORSY
+    ){
+        node->addChild(Parser::additiveOperator());
         node->addChild(Parser::term());
     }
 
@@ -624,8 +633,14 @@ ParseNode* Parser::term(){
     ParseNode* node = new ParseNode("<term>");
 
     node->addChild(Parser::factor());
-    while (ParseNode* temp = Parser::multiplicativeOperator()){
-        node->addChild(temp);
+    while (
+        currToken == TokenType::TIMES ||
+        currToken == TokenType::RDIV ||
+        currToken == TokenType::IDIV ||
+        currToken == TokenType::IMOD ||
+        currToken == TokenType::ANDSY
+    ){
+        node->addChild(Parser::multiplicativeOperator());
         node->addChild(Parser::factor());
     }
 
@@ -636,7 +651,12 @@ ParseNode* Parser::factor(){
     ParseNode* node = new ParseNode("<factor>");
 
     if (currToken == TokenType::IDENT){
-        node->addChild(match(TokenType::IDENT));
+        if (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LPARENT){
+            node->addChild(Parser::procedureFunctionCall());
+        }
+        else{
+            node->addChild(match(TokenType::IDENT));
+        }
     }
     else if (currToken == TokenType::INTCON){
         node->addChild(match(TokenType::INTCON));
@@ -659,14 +679,10 @@ ParseNode* Parser::factor(){
         node->addChild(match(TokenType::NOTSY));
         node->addChild(Parser::factor());
     }
-    else if (ParseNode* temp = Parser::procedureFunctionCall()){
-        node->addChild(temp);
-    }
     // else if (ParseNode* temp = Parser::variable()){ //TODO: fungsi dari revisi 2 MEI
     //     node->addChild(temp);
     // }
     else{
-        return nullptr;
     }
 
     return node;

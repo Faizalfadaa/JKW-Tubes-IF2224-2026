@@ -277,6 +277,7 @@ TokenType Lexer::processChar(char c){
                 state = State::FINISH;
                 return TokenType::STRING;
             }
+            break;
 
 
     //Case Comment

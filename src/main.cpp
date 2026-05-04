@@ -2,6 +2,7 @@
 #include "parser/parser.hpp"
 #include "parser/treeprinter.hpp"
 #include <vector>
+#include <exception>
 
 using namespace std;
 
@@ -36,10 +37,14 @@ int main(){
     }
     output.close();
 
-
-    Parser parser(parserTokens);
-    ParseNode* root = parser.program();
-    printTree(root);
+    try{
+        Parser parser(parserTokens);
+        ParseNode* root = parser.program();
+        printTree(root);
+    }
+    catch (std::exception& e){
+        std::cout << e.what() << std::endl;
+    }
 
     // for(int i = 0; i <  parserTokens.size(); i++) {
     //     cout << parserTokens[i].str_type() << " " << parserTokens[i].lexeme << endl;
