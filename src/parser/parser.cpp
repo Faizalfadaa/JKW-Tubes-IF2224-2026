@@ -434,7 +434,7 @@ ParseNode* Parser::statement(){
     ParseNode* node = new ParseNode("<statement>");
 
     if(currToken == TokenType::IDENT) {
-        if(parserTokens[pos + 1].type == TokenType::BECOMES && pos + 1 < (int) parserTokens.size()) {
+        if(pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::BECOMES) {
             node->addChild(assignmentStatement());
         } else {
             node->addChild(procedureFunctionCall());
@@ -567,13 +567,11 @@ ParseNode* Parser::procedureFunctionCall(){
     ParseNode* node = new ParseNode("<procedure/function-call>");
 
     node->addChild(match(TokenType::IDENT));
-    if (currToken == TokenType::LPARENT){
-        node->addChild(match(TokenType::LPARENT));
-        if (currToken != TokenType::RPARENT){
-            node->addChild(Parser::parameterList());
-        }
-        node->addChild(match(TokenType::RPARENT));
+    node->addChild(match(TokenType::LPARENT));
+    if (currToken != TokenType::RPARENT){
+        node->addChild(Parser::parameterList());
     }
+    node->addChild(match(TokenType::RPARENT));
 
     return node;
 }
@@ -635,7 +633,7 @@ ParseNode* Parser::term(){
 ParseNode* Parser::factor(){
     ParseNode* node = new ParseNode("<factor>");
 
-    if (currToken == TokenType::IDENT){
+    if (currToken == TokenType::IDENT && (pos + 1 == (int) parserTokens.size() || parserTokens[pos + 1].type != TokenType::LPARENT)){
         node->addChild(match(TokenType::IDENT));
     }
     else if (currToken == TokenType::INTCON){
@@ -659,14 +657,13 @@ ParseNode* Parser::factor(){
         node->addChild(match(TokenType::NOTSY));
         node->addChild(Parser::factor());
     }
-    else if (ParseNode* temp = Parser::procedureFunctionCall()){
+    else if (ParseNode* temp = Parser::procedureFunctionCall()){ //FIXEME: tidak akan terpanggil karena ident ada di atas, cek qna nanti
         node->addChild(temp);
     }
     // else if (ParseNode* temp = Parser::variable()){ //TODO: fungsi dari revisi 2 MEI
     //     node->addChild(temp);
     // }
     else{
-        return nullptr;
     }
 
     return node;
