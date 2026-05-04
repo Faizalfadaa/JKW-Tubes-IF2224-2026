@@ -17,6 +17,7 @@ class Parser {
 
         Parser(vector<Token> tokens);
         ParseNode* match(TokenType expectedToken);
+        ParseNode* match(std::vector<TokenType> expectedTokens);
 
         ParseNode* program();
         ParseNode* programHeader();
@@ -61,9 +62,6 @@ class Parser {
         ParseNode* relationalOperator();
         ParseNode* additiveOperator();
         ParseNode* multiplicativeOperator();
-
-        // void error(TokenType expectedToken);
-
 };
 
 

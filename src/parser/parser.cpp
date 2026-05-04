@@ -1,5 +1,6 @@
 #include "parser.hpp"
 #include "node.hpp"
+#include "../utils/exception.hpp"
 
 Parser::Parser(vector<Token> tokens) {
     parserTokens = tokens;
@@ -17,7 +18,6 @@ void Parser::advance() {
 }
 
 ParseNode* Parser::match(TokenType expectedToken) {
-
     if(currToken == expectedToken) {
         string label = parserTokens[pos].str_type();
 
@@ -30,9 +30,27 @@ ParseNode* Parser::match(TokenType expectedToken) {
         return node;
     }
 
-    // TODO: throw error(expectedToken); //Buat untuk semua kasus fungsi
-    return nullptr;
+    throw ParsingError(expectedToken, currToken);
 }
+
+ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
+    for (TokenType expectedToken : expectedTokens){
+        if(currToken == expectedToken) {
+            string label = parserTokens[pos].str_type();
+
+            if(currLexeme != "") {
+                label += "(" + currLexeme + ")";
+            }
+
+            ParseNode* node = new ParseNode(label);
+            advance();
+            return node;
+        }
+    }
+
+    throw ParsingError(expectedTokens, currToken);
+}
+
 ParseNode* Parser::program() {
 
     ParseNode* node = new ParseNode("<program>");
@@ -483,24 +501,14 @@ ParseNode* Parser::factor(){
 ParseNode* Parser::relationalOperator(){
     ParseNode* node = new ParseNode("<relational-operator>");
 
-    if (currToken == TokenType::EQL){
-        node->addChild(match(TokenType::EQL));
-    }
-    else if (currToken == TokenType::NEQ){
-        node->addChild(match(TokenType::NEQ));
-    }
-    else if (currToken == TokenType::GTR){
-        node->addChild(match(TokenType::GTR));
-    }
-    else if (currToken == TokenType::GEQ){
-        node->addChild(match(TokenType::GEQ));
-    }
-    else if (currToken == TokenType::LSS){
-        node->addChild(match(TokenType::LSS));
-    }
-    else if (currToken == TokenType::LEQ){
-        node->addChild(match(TokenType::LEQ));
-    }
+    node->addChild(match(vector<TokenType>{
+        TokenType::EQL,
+        TokenType::NEQ,
+        TokenType::GTR,
+        TokenType::GEQ,
+        TokenType::LSS,
+        TokenType::LEQ
+    }));
 
     return node;
 }
@@ -508,15 +516,11 @@ ParseNode* Parser::relationalOperator(){
 ParseNode* Parser::additiveOperator(){
     ParseNode* node = new ParseNode("<additive-operator>");
 
-    if (currToken == TokenType::PLUS){
-        node->addChild(match(TokenType::PLUS));
-    }
-    else if (currToken == TokenType::MINUS){
-        node->addChild(match(TokenType::MINUS));
-    }
-    else if (currToken == TokenType::ORSY){
-        node->addChild(match(TokenType::ORSY));
-    }
+    node->addChild(match(vector<TokenType>{
+        TokenType::PLUS,
+        TokenType::MINUS,
+        TokenType::ORSY
+    }));
 
     return node;
 }
@@ -524,28 +528,13 @@ ParseNode* Parser::additiveOperator(){
 ParseNode* Parser::multiplicativeOperator(){
     ParseNode* node = new ParseNode("<multiplicative-operator>");
 
-    if (currToken == TokenType::TIMES){
-        node->addChild(match(TokenType::TIMES));
-    }
-    else if (currToken == TokenType::RDIV){
-        node->addChild(match(TokenType::RDIV));
-    }
-    else if (currToken == TokenType::IDIV){
-        node->addChild(match(TokenType::IDIV));
-    }
-    else if (currToken == TokenType::IMOD){
-        node->addChild(match(TokenType::IMOD));
-    }
-    else if (currToken == TokenType::ANDSY){
-        node->addChild(match(TokenType::ANDSY));
-    }
+    node->addChild(match(vector<TokenType>{
+        TokenType::TIMES,
+        TokenType::RDIV,
+        TokenType::IDIV,
+        TokenType::IMOD,
+        TokenType::ANDSY
+    }));
 
     return node;
 }
-
-// void Parser::error(TokenType expectedToken) {
-
-//     //ini masih placeholder aja
-//     cout << "Syntax Error!" << endl;
-//     exit(1);
-// }
