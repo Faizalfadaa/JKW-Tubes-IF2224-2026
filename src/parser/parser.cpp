@@ -30,7 +30,7 @@ ParseNode* Parser::match(TokenType expectedToken) {
         return node;
     }
 
-    throw ParsingError(expectedToken, currToken);
+    return error(expectedToken, currToken);
 }
 
 ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
@@ -48,13 +48,14 @@ ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
         }
     }
 
-    throw ParsingError(expectedTokens, currToken);
+    return error(expectedTokens, currToken);
 }
 
 ParseNode* Parser::error(TokenType expectedToken, TokenType found){
     ParsingError e = ParsingError(expectedToken, found);
     string label = "<ERROR> ";
     label += e.what();
+    advance();
     return new ParseNode(label);
 }
 
@@ -62,6 +63,7 @@ ParseNode* Parser::error(std::vector<TokenType> expectedTokens, TokenType found)
     ParsingError e = ParsingError(expectedTokens, found);
     string label = "<ERROR> ";
     label += e.what();
+    advance();
     return new ParseNode(label);
 }
 
@@ -568,7 +570,10 @@ ParseNode* Parser::forStatement(){
         node->addChild(match(TokenType::DOWNTOSY));
     }
     else {
-        return nullptr; //TODO: Throw error
+        node->addChild(error(vector<TokenType>{
+            TokenType::TOSY,
+            TokenType::DOWNTOSY
+        }, currToken));
     }
     node->addChild(Parser::expression());
     node->addChild(match(TokenType::DOSY));
