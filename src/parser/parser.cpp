@@ -458,7 +458,7 @@ ParseNode* Parser::statement(){
 ParseNode* Parser::assignmentStatement(){
     ParseNode* node = new ParseNode("<assignment-statement>");
 
-    node->addChild(match(TokenType::IDENT));
+    node->addChild(variable());
     node->addChild(match(TokenType::BECOMES));
     node->addChild(expression());
 
@@ -653,6 +653,9 @@ ParseNode* Parser::factor(){
     if (currToken == TokenType::IDENT){
         if (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LPARENT){
             node->addChild(Parser::procedureFunctionCall());
+        } else if ((pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LBRACK) // Tolong ini banyak banget revisi Spesifikasi
+                    || (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::PERIOD)) { // TODO: Asumsi kalau IDENT saja masuk ke token IDENT
+            node->addChild(variable());
         }
         else{
             node->addChild(match(TokenType::IDENT));
@@ -728,3 +731,72 @@ ParseNode* Parser::multiplicativeOperator(){
 
     return node;
 }
+
+// Tambahan Method dari revisi 
+ParseNode* Parser::variable() {
+    ParseNode* node = new ParseNode("<variable>");
+
+    node->addChild(match(vector<TokenType> {
+        TokenType::IDENT
+    }));
+
+    while(currToken == TokenType::LBRACK || currToken == TokenType::PERIOD) {
+        node->addChild(componentVariable());
+    }
+
+    return node;
+
+};
+
+ParseNode* Parser::componentVariable() {
+    ParseNode* node = new ParseNode("<component-variable>");
+
+    if(currToken == TokenType::LBRACK) {
+        node->addChild(match(vector<TokenType> {
+            TokenType::LBRACK
+        }));
+        node->addChild(indexList());
+        node->addChild(match(vector<TokenType> {
+            TokenType::RBRACK
+        }));        
+
+    } else if (currToken == TokenType::PERIOD) {
+        node->addChild(match(vector<TokenType> {
+            TokenType::PERIOD
+        }));
+
+        node->addChild(match(vector<TokenType> {
+            TokenType::IDENT
+        }));        
+    }
+
+    return node;
+};
+
+ParseNode* Parser::indexList() {
+    ParseNode* node = new ParseNode("<index-list>");
+
+    if(currToken == TokenType::INTCON) {
+        node->addChild(match(vector<TokenType> {
+            TokenType::INTCON
+        }));
+    } else if (currToken == TokenType::CHARCON) {
+        node->addChild(match(vector<TokenType> {
+            TokenType::CHARCON
+        }));       
+    } else if (currToken == TokenType::IDENT) {
+        node->addChild(match(vector<TokenType> {
+            TokenType::IDENT
+        }));
+    }
+
+    while(currToken == TokenType::COMMA) {
+        node->addChild(match(vector<TokenType> {
+            TokenType::COMMA
+        }));
+
+        node->addChild(indexList());
+    }
+
+    return node;
+};
