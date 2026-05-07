@@ -30,12 +30,19 @@ std::unordered_map<std::string, TokenType> keywordTable = {
     {"then", TokenType::THENSY},
 };
 
-Lexer::Lexer(Reader& reader) : state(State::START), lexeme(""), reader(reader) {}
+Lexer::Lexer(Reader& reader) : state(State::START), lexeme(""), reader(reader), tokenBuffer(queue<TokenType>()) {}
 
 Token Lexer::getNextToken(){
     //Inisialisasi
     TokenType tokenType;
     state = State::START;
+
+    //Cek apakah ada buffer token dari fungsi getNextToken() sebelumnya
+    if (!tokenBuffer.empty()){
+        tokenType = tokenBuffer.front();
+        tokenBuffer.pop();
+        return Token(tokenType, ""); //Tidak bisa return lexeme untuk buffer
+    }
 
     //Baca karakter selanjutnya hingga berada di state FINISH
     while (state != State::FINISH && state != State::DETERMINED && !reader.isEOF()){
@@ -206,6 +213,13 @@ TokenType Lexer::processChar(char c){
                 state = State::REALCON;
                 token = TokenType::REALCON;
             } 
+            else if (c == '.') {
+                //NOTE: perbaikan dari milestone 2
+                state = State::FINISH;
+                lexeme.pop_back();
+                tokenBuffer.push(TokenType::PERIOD);
+                return TokenType::INTCON;
+            }
             else {
                 state = State::UNKNOWN;
                 token = TokenType::UNKNOWN;

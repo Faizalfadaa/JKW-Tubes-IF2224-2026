@@ -3,7 +3,8 @@
 #include "reader.hpp"
 #include "token.hpp"
 #include "../utils/utils.hpp"
-#include "unordered_map"
+#include <unordered_map>
+#include <queue>
 
 enum class State{
     //Error State
@@ -54,6 +55,8 @@ private:
     Reader& reader;
     State state;
     std::string lexeme;
+    std::queue<TokenType> tokenBuffer;
+
 public:
     Token getNextToken();
     TokenType processChar(char c);
