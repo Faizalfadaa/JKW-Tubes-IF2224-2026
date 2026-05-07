@@ -9,7 +9,7 @@ using namespace std;
 class ParseNode {
 public:
     string label;
-    vector<ParseNode*> children; //TODO: ganti ke unique pointer agar tidak  memory leak
+    vector<ParseNode*> children;
 
     ParseNode(string lbl) {
         label = lbl;
