@@ -18,6 +18,8 @@ class Parser {
         Parser(vector<Token> tokens);
         ParseNode* match(TokenType expectedToken);
         ParseNode* match(std::vector<TokenType> expectedTokens);
+        ParseNode* error(TokenType expectedToken, TokenType found);
+        ParseNode* error(std::vector<TokenType> expectedTokens, TokenType found);
 
         ParseNode* program();
         ParseNode* programHeader();
