@@ -1,27 +1,30 @@
 #include "treeprinter.hpp"
+#include "sstream"
 #include <iostream>
 
 using namespace std;
 
-void printTree(ParseNode* node, string indent, bool last) {
-
-    cout << indent;
+std::string printTree(ParseNode* node, string indent, bool last) {
+    std::ostringstream oss;
+    oss << indent;
 
     if(last) {
-        cout << "\\-- ";
+        oss << "\\-- ";
         indent += "    ";
     } else {
-        cout << "|-- ";
+        oss << "|-- ";
         indent += "|   ";
     }
 
-    cout << node->label << endl;
+    oss << node->label << endl;
 
     for(int i = 0; i < (int)node->children.size(); i++) {
-        printTree(
+        oss << printTree(
             node->children[i],
             indent,
             i == (int)node->children.size() - 1
         );
     }
+
+    return oss.str();
 }

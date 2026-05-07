@@ -23,7 +23,8 @@ int main(){
         Token token = lex.getNextToken();
         tokens.push_back(token);
     }
- 
+    
+    // Milestone 1
     ofstream output("test/milestone-1/output.txt");
     vector<Token> parserTokens; 
     for (const Token& token : tokens){
@@ -37,16 +38,16 @@ int main(){
     }
     output.close();
 
+    // Milestone 2
+    ofstream output2("test/milestone-2/output.txt");
     try{
         Parser parser(parserTokens);
         ParseNode* root = parser.program();
-        printTree(root);
+        cout << printTree(root, "", true);
+        output2 << printTree(root, "", true);
+        output2.close();
     }
     catch (std::exception& e){
         std::cout << e.what() << std::endl;
     }
-
-    // for(int i = 0; i <  parserTokens.size(); i++) {
-    //     cout << parserTokens[i].str_type() << " " << parserTokens[i].lexeme << endl;
-    // }
 }

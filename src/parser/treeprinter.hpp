@@ -3,6 +3,6 @@
 
 #include "node.hpp"
 
-void printTree(ParseNode* node, string indent = "", bool last = true);
+std::string printTree(ParseNode* node, string indent = "", bool last = true);
 
 #endif
