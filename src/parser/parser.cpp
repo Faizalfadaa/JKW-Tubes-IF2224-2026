@@ -165,6 +165,13 @@ ParseNode* Parser::constant() {
         else if (currToken == TokenType::REALCON) {
             node->addChild(match(TokenType::REALCON));
         }
+        else return error(vector<TokenType>{
+            TokenType::CHARCON,
+            TokenType::STRING,
+            TokenType::IDENT,
+            TokenType::INTCON,
+            TokenType::REALCON
+        }, currToken);
     }
 
     return node;
@@ -251,6 +258,19 @@ ParseNode* Parser::type() {
     }
     else if (currToken == TokenType::RECORDSY) {
         node->addChild(recordType());
+    }
+    else{
+        return error(vector<TokenType>{
+            TokenType::IDENT,
+            TokenType::ARRAYSY,
+            TokenType::PLUS,
+            TokenType::MINUS,
+            TokenType::INTCON,
+            TokenType::REALCON,
+            TokenType::STRING,
+            TokenType::LPARENT,
+            TokenType::RECORDSY
+        }, currToken);
     }
 
     return node;
@@ -344,6 +364,11 @@ ParseNode* Parser::subProgramDeclaration(){
         node->addChild(procedureDeclaration());
     } else if (currToken == TokenType::FUNCTIONSY) {
         node->addChild(functionDeclaration());
+    } else {
+        return error(vector<TokenType>{
+            TokenType::PROCEDURESY,
+            TokenType::FUNCTIONSY
+        }, currToken);
     }
 
     return node;
@@ -413,6 +438,11 @@ ParseNode* Parser::parameterGroup(){
         node->addChild(match(TokenType::IDENT));
     } else if (currToken == TokenType::ARRAYSY){
         node->addChild(arrayType());
+    } else {
+        return error(vector<TokenType>{
+            TokenType::IDENT,
+            TokenType::ARRAYSY
+        }, currToken);
     }
 
     return node;
@@ -701,10 +731,16 @@ ParseNode* Parser::factor(){
         node->addChild(match(TokenType::NOTSY));
         node->addChild(Parser::factor());
     }
-    // else if (ParseNode* temp = Parser::variable()){ //TODO: fungsi dari revisi 2 MEI
-    //     node->addChild(temp);
-    // }
     else{
+        return error(vector<TokenType>{
+            TokenType::IDENT,
+            TokenType::INTCON,
+            TokenType::REALCON,
+            TokenType::CHARCON,
+            TokenType::STRING,
+            TokenType::LPARENT,
+            TokenType::NOTSY
+        }, currToken);
     }
 
     return node;
@@ -787,6 +823,11 @@ ParseNode* Parser::componentVariable() {
         node->addChild(match(vector<TokenType> {
             TokenType::IDENT
         }));        
+    } else {
+        return error(vector<TokenType>{
+            TokenType::LBRACK,
+            TokenType::PERIOD
+        }, currToken);
     }
 
     return node;
@@ -807,6 +848,12 @@ ParseNode* Parser::indexList() {
         node->addChild(match(vector<TokenType> {
             TokenType::IDENT
         }));
+    } else {
+        return error(vector<TokenType>{
+            TokenType::INTCON,
+            TokenType::CHARCON,
+            TokenType::IDENT
+        }, currToken);
     }
 
     while(currToken == TokenType::COMMA) {
