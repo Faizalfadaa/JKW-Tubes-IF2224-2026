@@ -9,6 +9,7 @@ Parser::Parser(vector<Token> tokens) {
     currLexeme = parserTokens[pos].lexeme;
 }
 
+//Fungsi untuk lompat ke token selanjutnya
 void Parser::advance() {
     pos++;
     if(pos < (int)parserTokens.size()) {
@@ -17,10 +18,13 @@ void Parser::advance() {
     }
 }
 
+//Fungsi untuk mengecek apakah currToken sama dengan expectedToken
 ParseNode* Parser::match(TokenType expectedToken) {
+    //Cek apakah token sesuai
     if(currToken == expectedToken) {
         string label = parserTokens[pos].str_type();
 
+        //Cek apakah lexeme perlu di masukkan atau tidak
         if(currLexeme != "") {
             label += "(" + currLexeme + ")";
         }
@@ -33,11 +37,14 @@ ParseNode* Parser::match(TokenType expectedToken) {
     return error(expectedToken, currToken);
 }
 
+//Fungsi untuk mengecek apakah currToken sama dengan expectedTokens dengan masukan berupa vector
 ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
     for (TokenType expectedToken : expectedTokens){
+        //Cek apakah token sesuai
         if(currToken == expectedToken) {
             string label = parserTokens[pos].str_type();
 
+            //Cek apakah lexeme perlu di masukkan atau tidak
             if(currLexeme != "") {
                 label += "(" + currLexeme + ")";
             }
@@ -51,6 +58,7 @@ ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
     return error(expectedTokens, currToken);
 }
 
+//Fungsi untuk membuat ErrorNode dengan informasi expected dan found
 ParseNode* Parser::error(TokenType expectedToken, TokenType found){
     ParsingError e = ParsingError(expectedToken, found);
     string label = "<ERROR> ";
@@ -59,6 +67,7 @@ ParseNode* Parser::error(TokenType expectedToken, TokenType found){
     return new ParseNode(label);
 }
 
+//Fungsi untuk membuat ErrorNode dengan informasi expected dan found dengan expected berupa vector
 ParseNode* Parser::error(std::vector<TokenType> expectedTokens, TokenType found){
     ParsingError e = ParsingError(expectedTokens, found);
     string label = "<ERROR> ";
@@ -67,10 +76,12 @@ ParseNode* Parser::error(std::vector<TokenType> expectedTokens, TokenType found)
     return new ParseNode(label);
 }
 
+//Fungsi untuk aturan produksi program
 ParseNode* Parser::program() {
-
+    //Buat label node
     ParseNode* node = new ParseNode("<program>");
 
+    //Tambahkan semua hasil aturan produksi sebagai child
     node->addChild(programHeader());
     node->addChild(declarationPart());
     node->addChild(compoundStatement());
@@ -79,10 +90,12 @@ ParseNode* Parser::program() {
     return node;
 }
 
+//Fungsi untuk aturan produksi programHeader
 ParseNode* Parser::programHeader() {
-
+    //Buat label node
     ParseNode* node = new ParseNode("<program-header>");
 
+    //Tambahkan semua hasil aturan produksi sebagai child
     node->addChild(match(TokenType::PROGRAMSY));
     node->addChild(match(TokenType::IDENT));
     node->addChild(match(TokenType::SEMICOLON));
@@ -90,10 +103,12 @@ ParseNode* Parser::programHeader() {
     return node;
 }
 
+//Fungsi untuk aturan produksi declarationPart
 ParseNode* Parser::declarationPart() {
 
     ParseNode* node = new ParseNode("<declaration-part>");
 
+    //Loop selama token masih sesuai
     while (currToken == TokenType::CONSTSY) {
         node->addChild(constDeclaration());
     }
@@ -116,6 +131,7 @@ ParseNode* Parser::declarationPart() {
     return node;
 }
 
+//Fungsi untuk aturan produksi constDeclaration
 ParseNode* Parser::constDeclaration() {
 
     ParseNode* node = new ParseNode("<const-declaration>");
@@ -137,10 +153,12 @@ ParseNode* Parser::constDeclaration() {
     return node;
 }
 
+//Fungsi untuk aturan produksi constant
 ParseNode* Parser::constant() {
 
     ParseNode* node = new ParseNode("<constant>");
 
+    //Cek token selanjutnya untuk mengetahui bentuk yang sesuai
     if (currToken == TokenType::CHARCON) {
         node->addChild(match(TokenType::CHARCON));
     }
@@ -177,6 +195,7 @@ ParseNode* Parser::constant() {
     return node;
 }
 
+//Fungsi untuk aturan produksi typeDeclaration
 ParseNode* Parser::typeDeclaration() {
 
     ParseNode* node = new ParseNode("<type-declaration>");
@@ -198,6 +217,7 @@ ParseNode* Parser::typeDeclaration() {
     return node;
 }
 
+//Fungsi untuk aturan produksi varDeclaration
 ParseNode* Parser::varDeclaration() {
 
     ParseNode* node = new ParseNode("<var-declaration>");
@@ -219,6 +239,7 @@ ParseNode* Parser::varDeclaration() {
     return node;
 }
 
+//Fungsi untuk aturan produksi identifierList
 ParseNode* Parser::identifierList() {
 
     ParseNode* node = new ParseNode("<identifier-list>");
@@ -233,6 +254,7 @@ ParseNode* Parser::identifierList() {
     return node;
 }
 
+//Fungsi untuk aturan produksi type
 ParseNode* Parser::type() {
 
     ParseNode* node = new ParseNode("<type>");
@@ -260,6 +282,7 @@ ParseNode* Parser::type() {
         node->addChild(recordType());
     }
     else{
+        //Return ErrorNode jika tidak ada token yang sesuai aturan
         return error(vector<TokenType>{
             TokenType::IDENT,
             TokenType::ARRAYSY,
@@ -276,6 +299,7 @@ ParseNode* Parser::type() {
     return node;
 }
 
+//Fungsi untuk aturan produksi arrayType
 ParseNode* Parser::arrayType() {
 
     ParseNode* node = new ParseNode("<array-type>");
@@ -297,6 +321,7 @@ ParseNode* Parser::arrayType() {
     return node;
 }
 
+//Fungsi untuk aturan produksi range
 ParseNode* Parser::range(){
     ParseNode* node = new ParseNode("<range>");
 
@@ -308,6 +333,7 @@ ParseNode* Parser::range(){
     return node;
 }
 
+//Fungsi untuk aturan produksi enumerated
 ParseNode* Parser::enumerated(){
     ParseNode* node = new ParseNode("<enumerated>");
 
@@ -322,6 +348,7 @@ ParseNode* Parser::enumerated(){
     return node;
 }
 
+//Fungsi untuk aturan produksi recordType
 ParseNode* Parser::recordType(){
     ParseNode* node = new ParseNode("<record-type>");
 
@@ -332,6 +359,7 @@ ParseNode* Parser::recordType(){
     return node;
 }
 
+//Fungsi untuk aturan produksi fieldList
 ParseNode* Parser::fieldList(){
     ParseNode* node = new ParseNode("<field-list>");
 
@@ -347,6 +375,7 @@ ParseNode* Parser::fieldList(){
     return node;
 }
 
+//Fungsi untuk aturan produksi fieldPart
 ParseNode* Parser::fieldPart(){
     ParseNode* node = new ParseNode("<field-part>");
 
@@ -357,6 +386,7 @@ ParseNode* Parser::fieldPart(){
     return node;
 }
 
+//Fungsi untuk aturan produksi subProgramDeclaration
 ParseNode* Parser::subProgramDeclaration(){
     ParseNode* node = new ParseNode("<subprogram-declaration>");
 
@@ -374,6 +404,7 @@ ParseNode* Parser::subProgramDeclaration(){
     return node;
 }
 
+//Fungsi untuk aturan produksi procedureDeclaration
 ParseNode* Parser::procedureDeclaration(){
     ParseNode* node = new ParseNode("<procedure-declaration>");
 
@@ -389,6 +420,7 @@ ParseNode* Parser::procedureDeclaration(){
     return node;
 }
 
+//Fungsi untuk aturan produksi functionDeclaration
 ParseNode* Parser::functionDeclaration(){
     ParseNode* node = new ParseNode("<function-declaration>");
 
@@ -406,6 +438,7 @@ ParseNode* Parser::functionDeclaration(){
     return node;
 }
 
+//Fungsi untuk aturan produksi block
 ParseNode* Parser::block(){
     ParseNode* node = new ParseNode("<block>");
 
@@ -415,6 +448,7 @@ ParseNode* Parser::block(){
     return node;
 }
 
+//Fungsi untuk aturan produksi formalParameterList
 ParseNode* Parser::formalParameterList(){
     ParseNode* node = new ParseNode("<formal-parameter-list>");
 
@@ -429,6 +463,7 @@ ParseNode* Parser::formalParameterList(){
     return node;
 }
 
+//Fungsi untuk aturan produksi parameterGroup
 ParseNode* Parser::parameterGroup(){
     ParseNode* node = new ParseNode("<parameter-group>");
 
@@ -449,6 +484,7 @@ ParseNode* Parser::parameterGroup(){
 
 }
 
+//Fungsi untuk aturan produksi compoundStatement
 ParseNode* Parser::compoundStatement(){
     ParseNode* node = new ParseNode("<compound-statement>");
 
@@ -459,6 +495,7 @@ ParseNode* Parser::compoundStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi statementList
 ParseNode* Parser::statementList(){
     ParseNode* node = new ParseNode("<statement-list>");
 
@@ -476,6 +513,7 @@ ParseNode* Parser::statementList(){
     return node;
 }
 
+//Fungsi untuk aturan produksi statement
 ParseNode* Parser::statement(){
     ParseNode* node = new ParseNode("<statement>");
 
@@ -501,6 +539,7 @@ ParseNode* Parser::statement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi assignmentStatement
 ParseNode* Parser::assignmentStatement(){
     ParseNode* node = new ParseNode("<assignment-statement>");
 
@@ -511,6 +550,7 @@ ParseNode* Parser::assignmentStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi ifStatement
 ParseNode* Parser::ifStatement(){
     ParseNode* node = new ParseNode("<if-statement>");
 
@@ -527,6 +567,7 @@ ParseNode* Parser::ifStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi caseStatement
 ParseNode* Parser::caseStatement(){
     ParseNode* node = new ParseNode("<case-statement>");
 
@@ -539,6 +580,7 @@ ParseNode* Parser::caseStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi caseBlock
 ParseNode* Parser::caseBlock(){
     ParseNode* node = new ParseNode("<case-block>");
 
@@ -564,6 +606,7 @@ ParseNode* Parser::caseBlock(){
     return node;
 }
 
+//Fungsi untuk aturan produksi whileStatement
 ParseNode* Parser::whileStatement(){
     ParseNode* node = new ParseNode("<while-statement>");
 
@@ -575,6 +618,7 @@ ParseNode* Parser::whileStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi repeatStatement
 ParseNode* Parser::repeatStatement(){
     ParseNode* node = new ParseNode("<repeat-statement>");
 
@@ -586,6 +630,7 @@ ParseNode* Parser::repeatStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi forStatement
 ParseNode* Parser::forStatement(){
     ParseNode* node = new ParseNode("<for-statement>");
 
@@ -612,6 +657,7 @@ ParseNode* Parser::forStatement(){
     return node;
 }
 
+//Fungsi untuk aturan produksi procedureFunctionCall
 ParseNode* Parser::procedureFunctionCall(){
     ParseNode* node = new ParseNode("<procedure/function-call>");
 
@@ -625,6 +671,7 @@ ParseNode* Parser::procedureFunctionCall(){
     return node;
 }
 
+//Fungsi untuk aturan produksi parameterList
 ParseNode* Parser::parameterList(){
     ParseNode* node = new ParseNode("<parameter-list>");
 
@@ -637,6 +684,7 @@ ParseNode* Parser::parameterList(){
     return node;
 }
 
+//Fungsi untuk aturan produksi expression
 ParseNode* Parser::expression(){
     ParseNode* node = new ParseNode("<expression>");
 
@@ -656,6 +704,7 @@ ParseNode* Parser::expression(){
     return node;
 }
 
+//Fungsi untuk aturan produksi simpleExpression
 ParseNode* Parser::simpleExpression(){
     ParseNode* node = new ParseNode("<simple-expression>");
 
@@ -678,6 +727,7 @@ ParseNode* Parser::simpleExpression(){
     return node;
 }
 
+//Fungsi untuk aturan produksi term
 ParseNode* Parser::term(){
     ParseNode* node = new ParseNode("<term>");
 
@@ -696,14 +746,15 @@ ParseNode* Parser::term(){
     return node;
 }
 
+//Fungsi untuk aturan produksi factor
 ParseNode* Parser::factor(){
     ParseNode* node = new ParseNode("<factor>");
 
     if (currToken == TokenType::IDENT){
         if (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LPARENT){
             node->addChild(Parser::procedureFunctionCall());
-        } else if ((pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LBRACK) // Tolong ini banyak banget revisi Spesifikasi
-                    || (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::PERIOD)) { // TODO: Asumsi kalau IDENT saja masuk ke token IDENT
+        } else if ((pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LBRACK)
+                    || (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::PERIOD)) { // Asumsi kalau IDENT saja masuk ke token IDENT
             node->addChild(variable());
         }
         else{
@@ -746,6 +797,7 @@ ParseNode* Parser::factor(){
     return node;
 }
 
+//Fungsi untuk aturan produksi relationalOperator
 ParseNode* Parser::relationalOperator(){
     ParseNode* node = new ParseNode("<relational-operator>");
 
@@ -761,6 +813,7 @@ ParseNode* Parser::relationalOperator(){
     return node;
 }
 
+//Fungsi untuk aturan produksi additiveOperator
 ParseNode* Parser::additiveOperator(){
     ParseNode* node = new ParseNode("<additive-operator>");
 
@@ -773,6 +826,7 @@ ParseNode* Parser::additiveOperator(){
     return node;
 }
 
+//Fungsi untuk aturan produksi multiplicativeOperator
 ParseNode* Parser::multiplicativeOperator(){
     ParseNode* node = new ParseNode("<multiplicative-operator>");
 
@@ -788,6 +842,7 @@ ParseNode* Parser::multiplicativeOperator(){
 }
 
 // Tambahan Method dari revisi 
+//Fungsi untuk aturan produksi variable
 ParseNode* Parser::variable() {
     ParseNode* node = new ParseNode("<variable>");
 
@@ -803,6 +858,7 @@ ParseNode* Parser::variable() {
 
 };
 
+//Fungsi untuk aturan produksi componentVariable
 ParseNode* Parser::componentVariable() {
     ParseNode* node = new ParseNode("<component-variable>");
 
@@ -833,6 +889,7 @@ ParseNode* Parser::componentVariable() {
     return node;
 };
 
+//Fungsi untuk aturan produksi 
 ParseNode* Parser::indexList() {
     ParseNode* node = new ParseNode("<index-list>");
 
