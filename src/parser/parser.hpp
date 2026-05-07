@@ -62,6 +62,12 @@ class Parser {
         ParseNode* relationalOperator();
         ParseNode* additiveOperator();
         ParseNode* multiplicativeOperator();
+
+        // Tambahan Method dari revisi 
+        ParseNode* variable();
+        ParseNode* componentVariable();
+        ParseNode* indexList();
+
 };
 
 
