@@ -1,0 +1,46 @@
+program TestSubprogram;
+
+var
+  result: integer;
+
+function Max(a, b: integer): integer;
+begin
+  if a > b then
+    Max := a
+  else
+    Max := b;
+end;
+
+function InRange(val, lo, hi: integer): boolean;
+begin
+  InRange := (val >= lo) and (val <= hi);
+end;
+
+procedure PrintNum(n: integer);
+begin
+  writeln(n);
+end;
+
+procedure PrintPair(a, b: integer; msg: string);
+begin
+  writeln(msg);
+  writeln(a);
+  writeln(b);
+end;
+
+procedure Greet;
+begin
+  writeln('Hello');
+end;
+
+begin
+  result := Max(15, 7);
+  PrintNum(result);
+  PrintPair(1, 2, 'pasangan:');
+  Greet();
+
+  if not (result > 100) then
+    writeln('dalam range');
+
+  result := Max(Max(1, 2), 3)
+end.
