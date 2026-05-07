@@ -51,6 +51,20 @@ ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
     throw ParsingError(expectedTokens, currToken);
 }
 
+ParseNode* Parser::error(TokenType expectedToken, TokenType found){
+    ParsingError e = ParsingError(expectedToken, found);
+    string label = "<ERROR> ";
+    label += e.what();
+    return new ParseNode(label);
+}
+
+ParseNode* Parser::error(std::vector<TokenType> expectedTokens, TokenType found){
+    ParsingError e = ParsingError(expectedTokens, found);
+    string label = "<ERROR> ";
+    label += e.what();
+    return new ParseNode(label);
+}
+
 ParseNode* Parser::program() {
 
     ParseNode* node = new ParseNode("<program>");
