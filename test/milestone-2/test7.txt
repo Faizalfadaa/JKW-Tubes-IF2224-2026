@@ -1,0 +1,48 @@
+program TestComprehensive;
+
+const
+  LIMIT == 50;
+  BASE == 1;
+  NAME == 'Arion';
+
+type
+  Status == (active, inactive, pending);
+  Grade == 'A'..'E';
+  Student == record
+    name: string;
+    score: integer;
+  end;
+  Scores == array[0..100] of integer;
+
+var
+  i, j, total: integer;
+  avg: real;
+
+function Abs(n: integer): integer;
+begin
+  if n < 0 then
+    Abs := -n
+  else
+    Abs := n;
+end;
+
+function Clamp(val, lo, hi: integer): integer;
+begin
+  if val < lo then
+    Clamp := lo
+  else if val > hi then
+    Clamp := hi
+  else
+    Clamp := val;
+end;
+
+procedure PrintStatus(n: integer; msg: string);
+begin
+  writeln(msg);
+  writeln(n);
+end;
+
+begin
+
+
+end.

@@ -1,384 +1,311 @@
 \-- <program>
     |-- <program-header>
     |   |-- PROGRAMSY
-    |   |-- IDENT(TestControlFlow)
+    |   |-- IDENT(TestComprehensive)
     |   \-- SEMICOLON
     |-- <declaration-part>
-    |   \-- <var-declaration>
-    |       |-- VARSY
-    |       |-- <identifier-list>
-    |       |   |-- IDENT(a)
-    |       |   |-- COMMA
-    |       |   |-- IDENT(b)
-    |       |   |-- COMMA
-    |       |   \-- IDENT(c)
-    |       |-- COLON
-    |       |-- <type>
-    |       |   \-- IDENT(integer)
-    |       |-- SEMICOLON
-    |       |-- <identifier-list>
-    |       |   \-- IDENT(x)
-    |       |-- COLON
-    |       |-- <type>
-    |       |   \-- IDENT(real)
-    |       \-- SEMICOLON
+    |   |-- <const-declaration>
+    |   |   |-- CONSTSY
+    |   |   |-- IDENT(LIMIT)
+    |   |   |-- EQL
+    |   |   |-- <constant>
+    |   |   |   \-- INTCON(50)
+    |   |   |-- SEMICOLON
+    |   |   |-- IDENT(BASE)
+    |   |   |-- EQL
+    |   |   |-- <constant>
+    |   |   |   \-- INTCON(1)
+    |   |   |-- SEMICOLON
+    |   |   |-- IDENT(NAME)
+    |   |   |-- EQL
+    |   |   |-- <constant>
+    |   |   |   \-- STRING('Arion')
+    |   |   \-- SEMICOLON
+    |   |-- <type-declaration>
+    |   |   |-- TYPESY
+    |   |   |-- IDENT(Status)
+    |   |   |-- EQL
+    |   |   |-- <type>
+    |   |   |   \-- <enumerated>
+    |   |   |       |-- LPARENT
+    |   |   |       |-- IDENT(active)
+    |   |   |       |-- COMMA
+    |   |   |       |-- IDENT(inactive)
+    |   |   |       |-- COMMA
+    |   |   |       |-- IDENT(pending)
+    |   |   |       \-- RPARENT
+    |   |   |-- SEMICOLON
+    |   |   |-- IDENT(Grade)
+    |   |   |-- EQL
+    |   |   |-- <type>
+    |   |   |   \-- <range>
+    |   |   |       |-- <constant>
+    |   |   |       |   \-- CHARCON('A')
+    |   |   |       |-- PERIOD
+    |   |   |       |-- PERIOD
+    |   |   |       \-- <constant>
+    |   |   |           \-- CHARCON('E')
+    |   |   |-- SEMICOLON
+    |   |   |-- IDENT(Student)
+    |   |   |-- EQL
+    |   |   |-- <type>
+    |   |   |   \-- <record-type>
+    |   |   |       |-- RECORDSY
+    |   |   |       |-- <field-list>
+    |   |   |       |   |-- <field-part>
+    |   |   |       |   |   |-- <identifier-list>
+    |   |   |       |   |   |   \-- IDENT(name)
+    |   |   |       |   |   |-- COLON
+    |   |   |       |   |   \-- <type>
+    |   |   |       |   |       \-- IDENT(string)
+    |   |   |       |   |-- SEMICOLON
+    |   |   |       |   |-- <field-part>
+    |   |   |       |   |   |-- <identifier-list>
+    |   |   |       |   |   |   \-- IDENT(score)
+    |   |   |       |   |   |-- COLON
+    |   |   |       |   |   \-- <type>
+    |   |   |       |   |       \-- IDENT(integer)
+    |   |   |       |   \-- SEMICOLON
+    |   |   |       \-- ENDSY
+    |   |   |-- SEMICOLON
+    |   |   |-- IDENT(Scores)
+    |   |   |-- EQL
+    |   |   |-- <type>
+    |   |   |   \-- <array-type>
+    |   |   |       |-- ARRAYSY
+    |   |   |       |-- LBRACK
+    |   |   |       |-- <range>
+    |   |   |       |   |-- <constant>
+    |   |   |       |   |   \-- INTCON(0)
+    |   |   |       |   |-- PERIOD
+    |   |   |       |   |-- PERIOD
+    |   |   |       |   \-- <constant>
+    |   |   |       |       \-- INTCON(100)
+    |   |   |       |-- RBRACK
+    |   |   |       |-- OFSY
+    |   |   |       \-- <type>
+    |   |   |           \-- IDENT(integer)
+    |   |   \-- SEMICOLON
+    |   |-- <var-declaration>
+    |   |   |-- VARSY
+    |   |   |-- <identifier-list>
+    |   |   |   |-- IDENT(i)
+    |   |   |   |-- COMMA
+    |   |   |   |-- IDENT(j)
+    |   |   |   |-- COMMA
+    |   |   |   \-- IDENT(total)
+    |   |   |-- COLON
+    |   |   |-- <type>
+    |   |   |   \-- IDENT(integer)
+    |   |   |-- SEMICOLON
+    |   |   |-- <identifier-list>
+    |   |   |   \-- IDENT(avg)
+    |   |   |-- COLON
+    |   |   |-- <type>
+    |   |   |   \-- IDENT(real)
+    |   |   \-- SEMICOLON
+    |   |-- <subprogram-declaration>
+    |   |   \-- <function-declaration>
+    |   |       |-- FUNCTIONSY
+    |   |       |-- IDENT(Abs)
+    |   |       |-- <formal-parameter-list>
+    |   |       |   |-- LPARENT
+    |   |       |   |-- <parameter-group>
+    |   |       |   |   |-- <identifier-list>
+    |   |       |   |   |   \-- IDENT(n)
+    |   |       |   |   |-- COLON
+    |   |       |   |   \-- IDENT(integer)
+    |   |       |   \-- RPARENT
+    |   |       |-- COLON
+    |   |       |-- IDENT(integer)
+    |   |       |-- SEMICOLON
+    |   |       |-- <block>
+    |   |       |   |-- <declaration-part>
+    |   |       |   \-- <compound-statement>
+    |   |       |       |-- BEGINSY
+    |   |       |       |-- <statement-list>
+    |   |       |       |   |-- <statement>
+    |   |       |       |   |   \-- <if-statement>
+    |   |       |       |   |       |-- IFSY
+    |   |       |       |   |       |-- <expression>
+    |   |       |       |   |       |   |-- <simple-expression>
+    |   |       |       |   |       |   |   \-- <term>
+    |   |       |       |   |       |   |       \-- <factor>
+    |   |       |       |   |       |   |           \-- IDENT(n)
+    |   |       |       |   |       |   |-- <relational-operator>
+    |   |       |       |   |       |   |   \-- LSS
+    |   |       |       |   |       |   \-- <simple-expression>
+    |   |       |       |   |       |       \-- <term>
+    |   |       |       |   |       |           \-- <factor>
+    |   |       |       |   |       |               \-- INTCON(0)
+    |   |       |       |   |       |-- THENSY
+    |   |       |       |   |       |-- <statement>
+    |   |       |       |   |       |   \-- <assignment-statement>
+    |   |       |       |   |       |       |-- <variable>
+    |   |       |       |   |       |       |   \-- IDENT(Abs)
+    |   |       |       |   |       |       |-- BECOMES
+    |   |       |       |   |       |       \-- <expression>
+    |   |       |       |   |       |           \-- <simple-expression>
+    |   |       |       |   |       |               |-- MINUS
+    |   |       |       |   |       |               \-- <term>
+    |   |       |       |   |       |                   \-- <factor>
+    |   |       |       |   |       |                       \-- IDENT(n)
+    |   |       |       |   |       |-- ELSESY
+    |   |       |       |   |       \-- <statement>
+    |   |       |       |   |           \-- <assignment-statement>
+    |   |       |       |   |               |-- <variable>
+    |   |       |       |   |               |   \-- IDENT(Abs)
+    |   |       |       |   |               |-- BECOMES
+    |   |       |       |   |               \-- <expression>
+    |   |       |       |   |                   \-- <simple-expression>
+    |   |       |       |   |                       \-- <term>
+    |   |       |       |   |                           \-- <factor>
+    |   |       |       |   |                               \-- IDENT(n)
+    |   |       |       |   \-- SEMICOLON
+    |   |       |       \-- ENDSY
+    |   |       \-- SEMICOLON
+    |   |-- <subprogram-declaration>
+    |   |   \-- <function-declaration>
+    |   |       |-- FUNCTIONSY
+    |   |       |-- IDENT(Clamp)
+    |   |       |-- <formal-parameter-list>
+    |   |       |   |-- LPARENT
+    |   |       |   |-- <parameter-group>
+    |   |       |   |   |-- <identifier-list>
+    |   |       |   |   |   |-- IDENT(val)
+    |   |       |   |   |   |-- COMMA
+    |   |       |   |   |   |-- IDENT(lo)
+    |   |       |   |   |   |-- COMMA
+    |   |       |   |   |   \-- IDENT(hi)
+    |   |       |   |   |-- COLON
+    |   |       |   |   \-- IDENT(integer)
+    |   |       |   \-- RPARENT
+    |   |       |-- COLON
+    |   |       |-- IDENT(integer)
+    |   |       |-- SEMICOLON
+    |   |       |-- <block>
+    |   |       |   |-- <declaration-part>
+    |   |       |   \-- <compound-statement>
+    |   |       |       |-- BEGINSY
+    |   |       |       |-- <statement-list>
+    |   |       |       |   |-- <statement>
+    |   |       |       |   |   \-- <if-statement>
+    |   |       |       |   |       |-- IFSY
+    |   |       |       |   |       |-- <expression>
+    |   |       |       |   |       |   |-- <simple-expression>
+    |   |       |       |   |       |   |   \-- <term>
+    |   |       |       |   |       |   |       \-- <factor>
+    |   |       |       |   |       |   |           \-- IDENT(val)
+    |   |       |       |   |       |   |-- <relational-operator>
+    |   |       |       |   |       |   |   \-- LSS
+    |   |       |       |   |       |   \-- <simple-expression>
+    |   |       |       |   |       |       \-- <term>
+    |   |       |       |   |       |           \-- <factor>
+    |   |       |       |   |       |               \-- IDENT(lo)
+    |   |       |       |   |       |-- THENSY
+    |   |       |       |   |       |-- <statement>
+    |   |       |       |   |       |   \-- <assignment-statement>
+    |   |       |       |   |       |       |-- <variable>
+    |   |       |       |   |       |       |   \-- IDENT(Clamp)
+    |   |       |       |   |       |       |-- BECOMES
+    |   |       |       |   |       |       \-- <expression>
+    |   |       |       |   |       |           \-- <simple-expression>
+    |   |       |       |   |       |               \-- <term>
+    |   |       |       |   |       |                   \-- <factor>
+    |   |       |       |   |       |                       \-- IDENT(lo)
+    |   |       |       |   |       |-- ELSESY
+    |   |       |       |   |       \-- <statement>
+    |   |       |       |   |           \-- <if-statement>
+    |   |       |       |   |               |-- IFSY
+    |   |       |       |   |               |-- <expression>
+    |   |       |       |   |               |   |-- <simple-expression>
+    |   |       |       |   |               |   |   \-- <term>
+    |   |       |       |   |               |   |       \-- <factor>
+    |   |       |       |   |               |   |           \-- IDENT(val)
+    |   |       |       |   |               |   |-- <relational-operator>
+    |   |       |       |   |               |   |   \-- GTR
+    |   |       |       |   |               |   \-- <simple-expression>
+    |   |       |       |   |               |       \-- <term>
+    |   |       |       |   |               |           \-- <factor>
+    |   |       |       |   |               |               \-- IDENT(hi)
+    |   |       |       |   |               |-- THENSY
+    |   |       |       |   |               |-- <statement>
+    |   |       |       |   |               |   \-- <assignment-statement>
+    |   |       |       |   |               |       |-- <variable>
+    |   |       |       |   |               |       |   \-- IDENT(Clamp)
+    |   |       |       |   |               |       |-- BECOMES
+    |   |       |       |   |               |       \-- <expression>
+    |   |       |       |   |               |           \-- <simple-expression>
+    |   |       |       |   |               |               \-- <term>
+    |   |       |       |   |               |                   \-- <factor>
+    |   |       |       |   |               |                       \-- IDENT(hi)
+    |   |       |       |   |               |-- ELSESY
+    |   |       |       |   |               \-- <statement>
+    |   |       |       |   |                   \-- <assignment-statement>
+    |   |       |       |   |                       |-- <variable>
+    |   |       |       |   |                       |   \-- IDENT(Clamp)
+    |   |       |       |   |                       |-- BECOMES
+    |   |       |       |   |                       \-- <expression>
+    |   |       |       |   |                           \-- <simple-expression>
+    |   |       |       |   |                               \-- <term>
+    |   |       |       |   |                                   \-- <factor>
+    |   |       |       |   |                                       \-- IDENT(val)
+    |   |       |       |   \-- SEMICOLON
+    |   |       |       \-- ENDSY
+    |   |       \-- SEMICOLON
+    |   \-- <subprogram-declaration>
+    |       \-- <procedure-declaration>
+    |           |-- PROCEDURESY
+    |           |-- IDENT(PrintStatus)
+    |           |-- <formal-parameter-list>
+    |           |   |-- LPARENT
+    |           |   |-- <parameter-group>
+    |           |   |   |-- <identifier-list>
+    |           |   |   |   \-- IDENT(n)
+    |           |   |   |-- COLON
+    |           |   |   \-- IDENT(integer)
+    |           |   |-- SEMICOLON
+    |           |   |-- <parameter-group>
+    |           |   |   |-- <identifier-list>
+    |           |   |   |   \-- IDENT(msg)
+    |           |   |   |-- COLON
+    |           |   |   \-- IDENT(string)
+    |           |   \-- RPARENT
+    |           |-- SEMICOLON
+    |           |-- <block>
+    |           |   |-- <declaration-part>
+    |           |   \-- <compound-statement>
+    |           |       |-- BEGINSY
+    |           |       |-- <statement-list>
+    |           |       |   |-- <statement>
+    |           |       |   |   \-- <procedure/function-call>
+    |           |       |   |       |-- IDENT(writeln)
+    |           |       |   |       |-- LPARENT
+    |           |       |   |       |-- <parameter-list>
+    |           |       |   |       |   \-- <expression>
+    |           |       |   |       |       \-- <simple-expression>
+    |           |       |   |       |           \-- <term>
+    |           |       |   |       |               \-- <factor>
+    |           |       |   |       |                   \-- IDENT(msg)
+    |           |       |   |       \-- RPARENT
+    |           |       |   |-- SEMICOLON
+    |           |       |   |-- <statement>
+    |           |       |   |   \-- <procedure/function-call>
+    |           |       |   |       |-- IDENT(writeln)
+    |           |       |   |       |-- LPARENT
+    |           |       |   |       |-- <parameter-list>
+    |           |       |   |       |   \-- <expression>
+    |           |       |   |       |       \-- <simple-expression>
+    |           |       |   |       |           \-- <term>
+    |           |       |   |       |               \-- <factor>
+    |           |       |   |       |                   \-- IDENT(n)
+    |           |       |   |       \-- RPARENT
+    |           |       |   \-- SEMICOLON
+    |           |       \-- ENDSY
+    |           \-- SEMICOLON
     |-- <compound-statement>
     |   |-- BEGINSY
     |   |-- <statement-list>
-    |   |   |-- <statement>
-    |   |   |   \-- <assignment-statement>
-    |   |   |       |-- <variable>
-    |   |   |       |   \-- IDENT(a)
-    |   |   |       |-- BECOMES
-    |   |   |       \-- <expression>
-    |   |   |           \-- <simple-expression>
-    |   |   |               \-- <term>
-    |   |   |                   \-- <factor>
-    |   |   |                       \-- INTCON(10)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <assignment-statement>
-    |   |   |       |-- <variable>
-    |   |   |       |   \-- IDENT(b)
-    |   |   |       |-- BECOMES
-    |   |   |       \-- <expression>
-    |   |   |           \-- <simple-expression>
-    |   |   |               \-- <term>
-    |   |   |                   \-- <factor>
-    |   |   |                       \-- INTCON(3)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <assignment-statement>
-    |   |   |       |-- <variable>
-    |   |   |       |   \-- IDENT(x)
-    |   |   |       |-- BECOMES
-    |   |   |       \-- <expression>
-    |   |   |           \-- <simple-expression>
-    |   |   |               \-- <term>
-    |   |   |                   \-- <factor>
-    |   |   |                       \-- REALCON(3.14)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <assignment-statement>
-    |   |   |       |-- <variable>
-    |   |   |       |   \-- IDENT(c)
-    |   |   |       |-- BECOMES
-    |   |   |       \-- <expression>
-    |   |   |           \-- <simple-expression>
-    |   |   |               |-- <term>
-    |   |   |               |   \-- <factor>
-    |   |   |               |       \-- IDENT(a)
-    |   |   |               |-- <additive-operator>
-    |   |   |               |   \-- PLUS
-    |   |   |               |-- <term>
-    |   |   |               |   |-- <factor>
-    |   |   |               |   |   \-- IDENT(b)
-    |   |   |               |   |-- <multiplicative-operator>
-    |   |   |               |   |   \-- TIMES
-    |   |   |               |   \-- <factor>
-    |   |   |               |       \-- INTCON(2)
-    |   |   |               |-- <additive-operator>
-    |   |   |               |   \-- MINUS
-    |   |   |               \-- <term>
-    |   |   |                   \-- <factor>
-    |   |   |                       \-- INTCON(1)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <assignment-statement>
-    |   |   |       |-- <variable>
-    |   |   |       |   \-- IDENT(x)
-    |   |   |       |-- BECOMES
-    |   |   |       \-- <expression>
-    |   |   |           \-- <simple-expression>
-    |   |   |               \-- <term>
-    |   |   |                   |-- <factor>
-    |   |   |                   |   \-- IDENT(x)
-    |   |   |                   |-- <multiplicative-operator>
-    |   |   |                   |   \-- RDIV
-    |   |   |                   \-- <factor>
-    |   |   |                       \-- REALCON(2.0)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <if-statement>
-    |   |   |       |-- IFSY
-    |   |   |       |-- <expression>
-    |   |   |       |   |-- <simple-expression>
-    |   |   |       |   |   \-- <term>
-    |   |   |       |   |       \-- <factor>
-    |   |   |       |   |           \-- IDENT(a)
-    |   |   |       |   |-- <relational-operator>
-    |   |   |       |   |   \-- GTR
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           \-- <factor>
-    |   |   |       |               \-- IDENT(b)
-    |   |   |       |-- THENSY
-    |   |   |       |-- <statement>
-    |   |   |       |   \-- <procedure/function-call>
-    |   |   |       |       |-- IDENT(writeln)
-    |   |   |       |       |-- LPARENT
-    |   |   |       |       |-- <parameter-list>
-    |   |   |       |       |   \-- <expression>
-    |   |   |       |       |       \-- <simple-expression>
-    |   |   |       |       |           \-- <term>
-    |   |   |       |       |               \-- <factor>
-    |   |   |       |       |                   \-- STRING('a lebih besar')
-    |   |   |       |       \-- RPARENT
-    |   |   |       |-- ELSESY
-    |   |   |       \-- <statement>
-    |   |   |           \-- <procedure/function-call>
-    |   |   |               |-- IDENT(writeln)
-    |   |   |               |-- LPARENT
-    |   |   |               |-- <parameter-list>
-    |   |   |               |   \-- <expression>
-    |   |   |               |       \-- <simple-expression>
-    |   |   |               |           \-- <term>
-    |   |   |               |               \-- <factor>
-    |   |   |               |                   \-- STRING('b lebih besar atau sama')
-    |   |   |               \-- RPARENT
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <if-statement>
-    |   |   |       |-- IFSY
-    |   |   |       |-- <expression>
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           |-- <factor>
-    |   |   |       |           |   |-- LPARENT
-    |   |   |       |           |   |-- <expression>
-    |   |   |       |           |   |   |-- <simple-expression>
-    |   |   |       |           |   |   |   \-- <term>
-    |   |   |       |           |   |   |       \-- <factor>
-    |   |   |       |           |   |   |           \-- IDENT(a)
-    |   |   |       |           |   |   |-- <relational-operator>
-    |   |   |       |           |   |   |   \-- EQL
-    |   |   |       |           |   |   \-- <simple-expression>
-    |   |   |       |           |   |       \-- <term>
-    |   |   |       |           |   |           \-- <factor>
-    |   |   |       |           |   |               \-- INTCON(10)
-    |   |   |       |           |   \-- RPARENT
-    |   |   |       |           |-- <multiplicative-operator>
-    |   |   |       |           |   \-- ANDSY
-    |   |   |       |           \-- <factor>
-    |   |   |       |               |-- LPARENT
-    |   |   |       |               |-- <expression>
-    |   |   |       |               |   |-- <simple-expression>
-    |   |   |       |               |   |   \-- <term>
-    |   |   |       |               |   |       \-- <factor>
-    |   |   |       |               |   |           \-- IDENT(b)
-    |   |   |       |               |   |-- <relational-operator>
-    |   |   |       |               |   |   \-- NEQ
-    |   |   |       |               |   \-- <simple-expression>
-    |   |   |       |               |       \-- <term>
-    |   |   |       |               |           \-- <factor>
-    |   |   |       |               |               \-- INTCON(0)
-    |   |   |       |               \-- RPARENT
-    |   |   |       |-- THENSY
-    |   |   |       |-- <statement>
-    |   |   |       |   \-- <procedure/function-call>
-    |   |   |       |       |-- IDENT(writeln)
-    |   |   |       |       |-- LPARENT
-    |   |   |       |       |-- <parameter-list>
-    |   |   |       |       |   \-- <expression>
-    |   |   |       |       |       \-- <simple-expression>
-    |   |   |       |       |           \-- <term>
-    |   |   |       |       |               \-- <factor>
-    |   |   |       |       |                   \-- STRING('valid')
-    |   |   |       |       \-- RPARENT
-    |   |   |       |-- ELSESY
-    |   |   |       \-- <statement>
-    |   |   |           \-- <if-statement>
-    |   |   |               |-- IFSY
-    |   |   |               |-- <expression>
-    |   |   |               |   \-- <simple-expression>
-    |   |   |               |       |-- <term>
-    |   |   |               |       |   \-- <factor>
-    |   |   |               |       |       |-- LPARENT
-    |   |   |               |       |       |-- <expression>
-    |   |   |               |       |       |   |-- <simple-expression>
-    |   |   |               |       |       |   |   \-- <term>
-    |   |   |               |       |       |   |       \-- <factor>
-    |   |   |               |       |       |   |           \-- IDENT(a)
-    |   |   |               |       |       |   |-- <relational-operator>
-    |   |   |               |       |       |   |   \-- LSS
-    |   |   |               |       |       |   \-- <simple-expression>
-    |   |   |               |       |       |       \-- <term>
-    |   |   |               |       |       |           \-- <factor>
-    |   |   |               |       |       |               \-- INTCON(0)
-    |   |   |               |       |       \-- RPARENT
-    |   |   |               |       |-- <additive-operator>
-    |   |   |               |       |   \-- ORSY
-    |   |   |               |       \-- <term>
-    |   |   |               |           \-- <factor>
-    |   |   |               |               |-- LPARENT
-    |   |   |               |               |-- <expression>
-    |   |   |               |               |   |-- <simple-expression>
-    |   |   |               |               |   |   \-- <term>
-    |   |   |               |               |   |       \-- <factor>
-    |   |   |               |               |   |           \-- IDENT(b)
-    |   |   |               |               |   |-- <relational-operator>
-    |   |   |               |               |   |   \-- LEQ
-    |   |   |               |               |   \-- <simple-expression>
-    |   |   |               |               |       \-- <term>
-    |   |   |               |               |           \-- <factor>
-    |   |   |               |               |               \-- INTCON(0)
-    |   |   |               |               \-- RPARENT
-    |   |   |               |-- THENSY
-    |   |   |               \-- <statement>
-    |   |   |                   \-- <procedure/function-call>
-    |   |   |                       |-- IDENT(writeln)
-    |   |   |                       |-- LPARENT
-    |   |   |                       |-- <parameter-list>
-    |   |   |                       |   \-- <expression>
-    |   |   |                       |       \-- <simple-expression>
-    |   |   |                       |           \-- <term>
-    |   |   |                       |               \-- <factor>
-    |   |   |                       |                   \-- STRING('negatif')
-    |   |   |                       \-- RPARENT
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <while-statement>
-    |   |   |       |-- WHILESY
-    |   |   |       |-- <expression>
-    |   |   |       |   |-- <simple-expression>
-    |   |   |       |   |   \-- <term>
-    |   |   |       |   |       \-- <factor>
-    |   |   |       |   |           \-- IDENT(a)
-    |   |   |       |   |-- <relational-operator>
-    |   |   |       |   |   \-- GTR
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           \-- <factor>
-    |   |   |       |               \-- INTCON(0)
-    |   |   |       |-- DOSY
-    |   |   |       \-- <statement>
-    |   |   |           \-- <assignment-statement>
-    |   |   |               |-- <variable>
-    |   |   |               |   \-- IDENT(a)
-    |   |   |               |-- BECOMES
-    |   |   |               \-- <expression>
-    |   |   |                   \-- <simple-expression>
-    |   |   |                       |-- <term>
-    |   |   |                       |   \-- <factor>
-    |   |   |                       |       \-- IDENT(a)
-    |   |   |                       |-- <additive-operator>
-    |   |   |                       |   \-- MINUS
-    |   |   |                       \-- <term>
-    |   |   |                           \-- <factor>
-    |   |   |                               \-- INTCON(1)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <repeat-statement>
-    |   |   |       |-- REPEATSY
-    |   |   |       |-- <statement-list>
-    |   |   |       |   \-- <statement>
-    |   |   |       |       \-- <assignment-statement>
-    |   |   |       |           |-- <variable>
-    |   |   |       |           |   \-- IDENT(b)
-    |   |   |       |           |-- BECOMES
-    |   |   |       |           \-- <expression>
-    |   |   |       |               \-- <simple-expression>
-    |   |   |       |                   |-- <term>
-    |   |   |       |                   |   \-- <factor>
-    |   |   |       |                   |       \-- IDENT(b)
-    |   |   |       |                   |-- <additive-operator>
-    |   |   |       |                   |   \-- PLUS
-    |   |   |       |                   \-- <term>
-    |   |   |       |                       \-- <factor>
-    |   |   |       |                           \-- INTCON(1)
-    |   |   |       |-- UNTILSY
-    |   |   |       \-- <expression>
-    |   |   |           |-- <simple-expression>
-    |   |   |           |   \-- <term>
-    |   |   |           |       \-- <factor>
-    |   |   |           |           \-- IDENT(b)
-    |   |   |           |-- <relational-operator>
-    |   |   |           |   \-- GEQ
-    |   |   |           \-- <simple-expression>
-    |   |   |               \-- <term>
-    |   |   |                   \-- <factor>
-    |   |   |                       \-- INTCON(10)
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <for-statement>
-    |   |   |       |-- FORSY
-    |   |   |       |-- IDENT(c)
-    |   |   |       |-- BECOMES
-    |   |   |       |-- <expression>
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           \-- <factor>
-    |   |   |       |               \-- INTCON(1)
-    |   |   |       |-- TOSY
-    |   |   |       |-- <expression>
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           \-- <factor>
-    |   |   |       |               \-- INTCON(5)
-    |   |   |       |-- DOSY
-    |   |   |       \-- <statement>
-    |   |   |           \-- <procedure/function-call>
-    |   |   |               |-- IDENT(writeln)
-    |   |   |               |-- LPARENT
-    |   |   |               |-- <parameter-list>
-    |   |   |               |   \-- <expression>
-    |   |   |               |       \-- <simple-expression>
-    |   |   |               |           \-- <term>
-    |   |   |               |               \-- <factor>
-    |   |   |               |                   \-- IDENT(c)
-    |   |   |               \-- RPARENT
-    |   |   |-- SEMICOLON
-    |   |   |-- <statement>
-    |   |   |   \-- <for-statement>
-    |   |   |       |-- FORSY
-    |   |   |       |-- IDENT(c)
-    |   |   |       |-- BECOMES
-    |   |   |       |-- <expression>
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           \-- <factor>
-    |   |   |       |               \-- INTCON(5)
-    |   |   |       |-- DOWNTOSY
-    |   |   |       |-- <expression>
-    |   |   |       |   \-- <simple-expression>
-    |   |   |       |       \-- <term>
-    |   |   |       |           \-- <factor>
-    |   |   |       |               \-- INTCON(1)
-    |   |   |       |-- DOSY
-    |   |   |       \-- <statement>
-    |   |   |           \-- <procedure/function-call>
-    |   |   |               |-- IDENT(writeln)
-    |   |   |               |-- LPARENT
-    |   |   |               |-- <parameter-list>
-    |   |   |               |   \-- <expression>
-    |   |   |               |       \-- <simple-expression>
-    |   |   |               |           \-- <term>
-    |   |   |               |               \-- <factor>
-    |   |   |               |                   \-- IDENT(c)
-    |   |   |               \-- RPARENT
-    |   |   |-- SEMICOLON
     |   |   \-- <statement>
-    |   |       \-- <procedure/function-call>
-    |   |           |-- IDENT(writeln)
-    |   |           |-- LPARENT
-    |   |           |-- <parameter-list>
-    |   |           |   |-- <expression>
-    |   |           |   |   \-- <simple-expression>
-    |   |           |   |       \-- <term>
-    |   |           |   |           \-- <factor>
-    |   |           |   |               \-- STRING('selesai')
-    |   |           |   |-- COMMA
-    |   |           |   |-- <expression>
-    |   |           |   |   \-- <simple-expression>
-    |   |           |   |       \-- <term>
-    |   |           |   |           \-- <factor>
-    |   |           |   |               \-- IDENT(c)
-    |   |           |   |-- COMMA
-    |   |           |   \-- <expression>
-    |   |           |       \-- <simple-expression>
-    |   |           |           \-- <term>
-    |   |           |               \-- <factor>
-    |   |           |                   \-- IDENT(x)
-    |   |           \-- RPARENT
     |   \-- ENDSY
     \-- PERIOD

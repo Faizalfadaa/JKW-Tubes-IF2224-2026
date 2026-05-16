@@ -569,8 +569,8 @@ ParseNode* Parser::whileStatement(){
 
     node->addChild(match(TokenType::WHILESY));
     node->addChild(expression());
-    node->addChild(match(TokenType::DOSY));
-    node->addChild(statement());
+    node->addChild(compoundStatement());
+    node->addChild(match(TokenType::SEMICOLON));
 
     return node;
 }
@@ -599,15 +599,11 @@ ParseNode* Parser::forStatement(){
     else if (currToken == TokenType::DOWNTOSY){
         node->addChild(match(TokenType::DOWNTOSY));
     }
-    else {
-        node->addChild(error(vector<TokenType>{
-            TokenType::TOSY,
-            TokenType::DOWNTOSY
-        }, currToken));
-    }
+    
     node->addChild(Parser::expression());
     node->addChild(match(TokenType::DOSY));
-    node->addChild(Parser::statement());
+    node->addChild(compoundStatement());
+    node->addChild(match(TokenType::SEMICOLON));
 
     return node;
 }
