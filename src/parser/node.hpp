@@ -1,23 +1,21 @@
-#ifndef NODE_HPP
-#define NODE_HPP
+#pragma once
 
 #include <string>
 #include <vector>
+#include <memory>
 
 using namespace std;
 
 class ParseNode {
 public:
     string label;
-    vector<ParseNode*> children;
+    vector<unique_ptr<ParseNode>> children;
 
     ParseNode(string lbl) {
         label = lbl;
     }
 
-    void addChild(ParseNode* child) {
-        children.push_back(child);
+    void addChild(unique_ptr<ParseNode> child) {
+        children.push_back(move(child));
     }
 };
-
-#endif

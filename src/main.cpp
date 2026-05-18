@@ -42,9 +42,9 @@ int main(){
     ofstream output2("test/milestone-2/output.txt");
     try{
         Parser parser(parserTokens);
-        ParseNode* root = parser.program();
-        cout << printTree(root, "", true);
-        output2 << printTree(root, "", true);
+        std::unique_ptr<ParseNode> root = parser.program();
+        cout << printTree(root.get(), "", true);
+        output2 << printTree(root.get(), "", true);
         output2.close();
     }
     catch (std::exception& e){

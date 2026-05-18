@@ -19,7 +19,7 @@ void Parser::advance() {
 }
 
 //Fungsi untuk mengecek apakah currToken sama dengan expectedToken
-ParseNode* Parser::match(TokenType expectedToken) {
+unique_ptr<ParseNode> Parser::match(TokenType expectedToken) {
     //Cek apakah token sesuai
     if(currToken == expectedToken) {
         string label = parserTokens[pos].str_type();
@@ -29,7 +29,7 @@ ParseNode* Parser::match(TokenType expectedToken) {
             label += "(" + currLexeme + ")";
         }
 
-        ParseNode* node = new ParseNode(label);
+        unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode(label));
         advance();
         return node;
     }
@@ -38,7 +38,7 @@ ParseNode* Parser::match(TokenType expectedToken) {
 }
 
 //Fungsi untuk mengecek apakah currToken sama dengan expectedTokens dengan masukan berupa vector
-ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
+unique_ptr<ParseNode> Parser::match(std::vector<TokenType> expectedTokens){
     for (TokenType expectedToken : expectedTokens){
         //Cek apakah token sesuai
         if(currToken == expectedToken) {
@@ -49,7 +49,7 @@ ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
                 label += "(" + currLexeme + ")";
             }
 
-            ParseNode* node = new ParseNode(label);
+            unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode(label));
             advance();
             return node;
         }
@@ -59,27 +59,29 @@ ParseNode* Parser::match(std::vector<TokenType> expectedTokens){
 }
 
 //Fungsi untuk membuat ErrorNode dengan informasi expected dan found
-ParseNode* Parser::error(TokenType expectedToken, TokenType found){
+unique_ptr<ParseNode> Parser::error(TokenType expectedToken, TokenType found){
     ParsingError e = ParsingError(expectedToken, found);
     string label = "<ERROR> ";
     label += e.what();
     advance();
-    return new ParseNode(label);
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode(label));
+    return node;
 }
 
 //Fungsi untuk membuat ErrorNode dengan informasi expected dan found dengan expected berupa vector
-ParseNode* Parser::error(std::vector<TokenType> expectedTokens, TokenType found){
+unique_ptr<ParseNode> Parser::error(std::vector<TokenType> expectedTokens, TokenType found){
     ParsingError e = ParsingError(expectedTokens, found);
     string label = "<ERROR> ";
     label += e.what();
     advance();
-    return new ParseNode(label);
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode(label));
+    return node;
 }
 
 //Fungsi untuk aturan produksi program
-ParseNode* Parser::program() {
+unique_ptr<ParseNode> Parser::program() {
     //Buat label node
-    ParseNode* node = new ParseNode("<program>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<program>"));
 
     //Tambahkan semua hasil aturan produksi sebagai child
     node->addChild(programHeader());
@@ -91,9 +93,9 @@ ParseNode* Parser::program() {
 }
 
 //Fungsi untuk aturan produksi programHeader
-ParseNode* Parser::programHeader() {
+unique_ptr<ParseNode> Parser::programHeader() {
     //Buat label node
-    ParseNode* node = new ParseNode("<program-header>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<program-header>"));
 
     //Tambahkan semua hasil aturan produksi sebagai child
     node->addChild(match(TokenType::PROGRAMSY));
@@ -104,9 +106,9 @@ ParseNode* Parser::programHeader() {
 }
 
 //Fungsi untuk aturan produksi declarationPart
-ParseNode* Parser::declarationPart() {
+unique_ptr<ParseNode> Parser::declarationPart() {
 
-    ParseNode* node = new ParseNode("<declaration-part>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<declaration-part>"));
 
     //Loop selama token masih sesuai
     while (currToken == TokenType::CONSTSY) {
@@ -132,9 +134,9 @@ ParseNode* Parser::declarationPart() {
 }
 
 //Fungsi untuk aturan produksi constDeclaration
-ParseNode* Parser::constDeclaration() {
+unique_ptr<ParseNode> Parser::constDeclaration() {
 
-    ParseNode* node = new ParseNode("<const-declaration>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<const-declaration>"));
 
     node->addChild(match(TokenType::CONSTSY));
 
@@ -154,9 +156,9 @@ ParseNode* Parser::constDeclaration() {
 }
 
 //Fungsi untuk aturan produksi constant
-ParseNode* Parser::constant() {
+unique_ptr<ParseNode> Parser::constant() {
 
-    ParseNode* node = new ParseNode("<constant>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<constant>"));
 
     //Cek token selanjutnya untuk mengetahui bentuk yang sesuai
     if (currToken == TokenType::CHARCON) {
@@ -196,9 +198,9 @@ ParseNode* Parser::constant() {
 }
 
 //Fungsi untuk aturan produksi typeDeclaration
-ParseNode* Parser::typeDeclaration() {
+unique_ptr<ParseNode> Parser::typeDeclaration() {
 
-    ParseNode* node = new ParseNode("<type-declaration>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<type-declaration>"));
 
     node->addChild(match(TokenType::TYPESY));
 
@@ -218,9 +220,9 @@ ParseNode* Parser::typeDeclaration() {
 }
 
 //Fungsi untuk aturan produksi varDeclaration
-ParseNode* Parser::varDeclaration() {
+unique_ptr<ParseNode> Parser::varDeclaration() {
 
-    ParseNode* node = new ParseNode("<var-declaration>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<var-declaration>"));
 
     node->addChild(match(TokenType::VARSY));
 
@@ -240,9 +242,9 @@ ParseNode* Parser::varDeclaration() {
 }
 
 //Fungsi untuk aturan produksi identifierList
-ParseNode* Parser::identifierList() {
+unique_ptr<ParseNode> Parser::identifierList() {
 
-    ParseNode* node = new ParseNode("<identifier-list>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<identifier-list>"));
 
     node->addChild(match(TokenType::IDENT));
 
@@ -255,9 +257,9 @@ ParseNode* Parser::identifierList() {
 }
 
 //Fungsi untuk aturan produksi type
-ParseNode* Parser::type() {
+unique_ptr<ParseNode> Parser::type() {
 
-    ParseNode* node = new ParseNode("<type>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<type>"));
 
     if (currToken == TokenType::IDENT) {
         node->addChild(match(TokenType::IDENT));
@@ -300,9 +302,9 @@ ParseNode* Parser::type() {
 }
 
 //Fungsi untuk aturan produksi arrayType
-ParseNode* Parser::arrayType() {
+unique_ptr<ParseNode> Parser::arrayType() {
 
-    ParseNode* node = new ParseNode("<array-type>");
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<array-type>"));
 
     node->addChild(match(TokenType::ARRAYSY));
     node->addChild(match(TokenType::LBRACK));
@@ -322,8 +324,8 @@ ParseNode* Parser::arrayType() {
 }
 
 //Fungsi untuk aturan produksi range
-ParseNode* Parser::range(){
-    ParseNode* node = new ParseNode("<range>");
+unique_ptr<ParseNode> Parser::range(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<range>"));
 
     node->addChild(constant());
     node->addChild(match(TokenType::PERIOD));
@@ -334,8 +336,8 @@ ParseNode* Parser::range(){
 }
 
 //Fungsi untuk aturan produksi enumerated
-ParseNode* Parser::enumerated(){
-    ParseNode* node = new ParseNode("<enumerated>");
+unique_ptr<ParseNode> Parser::enumerated(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<enumerated>"));
 
     node->addChild(match(TokenType::LPARENT));
     node->addChild(match(TokenType::IDENT));
@@ -349,8 +351,8 @@ ParseNode* Parser::enumerated(){
 }
 
 //Fungsi untuk aturan produksi recordType
-ParseNode* Parser::recordType(){
-    ParseNode* node = new ParseNode("<record-type>");
+unique_ptr<ParseNode> Parser::recordType(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<record-type>"));
 
     node->addChild(match(TokenType::RECORDSY));
     node->addChild(fieldList());
@@ -360,8 +362,8 @@ ParseNode* Parser::recordType(){
 }
 
 //Fungsi untuk aturan produksi fieldList
-ParseNode* Parser::fieldList(){
-    ParseNode* node = new ParseNode("<field-list>");
+unique_ptr<ParseNode> Parser::fieldList(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<field-list>"));
 
     node->addChild(fieldPart());
     while (currToken == TokenType::SEMICOLON) {
@@ -376,8 +378,8 @@ ParseNode* Parser::fieldList(){
 }
 
 //Fungsi untuk aturan produksi fieldPart
-ParseNode* Parser::fieldPart(){
-    ParseNode* node = new ParseNode("<field-part>");
+unique_ptr<ParseNode> Parser::fieldPart(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<field-part>"));
 
     node->addChild(identifierList());
     node->addChild(match(TokenType::COLON));
@@ -387,8 +389,8 @@ ParseNode* Parser::fieldPart(){
 }
 
 //Fungsi untuk aturan produksi subProgramDeclaration
-ParseNode* Parser::subProgramDeclaration(){
-    ParseNode* node = new ParseNode("<subprogram-declaration>");
+unique_ptr<ParseNode> Parser::subProgramDeclaration(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<subprogram-declaration>"));
 
     if (currToken == TokenType::PROCEDURESY) {
         node->addChild(procedureDeclaration());
@@ -405,8 +407,8 @@ ParseNode* Parser::subProgramDeclaration(){
 }
 
 //Fungsi untuk aturan produksi procedureDeclaration
-ParseNode* Parser::procedureDeclaration(){
-    ParseNode* node = new ParseNode("<procedure-declaration>");
+unique_ptr<ParseNode> Parser::procedureDeclaration(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<procedure-declaration>"));
 
     node->addChild(match(TokenType::PROCEDURESY));
     node->addChild(match(TokenType::IDENT));
@@ -421,8 +423,8 @@ ParseNode* Parser::procedureDeclaration(){
 }
 
 //Fungsi untuk aturan produksi functionDeclaration
-ParseNode* Parser::functionDeclaration(){
-    ParseNode* node = new ParseNode("<function-declaration>");
+unique_ptr<ParseNode> Parser::functionDeclaration(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<function-declaration>"));
 
     node->addChild(match(TokenType::FUNCTIONSY));
     node->addChild(match(TokenType::IDENT));
@@ -439,8 +441,8 @@ ParseNode* Parser::functionDeclaration(){
 }
 
 //Fungsi untuk aturan produksi block
-ParseNode* Parser::block(){
-    ParseNode* node = new ParseNode("<block>");
+unique_ptr<ParseNode> Parser::block(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<block>"));
 
     node->addChild(declarationPart());
     node->addChild(compoundStatement());
@@ -449,8 +451,8 @@ ParseNode* Parser::block(){
 }
 
 //Fungsi untuk aturan produksi formalParameterList
-ParseNode* Parser::formalParameterList(){
-    ParseNode* node = new ParseNode("<formal-parameter-list>");
+unique_ptr<ParseNode> Parser::formalParameterList(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<formal-parameter-list>"));
 
     node->addChild(match(TokenType::LPARENT));
     node->addChild(parameterGroup());
@@ -464,8 +466,8 @@ ParseNode* Parser::formalParameterList(){
 }
 
 //Fungsi untuk aturan produksi parameterGroup
-ParseNode* Parser::parameterGroup(){
-    ParseNode* node = new ParseNode("<parameter-group>");
+unique_ptr<ParseNode> Parser::parameterGroup(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<parameter-group>"));
 
     node->addChild(identifierList());
     node->addChild(match(TokenType::COLON));
@@ -485,8 +487,8 @@ ParseNode* Parser::parameterGroup(){
 }
 
 //Fungsi untuk aturan produksi compoundStatement
-ParseNode* Parser::compoundStatement(){
-    ParseNode* node = new ParseNode("<compound-statement>");
+unique_ptr<ParseNode> Parser::compoundStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<compound-statement>"));
 
     node->addChild(match(TokenType::BEGINSY));
     node->addChild(statementList());
@@ -496,8 +498,8 @@ ParseNode* Parser::compoundStatement(){
 }
 
 //Fungsi untuk aturan produksi statementList
-ParseNode* Parser::statementList(){
-    ParseNode* node = new ParseNode("<statement-list>");
+unique_ptr<ParseNode> Parser::statementList(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<statement-list>"));
 
     node->addChild(statement());
     while(currToken == TokenType::SEMICOLON) {
@@ -514,8 +516,8 @@ ParseNode* Parser::statementList(){
 }
 
 //Fungsi untuk aturan produksi statement
-ParseNode* Parser::statement(){
-    ParseNode* node = new ParseNode("<statement>");
+unique_ptr<ParseNode> Parser::statement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<statement>"));
 
     if(currToken == TokenType::IDENT) {
         if(pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::BECOMES) {
@@ -540,8 +542,8 @@ ParseNode* Parser::statement(){
 }
 
 //Fungsi untuk aturan produksi assignmentStatement
-ParseNode* Parser::assignmentStatement(){
-    ParseNode* node = new ParseNode("<assignment-statement>");
+unique_ptr<ParseNode> Parser::assignmentStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<assignment-statement>"));
 
     node->addChild(variable());
     node->addChild(match(TokenType::BECOMES));
@@ -551,8 +553,8 @@ ParseNode* Parser::assignmentStatement(){
 }
 
 //Fungsi untuk aturan produksi ifStatement
-ParseNode* Parser::ifStatement(){
-    ParseNode* node = new ParseNode("<if-statement>");
+unique_ptr<ParseNode> Parser::ifStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<if-statement>"));
 
     node->addChild(match(TokenType::IFSY));
     node->addChild(expression());
@@ -568,8 +570,8 @@ ParseNode* Parser::ifStatement(){
 }
 
 //Fungsi untuk aturan produksi caseStatement
-ParseNode* Parser::caseStatement(){
-    ParseNode* node = new ParseNode("<case-statement>");
+unique_ptr<ParseNode> Parser::caseStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<case-statement>"));
 
     node->addChild(match(TokenType::CASESY));
     node->addChild(expression());
@@ -581,8 +583,8 @@ ParseNode* Parser::caseStatement(){
 }
 
 //Fungsi untuk aturan produksi caseBlock
-ParseNode* Parser::caseBlock(){
-    ParseNode* node = new ParseNode("<case-block>");
+unique_ptr<ParseNode> Parser::caseBlock(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<case-block>"));
 
     node->addChild(constant());
     while(currToken == TokenType::COMMA) {
@@ -607,8 +609,8 @@ ParseNode* Parser::caseBlock(){
 }
 
 //Fungsi untuk aturan produksi whileStatement
-ParseNode* Parser::whileStatement(){
-    ParseNode* node = new ParseNode("<while-statement>");
+unique_ptr<ParseNode> Parser::whileStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<while-statement>"));
 
     node->addChild(match(TokenType::WHILESY));
     node->addChild(expression());
@@ -619,8 +621,8 @@ ParseNode* Parser::whileStatement(){
 }
 
 //Fungsi untuk aturan produksi repeatStatement
-ParseNode* Parser::repeatStatement(){
-    ParseNode* node = new ParseNode("<repeat-statement>");
+unique_ptr<ParseNode> Parser::repeatStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<repeat-statement>"));
 
     node->addChild(match(TokenType::REPEATSY));
     node->addChild(statementList());
@@ -631,8 +633,8 @@ ParseNode* Parser::repeatStatement(){
 }
 
 //Fungsi untuk aturan produksi forStatement
-ParseNode* Parser::forStatement(){
-    ParseNode* node = new ParseNode("<for-statement>");
+unique_ptr<ParseNode> Parser::forStatement(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<for-statement>"));
 
     node->addChild(match(TokenType::FORSY));
     node->addChild(match(TokenType::IDENT));
@@ -654,8 +656,8 @@ ParseNode* Parser::forStatement(){
 }
 
 //Fungsi untuk aturan produksi procedureFunctionCall
-ParseNode* Parser::procedureFunctionCall(){
-    ParseNode* node = new ParseNode("<procedure/function-call>");
+unique_ptr<ParseNode> Parser::procedureFunctionCall(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<procedure/function-call>"));
 
     node->addChild(match(TokenType::IDENT));
     node->addChild(match(TokenType::LPARENT));
@@ -668,8 +670,8 @@ ParseNode* Parser::procedureFunctionCall(){
 }
 
 //Fungsi untuk aturan produksi parameterList
-ParseNode* Parser::parameterList(){
-    ParseNode* node = new ParseNode("<parameter-list>");
+unique_ptr<ParseNode> Parser::parameterList(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<parameter-list>"));
 
     node->addChild(Parser::expression());
     while (currToken == TokenType::COMMA){
@@ -681,8 +683,8 @@ ParseNode* Parser::parameterList(){
 }
 
 //Fungsi untuk aturan produksi expression
-ParseNode* Parser::expression(){
-    ParseNode* node = new ParseNode("<expression>");
+unique_ptr<ParseNode> Parser::expression(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<expression>"));
 
     node->addChild(Parser::simpleExpression());
     if (
@@ -701,8 +703,8 @@ ParseNode* Parser::expression(){
 }
 
 //Fungsi untuk aturan produksi simpleExpression
-ParseNode* Parser::simpleExpression(){
-    ParseNode* node = new ParseNode("<simple-expression>");
+unique_ptr<ParseNode> Parser::simpleExpression(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<simple-expression>"));
 
     if (currToken == TokenType::PLUS){
         node->addChild(match(TokenType::PLUS));
@@ -724,8 +726,8 @@ ParseNode* Parser::simpleExpression(){
 }
 
 //Fungsi untuk aturan produksi term
-ParseNode* Parser::term(){
-    ParseNode* node = new ParseNode("<term>");
+unique_ptr<ParseNode> Parser::term(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<term>"));
 
     node->addChild(Parser::factor());
     while (
@@ -743,8 +745,8 @@ ParseNode* Parser::term(){
 }
 
 //Fungsi untuk aturan produksi factor
-ParseNode* Parser::factor(){
-    ParseNode* node = new ParseNode("<factor>");
+unique_ptr<ParseNode> Parser::factor(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<factor>"));
 
     if (currToken == TokenType::IDENT){
         if (pos + 1 < (int) parserTokens.size() && parserTokens[pos + 1].type == TokenType::LPARENT){
@@ -794,8 +796,8 @@ ParseNode* Parser::factor(){
 }
 
 //Fungsi untuk aturan produksi relationalOperator
-ParseNode* Parser::relationalOperator(){
-    ParseNode* node = new ParseNode("<relational-operator>");
+unique_ptr<ParseNode> Parser::relationalOperator(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<relational-operator>"));
 
     node->addChild(match(vector<TokenType>{
         TokenType::EQL,
@@ -810,8 +812,8 @@ ParseNode* Parser::relationalOperator(){
 }
 
 //Fungsi untuk aturan produksi additiveOperator
-ParseNode* Parser::additiveOperator(){
-    ParseNode* node = new ParseNode("<additive-operator>");
+unique_ptr<ParseNode> Parser::additiveOperator(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<additive-operator>"));
 
     node->addChild(match(vector<TokenType>{
         TokenType::PLUS,
@@ -823,8 +825,8 @@ ParseNode* Parser::additiveOperator(){
 }
 
 //Fungsi untuk aturan produksi multiplicativeOperator
-ParseNode* Parser::multiplicativeOperator(){
-    ParseNode* node = new ParseNode("<multiplicative-operator>");
+unique_ptr<ParseNode> Parser::multiplicativeOperator(){
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<multiplicative-operator>"));
 
     node->addChild(match(vector<TokenType>{
         TokenType::TIMES,
@@ -839,8 +841,8 @@ ParseNode* Parser::multiplicativeOperator(){
 
 // Tambahan Method dari revisi 
 //Fungsi untuk aturan produksi variable
-ParseNode* Parser::variable() {
-    ParseNode* node = new ParseNode("<variable>");
+unique_ptr<ParseNode> Parser::variable() {
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<variable>"));
 
     node->addChild(match(vector<TokenType> {
         TokenType::IDENT
@@ -855,8 +857,8 @@ ParseNode* Parser::variable() {
 };
 
 //Fungsi untuk aturan produksi componentVariable
-ParseNode* Parser::componentVariable() {
-    ParseNode* node = new ParseNode("<component-variable>");
+unique_ptr<ParseNode> Parser::componentVariable() {
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<component-variable>"));
 
     if(currToken == TokenType::LBRACK) {
         node->addChild(match(vector<TokenType> {
@@ -886,8 +888,8 @@ ParseNode* Parser::componentVariable() {
 };
 
 //Fungsi untuk aturan produksi 
-ParseNode* Parser::indexList() {
-    ParseNode* node = new ParseNode("<index-list>");
+unique_ptr<ParseNode> Parser::indexList() {
+    unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode("<index-list>"));
 
     if(currToken == TokenType::INTCON) {
         node->addChild(match(vector<TokenType> {
