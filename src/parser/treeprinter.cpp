@@ -20,7 +20,7 @@ std::string printTree(ParseNode* node, string indent, bool last) {
 
     for(int i = 0; i < (int)node->children.size(); i++) {
         oss << printTree(
-            node->children[i],
+            node->children[i].get(),
             indent,
             i == (int)node->children.size() - 1
         );
