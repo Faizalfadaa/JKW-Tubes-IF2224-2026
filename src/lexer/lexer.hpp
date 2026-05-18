@@ -55,7 +55,7 @@ private:
     Reader& reader;
     State state;
     std::string lexeme;
-    std::queue<TokenType> tokenBuffer;
+    std::queue<Token> tokenBuffer;
 
 public:
     Token getNextToken();
