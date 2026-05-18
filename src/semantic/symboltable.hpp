@@ -1,0 +1,148 @@
+#pragma once
+
+#include <vector>
+#include <string>
+
+//Enum untuk SymbolType
+enum class SymbolType {
+    KEYWORD, //untuk keyword
+    CONSTANT,
+    VARIABLE,
+    TYPE,
+    PROCEDURE,
+    FUNCTION
+    //TODO: tambah
+};
+
+//Enum untuk tipe dasar
+enum class BaseType {
+    NOTYPE, //untuk void
+    INT,
+    BOOL,
+    CHAR,
+    STRING,
+    REAL,
+    ARRAY,
+    RECORD,
+    SUBRANGE,
+    ENUM
+    //TODO: tambah
+};
+
+//Elemen dari tab
+class TabEntry {
+public:
+    std::string identifier;
+    int link; //atau pointer
+    SymbolType obj;
+    BaseType type;
+    int ref; //atau pointer
+    int nrm;
+    int lev;
+    int adr;
+
+    /**
+    @param identifier 
+    Nama identifier (misalnya nama variabel, konstanta, tipe, prosedur, fungsi).
+    @param link
+    Pointer/indeks ke identifier sebelumnya dalam scope yang sama. Digunakan untuk manajemen scope (linked list per blok).
+    @param obj
+    Kelas objek yang dienumerasi: konstanta, variabel, tipe, prosedur, fungsi, dll.
+    @param type
+    Tipe dasar dari identifier, misalnya: integer, boolean, char, real, array, record, dll. Biasanya berupa kode numerik.
+    @param ref
+    Pointer/indeks ke tabel lain jika tipe adalah komposit (array/record). Mengarah ke atab (array table) atau btab (record/procedure block).
+    @param nrm
+    Menandai apakah identifier adalah variabel normal (=1) atau parameter by-reference (var parameter) (=0).
+    @param lev
+    Tingkat lexical level tempat identifier dideklarasikan (0 = global, 1 = dalam prosedur, 2 = dalam prosedur di dalam prosedur, dst).
+    @param adr
+    Makna tergantung jenis objek: offset variabel di stack frame, nilai konstanta, offset field record, alamat prosedur, atau ukuran/penanda lain.
+     */
+    TabEntry(std::string identifier, int link,SymbolType obj, BaseType type, int ref, int nrm, int lev, int adr):
+        identifier(identifier), link(link), obj(obj), type(type), ref(ref), nrm(nrm), lev(lev), adr(adr){}
+};
+
+//Elemen dari atab
+class ATabEntry {
+public:
+    int arrays; //template??
+    BaseType xtyp;
+    BaseType etyp;
+    int eref; //atau pointer
+    int low;
+    int high;
+    int elsz;
+    int size;
+
+    /**
+    @param arrays
+    Indeks entri array
+    @param xtyp
+    Tipe indeks array (misalnya integer). Berupa kode tipe dari tabel tab.
+    @param etyp
+    Tipe elemen array (misalnya integer). Berupa kode tipe dari tabel tab.
+    @param eref
+    Pointer/indeks ke detail tipe elemen jika elemen adalah tipe komposit (misalnya array dalam array, atau record). Mengarah ke atab atau btab.
+    @param low
+    Batas bawah indeks array (misalnya 1 pada array[1..10] atau 0 pada array[0..15]).
+    @param high
+    Batas atas indeks array.
+    @param elsz
+    Ukuran satu elemen array (dalam byte/unit memori).
+    @param size
+    Total ukuran array
+     */
+    ATabEntry(int arrays, BaseType xtyp, BaseType etyp, int eref, int low, int high, int elsz, int size):
+        arrays(arrays), xtyp(xtyp), etyp(etyp), eref(eref), low(low), high(high), elsz(elsz), size(size){}
+};
+
+//Elemen dari btab
+class BTabEntry {
+public:
+    int blocks;
+    int last; //atau pointer
+    int lpar; //atau pointer
+    int psze;
+    int vsze;
+
+    /**
+    @param blocks
+    Indeks entri block (setiap block mewakili prosedur, fungsi, atau record type definition).
+    @param last
+    Pointer/indeks ke identifier terakhir yang dideklarasikan di dalam block tersebut (menghubungkan field record, parameter, atau variabel lokal).
+    @param lpar
+    Pointer/indeks ke parameter terakhir dari prosedur/fungsi pada block tersebut. Jika block adalah record, nilainya 0.
+    @param psze
+    Total ukuran parameter block  (dalam byte/unit memori).
+    @param vsze
+    Total ukuran variabel lokal block (dalam byte/unit memori)
+     */
+    BTabEntry(int blocks, int last, int lpar, int psze, int vsze):
+        blocks(blocks), last(last), lpar(lpar), psze(psze), vsze(vsze){}
+};
+
+class SymbolTable {
+private:
+    int currentLevel;
+    std::vector<TabEntry> tab;
+    std::vector<ATabEntry> atab;
+    std::vector<BTabEntry> btab;
+
+public:
+    SymbolTable();
+
+    int insertTab(const TabEntry& entry);
+
+    int insertATab(const ATabEntry& entry);
+
+    int insertBTab(const BTabEntry& entry);
+
+    int lookup(std::string& name);
+
+    bool existsCurrentLevel(std::string& name);
+
+    void enterScope();
+
+    void leaveScope();
+};
