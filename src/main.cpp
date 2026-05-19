@@ -7,6 +7,7 @@
 using namespace std;
 
 int main(){
+    //TODO: buat while loop
     Reader reader;
     string path;
 
@@ -40,6 +41,7 @@ int main(){
 
     // Milestone 2
     ofstream output2("test/milestone-2/output.txt");
+    //TODO: hilangkan try catch
     try{
         Parser parser(parserTokens);
         std::unique_ptr<ParseNode> root = parser.program();
@@ -50,4 +52,7 @@ int main(){
     catch (std::exception& e){
         std::cout << e.what() << std::endl;
     }
+    //TODO: tampilkan error message jika parser tidak valid
+
+    // Milestone 3
 }
