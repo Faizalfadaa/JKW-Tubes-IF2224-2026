@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include <memory>
 
 //Forward declaration
@@ -10,7 +11,7 @@ class ParseNode;
 class ASTNode {
 protected:
     std::string label;
-    std::vector<std::string> attributes;
+    std::vector<std::pair<std::string, std::string>> attributes;
     std::vector<std::unique_ptr<ASTNode>> children; 
 
 public:
@@ -19,7 +20,7 @@ public:
         return label;
     }
 
-    std::vector<std::string> getAttribute(){
+    std::vector<std::pair<std::string, std::string>> getAttribute(){
         return attributes;
     }
 
@@ -30,11 +31,11 @@ public:
 
 class ProgramNode : ASTNode {
 public:    
-    ProgramNode(ParseNode node);
+    ProgramNode(ParseNode* node);
 };
 
 class DeclarationNode : ASTNode {
 public:
-    DeclarationNode(ParseNode node);
+    DeclarationNode(ParseNode* node);
 };
 
