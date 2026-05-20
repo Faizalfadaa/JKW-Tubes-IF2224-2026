@@ -16,17 +16,9 @@ enum class SymbolType {
 
 //Enum untuk tipe dasar
 enum class BaseType {
-    NOTYPE, //untuk void
-    INT,
-    BOOL,
-    CHAR,
-    STRING,
-    REAL,
-    ARRAY,
-    RECORD,
-    SUBRANGE,
-    ENUM
-    //TODO: tambah
+    UNKNOWN, VOID,
+    INTEGER, REAL, BOOLEAN, CHAR, STRING,
+    ARRAY, RECORD, SUBRANGE, ENUM
 };
 
 //Elemen dari tab
