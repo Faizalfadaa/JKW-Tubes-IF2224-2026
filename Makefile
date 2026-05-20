@@ -6,7 +6,9 @@ SRC = src/main.cpp \
       src/lexer/reader.cpp \
       src/utils/utils.cpp \
       src/parser/parser.cpp \
-      src/parser/treeprinter.cpp
+      src/parser/treeprinter.cpp \
+	  src/semantic/astnode.cpp \
+	  src/semantic/asttree.cpp
 
 ifeq ($(OS),Windows_NT)
 	TARGET = main.exe
