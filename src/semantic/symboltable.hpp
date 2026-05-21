@@ -124,23 +124,25 @@ public:
 
 class SymbolTable {
 private:
+    //Atribut
     int currentLevel;
     std::vector<TabEntry> tab;
     std::vector<ATabEntry> atab;
     std::vector<BTabEntry> btab;
 
+
+    int insertTab(const TabEntry& entry);
+    int insertATab(const ATabEntry& entry);
+    int insertBTab(const BTabEntry& entry);
+
 public:
     SymbolTable();
 
-    int insertTab(const TabEntry& entry);
+    void insert(const std::string& name, BaseType type);
 
-    int insertATab(const ATabEntry& entry);
+    int lookup(const std::string& name);
 
-    int insertBTab(const BTabEntry& entry);
-
-    int lookup(std::string& name);
-
-    bool existsCurrentLevel(std::string& name);
+    bool existsCurrentLevel(const std::string& name);
 
     void enterScope();
 

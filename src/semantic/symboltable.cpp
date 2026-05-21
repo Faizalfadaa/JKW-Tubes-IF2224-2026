@@ -2,6 +2,7 @@
 
 SymbolTable::SymbolTable(){
     currentLevel = 0;
+    //push null??
     tab.push_back(TabEntry("AND"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
     tab.push_back(TabEntry("ARRAY"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
     tab.push_back(TabEntry("BEGIN"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
@@ -34,7 +35,16 @@ SymbolTable::SymbolTable(){
     tab.push_back(TabEntry("UNTIL"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
     tab.push_back(TabEntry("VAR"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
     tab.push_back(TabEntry("WHILE"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
+    //push true
+    //push false
 }
+
+    void SymbolTable::insert(const std::string& name, BaseType type){
+        if (existsCurrentLevel(name)){
+            //throw custom exception
+        }
+        //TODO: 
+    }
 
     int SymbolTable::insertTab(const TabEntry& entry){
         //TODO:
@@ -48,11 +58,11 @@ SymbolTable::SymbolTable(){
         //TODO:
     }
 
-    int SymbolTable::lookup(std::string& name){
+    int SymbolTable::lookup(const std::string& name){
         //TODO:
     }
 
-    bool SymbolTable::existsCurrentLevel(std::string& name){
+    bool SymbolTable::existsCurrentLevel(const std::string& name){
         //TODO:
     }
 
