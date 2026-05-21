@@ -1,26 +1,120 @@
 #include "astnode.hpp"
-#include "../parser/node.hpp"
 
-using namespace std;
+ProgramNode::ProgramNode(std::string name, std::vector<std::unique_ptr<ASTNode>> decls, std::unique_ptr<ASTNode> block)
+    : programName(std::move(name)), declarations(std::move(decls)), mainBlock(std::move(block)) {}
+void ProgramNode::accept(ASTVisitor* visitor) {}
 
-ProgramNode::ProgramNode(ParseNode* node){
-    //Assign label
-    this->label = "ProgramNode";
+CompoundNode::CompoundNode(std::vector<std::unique_ptr<ASTNode>> stmts)
+    : statements(std::move(stmts)) {}
+void CompoundNode::accept(ASTVisitor* visitor) {}
 
-    //Validasi node
-    if (node->label != "<program>"){
-        //throw or assert something
-    }
+ConstDeclNode::ConstDeclNode(std::string name, std::unique_ptr<ASTNode> val)
+    : constName(std::move(name)), value(std::move(val)) {}
+void ConstDeclNode::accept(ASTVisitor* visitor) {}
 
-    //Assign attribute
-    string attribute = node->children[0].get()->children[0].get()->label;
-    this->attributes.push_back(make_pair("name", attribute));
-    
-    //Dapatkan child dari ParseNode untuk diproses
-    vector<unique_ptr<ParseNode>> parseChild = node->children;
-    this->children = {};
+TypeDeclNode::TypeDeclNode(std::string name, std::unique_ptr<ASTNode> def)
+    : typeName(std::move(name)), typeDef(std::move(def)) {}
+void TypeDeclNode::accept(ASTVisitor* visitor) {}
 
-    //Rekursi node child
-    children.push_back(make_unique<ASTNode>(DeclarationNode(parseChild.at(1).get())));
-    children.push_back(make_unique<ASTNode>(DeclarationNode(parseChild.at(2).get())));
-}
+VarDeclNode::VarDeclNode(std::vector<std::string> names, std::unique_ptr<ASTNode> def)
+    : varNames(std::move(names)), typeDef(std::move(def)) {}
+void VarDeclNode::accept(ASTVisitor* visitor) {}
+
+ParamNode::ParamNode(std::vector<std::string> names, std::unique_ptr<ASTNode> def, bool isVar)
+    : paramNames(std::move(names)), typeDef(std::move(def)), isVarParam(isVar) {}
+void ParamNode::accept(ASTVisitor* visitor) {}
+
+SubprogramDeclNode::SubprogramDeclNode(bool isFunc, std::string name,
+                                       std::vector<std::unique_ptr<ASTNode>> params,
+                                       std::unique_ptr<ASTNode> retType,
+                                       std::vector<std::unique_ptr<ASTNode>> decls,
+                                       std::unique_ptr<ASTNode> bodyBlock)
+    : isFunction(isFunc), subprogramName(std::move(name)), parameters(std::move(params)),
+      returnType(std::move(retType)), declarations(std::move(decls)), body(std::move(bodyBlock)) {}
+void SubprogramDeclNode::accept(ASTVisitor* visitor) {}
+
+NamedTypeNode::NamedTypeNode(std::string name)
+    : typeName(std::move(name)) {}
+void NamedTypeNode::accept(ASTVisitor* visitor) {}
+
+ArrayTypeNode::ArrayTypeNode(std::unique_ptr<ASTNode> idxType, std::unique_ptr<ASTNode> elemType)
+    : indexType(std::move(idxType)), elementType(std::move(elemType)) {}
+void ArrayTypeNode::accept(ASTVisitor* visitor) {}
+
+RecordTypeNode::RecordTypeNode(std::vector<std::unique_ptr<ASTNode>> recFields)
+    : fields(std::move(recFields)) {}
+void RecordTypeNode::accept(ASTVisitor* visitor) {}
+
+RangeNode::RangeNode(std::unique_ptr<ASTNode> low, std::unique_ptr<ASTNode> high)
+    : lowerBound(std::move(low)), upperBound(std::move(high)) {}
+void RangeNode::accept(ASTVisitor* visitor) {}
+
+EnumNode::EnumNode(std::vector<std::string> ids)
+    : identifiers(std::move(ids)) {}
+void EnumNode::accept(ASTVisitor* visitor) {}
+
+AssignNode::AssignNode(std::unique_ptr<ASTNode> tgt, std::unique_ptr<ASTNode> val)
+    : target(std::move(tgt)), value(std::move(val)) {}
+void AssignNode::accept(ASTVisitor* visitor) {}
+
+IfNode::IfNode(std::unique_ptr<ASTNode> cond, std::unique_ptr<ASTNode> thenBlk, std::unique_ptr<ASTNode> elseBlk)
+    : condition(std::move(cond)), thenBlock(std::move(thenBlk)), elseBlock(std::move(elseBlk)) {}
+void IfNode::accept(ASTVisitor* visitor) {}
+
+CaseBlockNode::CaseBlockNode(std::vector<std::unique_ptr<ASTNode>> consts, std::unique_ptr<ASTNode> stmt)
+    : constants(std::move(consts)), statement(std::move(stmt)) {}
+void CaseBlockNode::accept(ASTVisitor* visitor) {}
+
+CaseNode::CaseNode(std::unique_ptr<ASTNode> cond, std::vector<std::unique_ptr<ASTNode>> caseList)
+    : condition(std::move(cond)), cases(std::move(caseList)) {}
+void CaseNode::accept(ASTVisitor* visitor) {}
+
+WhileNode::WhileNode(std::unique_ptr<ASTNode> cond, std::unique_ptr<ASTNode> block)
+    : condition(std::move(cond)), loopBlock(std::move(block)) {}
+void WhileNode::accept(ASTVisitor* visitor) {}
+
+RepeatNode::RepeatNode(std::vector<std::unique_ptr<ASTNode>> stmts, std::unique_ptr<ASTNode> cond)
+    : statements(std::move(stmts)), condition(std::move(cond)) {}
+void RepeatNode::accept(ASTVisitor* visitor) {}
+
+ForNode::ForNode(std::string iterName, std::unique_ptr<ASTNode> startVal,
+                 std::unique_ptr<ASTNode> endVal, bool downto, std::unique_ptr<ASTNode> block)
+    : iteratorName(std::move(iterName)), startValue(std::move(startVal)),
+      endValue(std::move(endVal)), isDownto(downto), loopBlock(std::move(block)) {}
+void ForNode::accept(ASTVisitor* visitor) {}
+
+ProcCallNode::ProcCallNode(std::string name, std::vector<std::unique_ptr<ASTNode>> args)
+    : procName(std::move(name)), arguments(std::move(args)) {}
+void ProcCallNode::accept(ASTVisitor* visitor) {}
+
+VarNode::VarNode(std::string n)
+    : name(std::move(n)) {}
+void VarNode::accept(ASTVisitor* visitor) {}
+
+ArrayAccessNode::ArrayAccessNode(std::unique_ptr<ASTNode> arrVar, std::vector<std::unique_ptr<ASTNode>> idxs)
+    : arrayVar(std::move(arrVar)), indices(std::move(idxs)) {}
+void ArrayAccessNode::accept(ASTVisitor* visitor) {}
+
+RecordAccessNode::RecordAccessNode(std::unique_ptr<ASTNode> recVar, std::string fName)
+    : recordVar(std::move(recVar)), fieldName(std::move(fName)) {}
+void RecordAccessNode::accept(ASTVisitor* visitor) {}
+
+BinOpNode::BinOpNode(std::string oper, std::unique_ptr<ASTNode> l, std::unique_ptr<ASTNode> r)
+    : op(std::move(oper)), left(std::move(l)), right(std::move(r)) {}
+void BinOpNode::accept(ASTVisitor* visitor) {}
+
+UnaryOpNode::UnaryOpNode(std::string oper, std::unique_ptr<ASTNode> expr)
+    : op(std::move(oper)), operand(std::move(expr)) {}
+void UnaryOpNode::accept(ASTVisitor* visitor) {}
+
+NumberNode::NumberNode(std::string val, bool isR)
+    : value(std::move(val)), isReal(isR) {}
+void NumberNode::accept(ASTVisitor* visitor) {}
+
+StringNode::StringNode(std::string val)
+    : value(std::move(val)) {}
+void StringNode::accept(ASTVisitor* visitor) {}
+
+CharNode::CharNode(std::string val)
+    : value(std::move(val)) {}
+void CharNode::accept(ASTVisitor* visitor) {}
