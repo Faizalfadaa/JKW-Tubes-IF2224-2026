@@ -6,9 +6,18 @@ class ASTVisitor {
 private:
     SymbolTable symtab;
 
+    bool isRelationalOperator(const std::string& op) const;
+    bool isBooleanOperator(const std::string& op) const;
+    bool isArithmeticOperator(const std::string& op) const;
+    bool isAssignmentCompatible(BaseType targetType, BaseType valueType) const;
+
 public:
     ASTVisitor();
 
+    int getVisitedNodeCount();
+
+    SymbolTable& getSymbolTable();
+    
     // Struktur program / block
     virtual void visit(ProgramNode* node);
     virtual void visit(CompoundNode* node);
