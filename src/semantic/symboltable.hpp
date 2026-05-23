@@ -21,15 +21,21 @@ enum class BaseType {
     ARRAY, RECORD, SUBRANGE, ENUM
 };
 
+//Parent dari tab entry
+class TEntry {
+public:
+    virtual ~TEntry() = 0;
+};
+
 //Elemen dari tab
-class TabEntry {
+class TabEntry : public TEntry {
 public:
     std::string identifier;
-    int link; //atau pointer
+    TabEntry* link; 
     SymbolType obj;
     BaseType type;
-    int ref; //atau pointer
-    int nrm;
+    TEntry* ref;
+    bool nrm;
     int lev;
     int adr;
 
@@ -51,17 +57,17 @@ public:
     @param adr
     Makna tergantung jenis objek: offset variabel di stack frame, nilai konstanta, offset field record, alamat prosedur, atau ukuran/penanda lain.
      */
-    TabEntry(std::string identifier, int link,SymbolType obj, BaseType type, int ref, int nrm, int lev, int adr):
+    TabEntry(std::string identifier, TabEntry* link,SymbolType obj, BaseType type, TEntry* ref, bool nrm, int lev, int adr):
         identifier(identifier), link(link), obj(obj), type(type), ref(ref), nrm(nrm), lev(lev), adr(adr){}
 };
 
 //Elemen dari atab
-class ATabEntry {
+class ATabEntry : public TEntry {
 public:
-    int arrays; //template??
+    int arrays; //TODO: template??
     BaseType xtyp;
     BaseType etyp;
-    int eref; //atau pointer
+    TEntry* eref;
     int low;
     int high;
     int elsz;
@@ -85,16 +91,16 @@ public:
     @param size
     Total ukuran array
      */
-    ATabEntry(int arrays, BaseType xtyp, BaseType etyp, int eref, int low, int high, int elsz, int size):
+    ATabEntry(int arrays, BaseType xtyp, BaseType etyp, TEntry* ref, int low, int high, int elsz, int size):
         arrays(arrays), xtyp(xtyp), etyp(etyp), eref(eref), low(low), high(high), elsz(elsz), size(size){}
 };
 
 //Elemen dari btab
-class BTabEntry {
+class BTabEntry : public TEntry {
 public:
     int blocks;
-    int last; //atau pointer
-    int lpar; //atau pointer
+    TabEntry* last; //atau pointer
+    TabEntry* lpar; //atau pointer
     int psze;
     int vsze;
 
@@ -110,7 +116,7 @@ public:
     @param vsze
     Total ukuran variabel lokal block (dalam byte/unit memori)
      */
-    BTabEntry(int blocks, int last, int lpar, int psze, int vsze):
+    BTabEntry(int blocks, TabEntry* last, TabEntry* lpar, int psze, int vsze):
         blocks(blocks), last(last), lpar(lpar), psze(psze), vsze(vsze){}
 };
 
@@ -118,10 +124,11 @@ class SymbolTable {
 private:
     //Atribut
     int currentLevel;
+    TabEntry* lastTab;
+    
     std::vector<TabEntry> tab;
     std::vector<ATabEntry> atab;
     std::vector<BTabEntry> btab;
-
 
     int insertTab(const TabEntry& entry);
     int insertATab(const ATabEntry& entry);
@@ -130,9 +137,9 @@ private:
 public:
     SymbolTable();
 
-    void insert(const std::string& name, BaseType type);
+    void insert(const std::string& name, SymbolType object, BaseType type, bool nrm = true);
 
-    int lookup(const std::string& name);
+    TabEntry* lookup(const std::string& name);
 
     bool existsCurrentLevel(const std::string& name);
 

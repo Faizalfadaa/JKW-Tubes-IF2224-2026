@@ -1,75 +1,125 @@
 #include "symboltable.hpp"
+#include "../utils/exception.hpp"
 
 SymbolTable::SymbolTable(){
     currentLevel = 0;
     //push null??
-    tab.push_back(TabEntry("AND"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("ARRAY"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("BEGIN"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("CASE"   , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("CONST"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("DIV"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("DOWNTO" , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("DO"     , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("ELSE"   , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("END"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("FOR"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("FUNCTION", 0, SymbolType::KEYWORD, BaseType::NOTYPE , -1, 1, 0, 0));
-    tab.push_back(TabEntry("IF"     , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("MOD"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("NOT"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("OF"     , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("OR"     , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("PROCEDURE", 0, SymbolType::KEYWORD, BaseType::NOTYPE, -1, 1, 0, 0));
-    tab.push_back(TabEntry("PROGRAM", 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("RECORD" , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("REPEAT" , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("INTEGER", 0, SymbolType::TYPE   , BaseType::INT     , -1, 1, 0, 0));
-    tab.push_back(TabEntry("REAL"   , 0, SymbolType::TYPE   , BaseType::REAL    , -1, 1, 0, 0));
-    tab.push_back(TabEntry("BOOLEAN", 0, SymbolType::TYPE   , BaseType::BOOL    , -1, 1, 0, 0));
-    tab.push_back(TabEntry("CHAR"   , 0, SymbolType::TYPE   , BaseType::CHAR    , -1, 1, 0, 0));
-    tab.push_back(TabEntry("STRING" , 0, SymbolType::TYPE   , BaseType::STRING  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("THEN"   , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("TO"     , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("TYPE"   , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("UNTIL"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("VAR"    , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    tab.push_back(TabEntry("WHILE"  , 0, SymbolType::KEYWORD, BaseType::NOTYPE  , -1, 1, 0, 0));
-    //push true
-    //push false
+    tab.push_back(TabEntry("AND"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("ARRAY"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("BEGIN"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("CASE"   , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("CONST"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("DIV"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("DOWNTO" , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("DO"     , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("ELSE"   , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("END"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("FOR"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("FUNCTION", NULL, SymbolType::KEYWORD, BaseType::VOID   , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("IF"     , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("MOD"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("NOT"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("OF"     , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("OR"     , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("PROCEDURE", NULL, SymbolType::KEYWORD, BaseType::VOID  , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("PROGRAM", NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("RECORD" , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("REPEAT" , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("INTEGER", NULL, SymbolType::TYPE   , BaseType::INTEGER , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("REAL"   , NULL, SymbolType::TYPE   , BaseType::REAL    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("BOOLEAN", NULL, SymbolType::TYPE   , BaseType::BOOLEAN , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("CHAR"   , NULL, SymbolType::TYPE   , BaseType::CHAR    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("STRING" , NULL, SymbolType::TYPE   , BaseType::STRING  , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("THEN"   , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("TO"     , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("TYPE"   , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("UNTIL"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("VAR"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("WHILE"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("TRUE"  , NULL, SymbolType::CONSTANT, BaseType::BOOLEAN , NULL, 1, 0, 0));
+    tab.push_back(TabEntry("FALSE"  , NULL, SymbolType::CONSTANT, BaseType::BOOLEAN, NULL, 1, 0, 0));
 }
 
-    void SymbolTable::insert(const std::string& name, BaseType type){
+    void SymbolTable::insert(const std::string& name, SymbolType object, BaseType type, bool nrm){
         if (existsCurrentLevel(name)){
-            //throw custom exception
+            throw IdentRedeclarationError(name);
         }
-        //TODO: 
+        
+        TabEntry* ref = NULL;
+
+        if (type == BaseType::ARRAY){
+            insertATab(ATabEntry(
+                atab.size(),
+                type, //TODO: xtype
+                type,
+                lastTab,
+                0, //TODO low
+                10, //TODO high
+                4, //TDO elsz,
+                10 //TODO size
+            ));
+        }
+        else if (type == BaseType::RECORD || object == SymbolType::FUNCTION || object == SymbolType::PROCEDURE){
+            //TODO
+        }
+
+        insertTab(TabEntry(
+            name,
+            lastTab,
+            object,
+            type,
+            ref,
+            nrm,
+            currentLevel,
+            0 //TODO: adr
+        ));
+        lastTab = &tab.back();
     }
 
     int SymbolTable::insertTab(const TabEntry& entry){
-        //TODO:
+        if (existsCurrentLevel(entry.identifier)){
+            throw IdentRedeclarationError(entry.identifier);
+        }
+
+        tab.push_back(entry);
     }
 
     int SymbolTable::insertATab(const ATabEntry& entry){
-        //TODO:
+        atab.push_back(entry);
     }
 
     int SymbolTable::insertBTab(const BTabEntry& entry){
-        //TODO:
+        btab.push_back(entry);
     }
 
-    int SymbolTable::lookup(const std::string& name){
-        //TODO:
+    TabEntry* SymbolTable::lookup(const std::string& name){
+        TabEntry* next = &tab.back(); //FIXME: kasus tab.back setelah leaveScope?
+        while (next != NULL){
+            if (next->identifier == name){
+                return next;
+            }
+            next = next->link;
+        }
+        return NULL;
     }
 
     bool SymbolTable::existsCurrentLevel(const std::string& name){
-        //TODO:
+        TabEntry* next = &tab.back();
+        while (next != NULL && next->lev == currentLevel){
+            if (next->identifier == name){
+                return false;
+            }
+            next = next->link;
+        }
+        return true;
     }
 
     void SymbolTable::enterScope(){
-        //TODO:
+        currentLevel++;
+        lastTab = &tab.back(); //FIXME: lastTab??
     }
 
     void SymbolTable::leaveScope(){
-        //TODO:  
+        currentLevel--;
+        lastTab = &tab.back(); //FIXME: lastTab??
     }
