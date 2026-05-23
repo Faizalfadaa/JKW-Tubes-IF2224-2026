@@ -62,9 +62,10 @@ int main(){
             ASTBuilder astBuilder;
             unique_ptr<ASTNode> astRoot = astBuilder.createAST(root.get());
 
-            //TODO tambahkan fungsi visit dan decorated ast
+            ASTVisitor visitor = ASTVisitor();
+            astRoot->accept(&visitor);
 
-            string astTreeOutput = printAST(astRoot.get(), "", true);
+            string astTreeOutput = printDecoratedAST(astRoot.get(), "", true);
             cout << "\n===== AST TREE =====\n";
             cout << astTreeOutput;
 

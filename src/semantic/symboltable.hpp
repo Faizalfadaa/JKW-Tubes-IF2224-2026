@@ -157,8 +157,8 @@ public:
     int indexOf(const BTabEntry* entry);
 
     BaseType toBaseType(const std::string& string);
-    std::string toString(SymbolType type);
-    std::string toString(BaseType type);
+    static std::string toString(SymbolType type);
+    static std::string toString(BaseType type);
 
     const std::vector<TabEntry>& getTab();
     const std::vector<ATabEntry>& getATab();
