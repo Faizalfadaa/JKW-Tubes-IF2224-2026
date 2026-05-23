@@ -53,7 +53,7 @@ int main(){
             if (parser.hasErrorNode){
                 std::cout << "=================================================================================" << std::endl <<
                              "Terdapat struktur yang tidak valid. Tidak bisa lanjut ke tahap Semantic Analysis." << std::endl <<
-                             "=================================================================================" << std::endl;
+                             "=================================================================================" << std::endl << std::endl;
                 continue;
             }
 

@@ -1,9 +1,9 @@
 #include "astprinter.hpp"
-#include "semantic/astnode.hpp"
+#include "astnode.hpp"
 
 using namespace std;
 
-static string joinNames(const vector<string>& names) {
+string joinNames(const vector<string>& names) {
     ostringstream oss;
     for (size_t i = 0; i < names.size(); ++i) {
         if (i > 0) oss << ", ";
@@ -12,7 +12,7 @@ static string joinNames(const vector<string>& names) {
     return oss.str();
 }
 
-static string printAST(ASTNode* node, string indent, bool last) {
+string printAST(ASTNode* node, string indent, bool last) {
     ostringstream oss;
 
     oss << indent;

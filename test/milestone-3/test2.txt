@@ -1,0 +1,41 @@
+program TestControlFlow;
+
+var
+  a, b, c: integer;
+  x: real;
+
+begin
+  a := 10;
+  b := 3;
+  x := 3.14;
+
+  c := a + b * 2 - 1;
+  x := x / 2.0;
+
+  if a > b then
+    writeln('a lebih besar')
+  else
+    writeln('b lebih besar atau sama');
+
+  if (a == 10) and (b <> 0) then
+    writeln('valid')
+  else if (a < 0) or (b <= 0) then
+    writeln('negatif');
+
+  while a > 0 do
+    a := a - 1;
+
+  repeat
+    b := b + 1
+  until b >= 10;
+
+  for c := 1 to 5 do
+    writeln(c);
+
+  for c := 5 downto 1 do
+    writeln(c);
+
+
+
+  writeln('selesai', c, x)
+end.
