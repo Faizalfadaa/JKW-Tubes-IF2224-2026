@@ -9,3 +9,4 @@ class ASTNode;
 std::string joinNames(const std::vector<std::string>& names);
 std::string printAST(ASTNode* node, std::string indent = "", bool last = true);
 std::string printDecoratedAST(ASTNode* node, std::string indent = "", bool last = true);
+std::string printASTInternal(ASTNode* node, std::string indent, bool last, bool decorated);

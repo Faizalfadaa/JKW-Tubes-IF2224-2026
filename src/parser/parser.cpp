@@ -616,8 +616,8 @@ unique_ptr<ParseNode> Parser::whileStatement(){
 
     node->addChild(match(TokenType::WHILESY));
     node->addChild(expression());
+    node->addChild(match(TokenType::DOSY));
     node->addChild(compoundStatement());
-    node->addChild(match(TokenType::SEMICOLON));
 
     return node;
 }
@@ -652,7 +652,6 @@ unique_ptr<ParseNode> Parser::forStatement(){
     node->addChild(Parser::expression());
     node->addChild(match(TokenType::DOSY));
     node->addChild(compoundStatement());
-    node->addChild(match(TokenType::SEMICOLON));
 
     return node;
 }

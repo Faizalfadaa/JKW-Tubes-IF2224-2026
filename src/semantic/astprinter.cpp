@@ -5,6 +5,8 @@
 
 using namespace std;
 
+string printASTInternal(ASTNode* node, string indent, bool last, bool decorated);
+
 string joinNames(const vector<string>& names) {
     ostringstream oss;
     for (size_t i = 0; i < names.size(); ++i) {

@@ -63,6 +63,10 @@ SymbolTable::SymbolTable(){
     insertTab("WHILE"  , SymbolType::KEYWORD, BaseType::VOID);
     insertTab("TRUE"  , SymbolType::CONSTANT, BaseType::BOOLEAN);
     insertTab("FALSE"  , SymbolType::CONSTANT, BaseType::BOOLEAN);
+    insertTab("READ", SymbolType::PROCEDURE, BaseType::VOID);
+    insertTab("READLN", SymbolType::PROCEDURE, BaseType::VOID);
+    insertTab("WRITE", SymbolType::PROCEDURE, BaseType::VOID);
+    insertTab("WRITELN", SymbolType::PROCEDURE, BaseType::VOID);
 }
 
 int SymbolTable::getSize(BaseType type){
@@ -105,10 +109,10 @@ TabEntry* SymbolTable::insertTab(const string& name, SymbolType object, BaseType
 
     tab.push_back(TabEntry(
         nname,
-        lastTab,
+        previousInSameScope,
         object,
         type,
-        NULL,
+        ref,
         nrm,
         currentLevel,
         adr
@@ -140,7 +144,7 @@ ATabEntry* SymbolTable::insertATab(BaseType xtype, BaseType etype, int low, int 
         atab.size(),
         xtype,
         etype,
-        &tab.back(), //TODO: Harus selalu dipanggil setelah insert
+        eref,
         low,
         high,
         elsz,
@@ -276,19 +280,19 @@ int SymbolTable::indexOf(const BTabEntry* entry){
 BaseType SymbolTable::toBaseType(const string& str){
     string normalized = toUpper(str);
 
-    if (str == "INTEGER"){
+    if (normalized == "INTEGER"){
         return BaseType::INTEGER;
     }
-    else if (str == "REAL"){
+    else if (normalized == "REAL"){
         return BaseType::REAL;
     }
-    else if (str == "BOOLEAN"){
+    else if (normalized == "BOOLEAN"){
         return BaseType::BOOLEAN;
     }
-    else if (str == "CHAR"){
+    else if (normalized == "CHAR"){
         return BaseType::CHAR;
     }
-    else if (str == "STRING"){
+    else if (normalized == "STRING"){
         return BaseType::STRING;
     }
     else{
@@ -335,4 +339,115 @@ const vector<ATabEntry>& SymbolTable::getATab(){
 
 const vector<BTabEntry>& SymbolTable::getBTab(){
     return btab;
+}
+
+string SymbolTable::printTab(){
+    ostringstream oss;
+
+    oss << "===== TAB =====\n";
+    oss << left
+        << setw(5)  << "idx"
+        << setw(18) << "identifier"
+        << setw(12) << "obj"
+        << setw(12) << "type"
+        << setw(8)  << "ref"
+        << setw(6)  << "nrm"
+        << setw(6)  << "lev"
+        << setw(6)  << "adr"
+        << setw(6)  << "link"
+        << "\n";
+
+    oss << string(79, '-') << "\n";
+
+    for (size_t i = 0; i < tab.size(); ++i){
+        TabEntry& entry = tab[i];
+
+        oss << left
+            << setw(5)  << i
+            << setw(18) << entry.identifier
+            << setw(12) << SymbolTable::toString(entry.obj)
+            << setw(12) << SymbolTable::toString(entry.type)
+            << setw(8)  << (entry.ref ? "yes" : "null")
+            << setw(6)  << (entry.nrm ? 1 : 0)
+            << setw(6)  << entry.lev
+            << setw(6)  << entry.adr
+            << setw(6)  << indexOf(entry.link)
+            << "\n";
+    }
+
+    return oss.str();
+}
+
+string SymbolTable::printATab(){
+    ostringstream oss;
+
+    oss << "===== ATAB =====\n";
+    oss << left
+        << setw(8)  << "idx"
+        << setw(12) << "xtyp"
+        << setw(12) << "etyp"
+        << setw(8)  << "eref"
+        << setw(8)  << "low"
+        << setw(8)  << "high"
+        << setw(8)  << "elsz"
+        << setw(8)  << "size"
+        << "\n";
+
+    oss << string(72, '-') << "\n";
+
+    for (size_t i = 0; i < atab.size(); ++i){
+        ATabEntry& entry = atab[i];
+
+        oss << left
+            << setw(8)  << i
+            << setw(12) << SymbolTable::toString(entry.xtyp)
+            << setw(12) << SymbolTable::toString(entry.etyp)
+            << setw(8)  << (entry.eref ? "yes" : "null")
+            << setw(8)  << entry.low
+            << setw(8)  << entry.high
+            << setw(8)  << entry.elsz
+            << setw(8)  << entry.size
+            << "\n";
+    }
+
+    return oss.str();
+}
+
+string SymbolTable::printBTab(){
+    ostringstream oss;
+
+    oss << "===== BTAB =====\n";
+    oss << left
+        << setw(8) << "idx"
+        << setw(8) << "last"
+        << setw(8) << "lpar"
+        << setw(8) << "psze"
+        << setw(8) << "vsze"
+        << "\n";
+
+    oss << string(40, '-') << "\n";
+
+    for (size_t i = 0; i < btab.size(); ++i){
+        BTabEntry& entry = btab[i];
+
+        oss << left
+            << setw(8) << i
+            << setw(8) << indexOf(entry.last)
+            << setw(8) << indexOf(entry.lpar)
+            << setw(8) << entry.psze
+            << setw(8) << entry.vsze
+            << "\n";
+    }
+
+    return oss.str();
+}
+
+string SymbolTable::printAll(){
+    ostringstream oss;
+
+    oss << printTab() << "\n";
+    oss << printATab() << "\n";
+    oss << printBTab();
+
+    return oss.str();
 }

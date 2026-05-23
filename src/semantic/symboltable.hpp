@@ -3,6 +3,8 @@
 #include <deque>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 //Enum untuk SymbolType
 enum class SymbolType {
@@ -92,7 +94,7 @@ public:
     Total ukuran array
      */
     ATabEntry(int arrays, BaseType xtyp, BaseType etyp, TEntry* ref, int low, int high, int elsz, int size):
-        arrays(arrays), xtyp(xtyp), etyp(etyp), eref(eref), low(low), high(high), elsz(elsz), size(size){}
+        arrays(arrays), xtyp(xtyp), etyp(etyp), eref(ref), low(low), high(high), elsz(elsz), size(size){}
 };
 
 //Elemen dari btab
@@ -163,4 +165,9 @@ public:
     const std::vector<TabEntry>& getTab();
     const std::vector<ATabEntry>& getATab();
     const std::vector<BTabEntry>& getBTab();
+
+    std::string printTab();
+    std::string printATab();
+    std::string printBTab();
+    std::string printAll();
 };

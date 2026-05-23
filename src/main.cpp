@@ -66,12 +66,24 @@ int main(){
             astRoot->accept(&visitor);
 
             string astTreeOutput = printDecoratedAST(astRoot.get(), "", true);
-            cout << "\n===== AST TREE =====\n";
+            string symbolTableOutput = visitor.getSymbolTable().printAll();
+
+            cout << "\n===== DECORATED AST =====\n";
             cout << astTreeOutput;
 
+            cout << "\n===== SYMBOL TABLE =====\n";
+            cout << symbolTableOutput;
+
             ofstream output3("test/milestone-3/output.txt");
+            output3 << "===== DECORATED AST =====\n";
             output3 << astTreeOutput;
+            output3 << "\n===== SYMBOL TABLE =====\n";
+            output3 << symbolTableOutput;
             output3.close();
+
+            ofstream outputSymbol("test/milestone-3/table_output.txt");
+            outputSymbol << symbolTableOutput;
+            outputSymbol.close();
         }
         catch (std::exception& e){
             std::cout << e.what() << std::endl;
