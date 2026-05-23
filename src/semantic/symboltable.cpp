@@ -63,6 +63,10 @@ SymbolTable::SymbolTable(){
     insertTab("WHILE"  , SymbolType::KEYWORD, BaseType::VOID);
     insertTab("TRUE"  , SymbolType::CONSTANT, BaseType::BOOLEAN);
     insertTab("FALSE"  , SymbolType::CONSTANT, BaseType::BOOLEAN);
+    insertTab("READ", SymbolType::PROCEDURE, BaseType::VOID);
+    insertTab("READLN", SymbolType::PROCEDURE, BaseType::VOID);
+    insertTab("WRITE", SymbolType::PROCEDURE, BaseType::VOID);
+    insertTab("WRITELN", SymbolType::PROCEDURE, BaseType::VOID);
 }
 
 int SymbolTable::getSize(BaseType type){
@@ -105,10 +109,10 @@ TabEntry* SymbolTable::insertTab(const string& name, SymbolType object, BaseType
 
     tab.push_back(TabEntry(
         nname,
-        lastTab,
+        previousInSameScope,
         object,
         type,
-        NULL,
+        ref,
         nrm,
         currentLevel,
         adr
@@ -140,7 +144,7 @@ ATabEntry* SymbolTable::insertATab(BaseType xtype, BaseType etype, int low, int 
         atab.size(),
         xtype,
         etype,
-        &tab.back(), //TODO: Harus selalu dipanggil setelah insert
+        eref,
         low,
         high,
         elsz,
@@ -276,19 +280,19 @@ int SymbolTable::indexOf(const BTabEntry* entry){
 BaseType SymbolTable::toBaseType(const string& str){
     string normalized = toUpper(str);
 
-    if (str == "INTEGER"){
+    if (normalized == "INTEGER"){
         return BaseType::INTEGER;
     }
-    else if (str == "REAL"){
+    else if (normalized == "REAL"){
         return BaseType::REAL;
     }
-    else if (str == "BOOLEAN"){
+    else if (normalized == "BOOLEAN"){
         return BaseType::BOOLEAN;
     }
-    else if (str == "CHAR"){
+    else if (normalized == "CHAR"){
         return BaseType::CHAR;
     }
-    else if (str == "STRING"){
+    else if (normalized == "STRING"){
         return BaseType::STRING;
     }
     else{

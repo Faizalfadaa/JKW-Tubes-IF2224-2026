@@ -92,7 +92,7 @@ public:
     Total ukuran array
      */
     ATabEntry(int arrays, BaseType xtyp, BaseType etyp, TEntry* ref, int low, int high, int elsz, int size):
-        arrays(arrays), xtyp(xtyp), etyp(etyp), eref(eref), low(low), high(high), elsz(elsz), size(size){}
+        arrays(arrays), xtyp(xtyp), etyp(etyp), eref(ref), low(low), high(high), elsz(elsz), size(size){}
 };
 
 //Elemen dari btab
