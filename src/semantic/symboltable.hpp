@@ -3,6 +3,8 @@
 #include <deque>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 //Enum untuk SymbolType
 enum class SymbolType {
@@ -163,4 +165,9 @@ public:
     const std::vector<TabEntry>& getTab();
     const std::vector<ATabEntry>& getATab();
     const std::vector<BTabEntry>& getBTab();
+
+    std::string printTab();
+    std::string printATab();
+    std::string printBTab();
+    std::string printAll();
 };
