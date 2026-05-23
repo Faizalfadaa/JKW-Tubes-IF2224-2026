@@ -34,3 +34,19 @@ public:
         return message.c_str();
     }
 };
+
+class IdentRedeclarationError : public std::exception {
+private:
+    std::string identName;
+    std::string message;
+
+public:
+    IdentRedeclarationError(const std::string& identName){
+        this->identName = identName;
+        message = identName + " already declared.";
+    }
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
