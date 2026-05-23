@@ -83,9 +83,6 @@ string printAST(ASTNode* node, string indent, bool last) {
         oss << indent << "\\-- Body\n";
         oss << printAST(n->body.get(), indent + "    ", true);
     }
-    else if (auto* n = dynamic_cast<NamedTypeNode*>(node)) {
-        oss << "NamedTypeNode(name: '" << n->typeName << "')\n";
-    }
     else if (auto* n = dynamic_cast<ArrayTypeNode*>(node)) {
         oss << "ArrayTypeNode\n";
         oss << indent << "|-- IndexType\n";

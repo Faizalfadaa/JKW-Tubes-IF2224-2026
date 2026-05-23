@@ -96,6 +96,8 @@ SymbolTable::SymbolTable(){
             psze,
             0
         ));
+
+        currentBlock = &btab.back();
     }
 
     TabEntry* SymbolTable::lookup(const string& name){
@@ -131,4 +133,25 @@ SymbolTable::SymbolTable(){
         }
         currentLevel--;
         lastTab = &tab.back(); //FIXME: lastTab??
+    }
+
+    BaseType SymbolTable::toBaseType(const string& string){
+        if (string == "integer"){
+            return BaseType::INTEGER;
+        }
+        else if (string == "real"){
+            return BaseType::REAL;
+        }
+        else if (string == "boolean"){
+            return BaseType::BOOLEAN;
+        }
+        else if (string == "char"){
+            return BaseType::CHAR;
+        }
+        else if (string == "string"){
+            return BaseType::STRING;
+        }
+        else{
+            return BaseType::UNKNOWN;
+        }
     }

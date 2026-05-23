@@ -85,6 +85,7 @@ void ASTVisitor::visit(SubprogramDeclNode* node) {
     if (!node) throw SemanticError("Invalid node");
     
     symtab.insertTab(node->subprogramName, node->isFunction ? SymbolType::FUNCTION : SymbolType::PROCEDURE, node->exprType);
+    symtab.enterScope();
 
     for (auto& param : node->parameters) {
         if (param) param->accept(this);
@@ -110,7 +111,7 @@ void ASTVisitor::visit(SubprogramDeclNode* node) {
 // ====================
 
 void ASTVisitor::visit(NamedTypeNode* node) {
-    if (!node) throw SemanticError("Invalid node");
+    if (!node) throw SemanticError("Invalid node"); //FIXME
 }
 
 void ASTVisitor::visit(ArrayTypeNode* node) {
@@ -123,6 +124,16 @@ void ASTVisitor::visit(ArrayTypeNode* node) {
     if (node->elementType) {
         node->elementType->accept(this);
     }
+
+    BaseType xtype = node->indexType.get()->exprType;
+    BaseType etype = node->elementType.get()->exprType;
+    int low = 0, high = 0; //TODO: asumsi low dan high adalah 0 jika index type != subrange
+    if (xtype == BaseType::SUBRANGE){
+        low = 0; //TODO: simpan low dan high di node array
+        high = 0;
+    }
+
+    symtab.insertATab(xtype, etype, low, high);
 }
 
 void ASTVisitor::visit(RecordTypeNode* node) {
@@ -131,6 +142,8 @@ void ASTVisitor::visit(RecordTypeNode* node) {
     for (auto& field : node->fields) {
         if (field) field->accept(this);
     }
+
+    symtab.insertBTab();
 }
 
 void ASTVisitor::visit(RangeNode* node) {

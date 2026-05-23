@@ -143,4 +143,6 @@ public:
     void enterScope();
 
     void leaveScope();
+
+    BaseType toBaseType(const std::string& string);
 };
