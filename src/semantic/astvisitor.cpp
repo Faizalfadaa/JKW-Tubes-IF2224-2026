@@ -1,7 +1,14 @@
 #include "astvisitor.hpp"
+#include "../utils/exception.hpp"
+
+using namespace std;
+
+ASTVisitor::ASTVisitor(){
+    symtab = SymbolTable();
+}
 
 void ASTVisitor::visit(ProgramNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     for (auto& decl : node->declarations) {
         if (decl) {
@@ -15,7 +22,7 @@ void ASTVisitor::visit(ProgramNode* node) {
 }
 
 void ASTVisitor::visit(CompoundNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     for (auto& stmt : node->statements) {
         if (stmt) {
@@ -29,39 +36,55 @@ void ASTVisitor::visit(CompoundNode* node) {
 // ====================
 
 void ASTVisitor::visit(ConstDeclNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->value) {
         node->value->accept(this);
     }
+
+    symtab.insertTab(node->constName, SymbolType::CONSTANT, node->value->exprType);
 }
 
 void ASTVisitor::visit(TypeDeclNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->typeDef) {
         node->typeDef->accept(this);
     }
+    
+    symtab.insertTab(node->typeName, SymbolType::TYPE, node->typeDef->exprType);
 }
 
 void ASTVisitor::visit(VarDeclNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->typeDef) {
         node->typeDef->accept(this);
+    }
+
+    BaseType baseType = node->typeDef->exprType;
+    for(auto& name : node->varNames){
+        symtab.insertTab(name, SymbolType::VARIABLE, baseType);
     }
 }
 
 void ASTVisitor::visit(ParamNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->typeDef) {
         node->typeDef->accept(this);
     }
+
+    BaseType baseType = node->typeDef->exprType;
+    for(auto& name : node->paramNames){
+        symtab.insertTab(name, SymbolType::VARIABLE, baseType, false);
+    }
 }
 
 void ASTVisitor::visit(SubprogramDeclNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
+    
+    symtab.insertTab(node->subprogramName, node->isFunction ? SymbolType::FUNCTION : SymbolType::PROCEDURE, node->exprType);
 
     for (auto& param : node->parameters) {
         if (param) param->accept(this);
@@ -78,6 +101,8 @@ void ASTVisitor::visit(SubprogramDeclNode* node) {
     if (node->body) {
         node->body->accept(this);
     }
+    
+    symtab.insertBTab();
 }
 
 // ====================
@@ -85,11 +110,11 @@ void ASTVisitor::visit(SubprogramDeclNode* node) {
 // ====================
 
 void ASTVisitor::visit(NamedTypeNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 }
 
 void ASTVisitor::visit(ArrayTypeNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->indexType) {
         node->indexType->accept(this);
@@ -101,7 +126,7 @@ void ASTVisitor::visit(ArrayTypeNode* node) {
 }
 
 void ASTVisitor::visit(RecordTypeNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     for (auto& field : node->fields) {
         if (field) field->accept(this);
@@ -109,7 +134,7 @@ void ASTVisitor::visit(RecordTypeNode* node) {
 }
 
 void ASTVisitor::visit(RangeNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->lowerBound) {
         node->lowerBound->accept(this);
@@ -121,7 +146,7 @@ void ASTVisitor::visit(RangeNode* node) {
 }
 
 void ASTVisitor::visit(EnumNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 }
 
 // ====================
@@ -129,7 +154,7 @@ void ASTVisitor::visit(EnumNode* node) {
 // ====================
 
 void ASTVisitor::visit(AssignNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->target) {
         node->target->accept(this);
@@ -141,7 +166,7 @@ void ASTVisitor::visit(AssignNode* node) {
 }
 
 void ASTVisitor::visit(IfNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->condition) {
         node->condition->accept(this);
@@ -157,7 +182,7 @@ void ASTVisitor::visit(IfNode* node) {
 }
 
 void ASTVisitor::visit(CaseNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->condition) {
         node->condition->accept(this);
@@ -169,7 +194,7 @@ void ASTVisitor::visit(CaseNode* node) {
 }
 
 void ASTVisitor::visit(CaseBlockNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     for (auto& c : node->constants) {
         if (c) c->accept(this);
@@ -181,7 +206,7 @@ void ASTVisitor::visit(CaseBlockNode* node) {
 }
 
 void ASTVisitor::visit(WhileNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->condition) {
         node->condition->accept(this);
@@ -193,7 +218,7 @@ void ASTVisitor::visit(WhileNode* node) {
 }
 
 void ASTVisitor::visit(RepeatNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     for (auto& stmt : node->statements) {
         if (stmt) stmt->accept(this);
@@ -205,7 +230,7 @@ void ASTVisitor::visit(RepeatNode* node) {
 }
 
 void ASTVisitor::visit(ForNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->startValue) {
         node->startValue->accept(this);
@@ -221,7 +246,7 @@ void ASTVisitor::visit(ForNode* node) {
 }
 
 void ASTVisitor::visit(ProcCallNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     for (auto& arg : node->arguments) {
         if (arg) arg->accept(this);
@@ -233,11 +258,11 @@ void ASTVisitor::visit(ProcCallNode* node) {
 // ====================
 
 void ASTVisitor::visit(VarNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 }
 
 void ASTVisitor::visit(ArrayAccessNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->arrayVar) {
         node->arrayVar->accept(this);
@@ -249,7 +274,7 @@ void ASTVisitor::visit(ArrayAccessNode* node) {
 }
 
 void ASTVisitor::visit(RecordAccessNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->recordVar) {
         node->recordVar->accept(this);
@@ -261,7 +286,7 @@ void ASTVisitor::visit(RecordAccessNode* node) {
 // ====================
 
 void ASTVisitor::visit(BinOpNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->left) {
         node->left->accept(this);
@@ -273,7 +298,7 @@ void ASTVisitor::visit(BinOpNode* node) {
 }
 
 void ASTVisitor::visit(UnaryOpNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 
     if (node->operand) {
         node->operand->accept(this);
@@ -281,13 +306,13 @@ void ASTVisitor::visit(UnaryOpNode* node) {
 }
 
 void ASTVisitor::visit(NumberNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 }
 
 void ASTVisitor::visit(StringNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 }
 
 void ASTVisitor::visit(CharNode* node) {
-    if (!node) return;
+    if (!node) throw SemanticError("Invalid node");
 }

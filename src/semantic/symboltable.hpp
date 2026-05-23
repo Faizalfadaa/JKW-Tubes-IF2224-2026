@@ -134,7 +134,7 @@ public:
 
     TabEntry* insertTab(const std::string& name, SymbolType object, BaseType type, bool nrm = true);
     ATabEntry* insertATab(BaseType xtype, BaseType etype, int low, int high);
-    BTabEntry* insertBTab(std::vector<TEntry*> parList);
+    BTabEntry* insertBTab();
 
     TabEntry* lookup(const std::string& name);
 

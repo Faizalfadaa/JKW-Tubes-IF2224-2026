@@ -3,7 +3,12 @@
 #include "astnode.hpp"
 
 class ASTVisitor {
+private:
+    SymbolTable symtab;
+
 public:
+    ASTVisitor();
+
     // Struktur program / block
     virtual void visit(ProgramNode* node);
     virtual void visit(CompoundNode* node);
