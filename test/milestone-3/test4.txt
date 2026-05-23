@@ -1,0 +1,26 @@
+program TestRecordArray;
+
+type
+  Point == record
+    x, y: integer;
+    label: string;
+  end;
+  Person == record
+    name: string;
+    age: integer;
+    height: real;
+  end;
+  IntArray == array[1..10] of integer;
+  Matrix == array[1..5] of real;
+  CharMap == array[char] of integer;
+
+var
+  i: integer;
+  x: real;
+
+begin
+  i := 0;
+  x := 3;
+  writeln(i);
+  writeln(x)
+end.

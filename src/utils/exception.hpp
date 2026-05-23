@@ -50,3 +50,31 @@ public:
         return message.c_str();
     }
 };
+
+class SymbolTableError : public std::exception {
+private:
+    std::string message;
+
+public:
+    SymbolTableError(const std::string& msg){
+        message = "Symbol table error: " + msg;
+    }
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
+class SemanticError : public std::exception {
+private:
+    std::string message;
+
+public:
+    SemanticError(const std::string& msg){
+        message = "Semantic Error: " + msg;
+    }
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};

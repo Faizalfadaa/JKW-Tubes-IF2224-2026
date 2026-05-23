@@ -9,3 +9,11 @@ string toLower(const string& str) {
     }
     return lower;
 }
+
+string toUpper(const string& str) {
+    string upper = str;
+    for (char& c : upper) {
+        c = toupper(c);
+    }
+    return upper;
+}

@@ -16,7 +16,6 @@ public:
     BaseType exprType = BaseType::UNKNOWN;
     int tabIndex = -1;  // indeks ke tab di symbol table
     int lev      = -1;  // lexical level
-    int lineNum  =  0;  // baris asal dari source code
 
     virtual ~ASTNode() = default;
     virtual void accept(ASTVisitor* visitor) = 0;

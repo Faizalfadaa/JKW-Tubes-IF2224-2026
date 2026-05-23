@@ -65,6 +65,7 @@ unique_ptr<ParseNode> Parser::error(TokenType expectedToken, TokenType found){
     label += e.what();
     advance();
     unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode(label));
+    hasErrorNode = true;
     return node;
 }
 
@@ -75,6 +76,7 @@ unique_ptr<ParseNode> Parser::error(std::vector<TokenType> expectedTokens, Token
     label += e.what();
     advance();
     unique_ptr<ParseNode> node = std::make_unique<ParseNode>(ParseNode(label));
+    hasErrorNode = true;
     return node;
 }
 

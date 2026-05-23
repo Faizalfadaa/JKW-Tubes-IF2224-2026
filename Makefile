@@ -8,7 +8,10 @@ SRC = src/main.cpp \
       src/parser/parser.cpp \
       src/parser/treeprinter.cpp \
 	  src/semantic/astnode.cpp \
-	  src/semantic/asttree.cpp
+	  src/semantic/astprinter.cpp \
+	  src/semantic/asttree.cpp \
+	  src/semantic/astvisitor.cpp \
+	  src/semantic/symboltable.cpp
 
 ifeq ($(OS),Windows_NT)
 	TARGET = main.exe

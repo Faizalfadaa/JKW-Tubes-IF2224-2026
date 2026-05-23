@@ -1,0 +1,84 @@
+program TestComprehensive;
+
+const
+  LIMIT == 50;
+  BASE == 1;
+  NAME == 'Arion';
+
+type
+  Status == (active, inactive, pending);
+  Grade == 'A'..'E';
+  Student == record
+    name: string;
+    score: integer;
+  end;
+  Scores == array[0..100] of integer;
+
+var
+  i, j, total: integer;
+  avg: real;
+
+function Abs(n: integer): integer;
+begin
+  if n < 0 then
+    Abs := -n
+  else
+    Abs := n;
+end;
+
+function Clamp(val, lo, hi: integer): integer;
+begin
+  if val < lo then
+    Clamp := lo
+  else if val > hi then
+    Clamp := hi
+  else
+    Clamp := val;
+end;
+
+procedure PrintStatus(n: integer; msg: string);
+begin
+  writeln(msg);
+  writeln(n);
+end;
+
+begin
+  total := 0;
+  i := BASE;
+
+  total := (10 + 20) * 3 - Abs(-5);
+  avg := total / 6.0;
+  i := total + 7;
+  j := total - 3;
+
+  if (i > 0) and (j >= 0) then
+    PrintStatus(i, NAME)
+  else if (i == 0) or (j < 0) then
+    writeln('nol atau negatif')
+  else
+    writeln('kondisi lain');
+
+  if not (i > LIMIT) then
+    i := Clamp(i, 0, LIMIT);
+
+  for i := 1 to 5 do
+    writeln(i);
+
+  for i := 5 downto 1 do
+    writeln(i);
+
+  while i < 10 do
+    i := i + 1;
+
+  repeat
+    j := j - 1
+  until j == 0;
+
+  case i of
+    0: writeln('nol');
+    1, 2, 3: writeln('kecil');
+    10: writeln('sepuluh')
+  end;
+
+  writeln(Clamp(100, 0, 50))
+end.
