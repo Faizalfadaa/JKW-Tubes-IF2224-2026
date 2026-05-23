@@ -1,17 +1,5 @@
-#include "lexer/lexer.hpp"
-#include "parser/parser.hpp"
-#include "parser/treeprinter.hpp"
-#include "semantic/asttree.hpp"
+#include "astprinter.hpp"
 #include "semantic/astnode.hpp"
-
-#include <exception>
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <sstream>
-#include <string>
-#include <vector>
 
 using namespace std;
 
@@ -24,7 +12,7 @@ static string joinNames(const vector<string>& names) {
     return oss.str();
 }
 
-static string printAST(ASTNode* node, string indent = "", bool last = true) {
+static string printAST(ASTNode* node, string indent, bool last) {
     ostringstream oss;
 
     oss << indent;
@@ -228,74 +216,4 @@ static string printAST(ASTNode* node, string indent = "", bool last = true) {
     }
 
     return oss.str();
-}
-
-int main() {
-    Reader reader;
-    string path;
-
-    do {
-        cout << "Input path file: ";
-        cin >> path;
-    } while (!reader.open(path));
-
-    Lexer lex(reader);
-    vector<Token> tokens;
-    while (!reader.isEOF()) {
-        Token token = lex.getNextToken();
-        tokens.push_back(token);
-    }
-
-#ifdef _WIN32
-    system("if not exist test mkdir test");
-    system("if not exist test\\milestone-1 mkdir test\\milestone-1");
-    system("if not exist test\\milestone-2 mkdir test\\milestone-2");
-    system("if not exist test\\milestone-3 mkdir test\\milestone-3");
-#else
-    system("mkdir -p test/milestone-1 test/milestone-2 test/milestone-3");
-#endif
-
-    ofstream output1("test/milestone-1/output.txt");
-    vector<Token> parserTokens;
-
-    for (const Token& token : tokens) {
-        output1 << token.str_type();
-        if (token.lexeme != "") output1 << "(" << token.lexeme << ")";
-        output1 << '\n';
-
-        if (token.type == TokenType::COMMENT) continue;
-        if (token.type == TokenType::NOTDETERMINED) continue;
-        parserTokens.push_back(token);
-    }
-    output1.close();
-
-    try {
-        Parser parser(parserTokens);
-        unique_ptr<ParseNode> root = parser.program();
-
-        string parseTreeOutput = printTree(root.get(), "", true);
-        cout << "===== PARSE TREE =====\n";
-        cout << parseTreeOutput;
-
-        ofstream output2("test/milestone-2/output.txt");
-        output2 << parseTreeOutput;
-        output2.close();
-
-        // Input untuk ASTBuilder adalah parse tree hasil parser.
-        ASTBuilder astBuilder;
-        unique_ptr<ASTNode> astRoot = astBuilder.createAST(root.get());
-
-        string astTreeOutput = printAST(astRoot.get(), "", true);
-        cout << "\n===== AST TREE =====\n";
-        cout << astTreeOutput;
-
-        ofstream output3("test/milestone-3/output.txt");
-        output3 << astTreeOutput;
-        output3.close();
-    }
-    catch (const exception& e) {
-        cout << e.what() << endl;
-    }
-
-    return 0;
 }

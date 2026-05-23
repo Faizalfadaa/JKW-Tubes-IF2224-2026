@@ -5,13 +5,12 @@
 
 //Enum untuk SymbolType
 enum class SymbolType {
-    KEYWORD, //untuk keyword
+    KEYWORD,
     CONSTANT,
     VARIABLE,
     TYPE,
     PROCEDURE,
     FUNCTION
-    //TODO: tambah
 };
 
 //Enum untuk tipe dasar
@@ -99,8 +98,8 @@ public:
 class BTabEntry : public TEntry {
 public:
     int blocks;
-    TabEntry* last; //atau pointer
-    TabEntry* lpar; //atau pointer
+    TabEntry* last;
+    TabEntry* lpar;
     int psze;
     int vsze;
 

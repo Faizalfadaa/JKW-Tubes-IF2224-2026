@@ -14,6 +14,7 @@ class Parser {
         void advance();
 
     public:
+        bool hasErrorNode = false;
         TokenType currToken;
         std::string currLexeme;
 

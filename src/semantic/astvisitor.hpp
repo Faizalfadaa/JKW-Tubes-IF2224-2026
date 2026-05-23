@@ -1,52 +1,46 @@
 #pragma once
 
-#ifndef ASTVISITOR_HPP
-#define ASTVISITOR_HPP
-
 #include "astnode.hpp"
 
 class ASTVisitor {
 public:
-
     // Struktur program / block
-    virtual void visitProgramNode(ProgramNode* node) = 0;
-    virtual void visitCompoundNode(CompoundNode* node) = 0;
+    virtual void visit(ProgramNode* node);
+    virtual void visit(CompoundNode* node);
 
     // Declaration nodes
-    virtual void visitConstDeclNode(ConstDeclNode* node) = 0;
-    virtual void visitTypeDeclNode(TypeDeclNode* node) = 0;
-    virtual void visitVarDeclNode(VarDeclNode* node) = 0;
-    virtual void visitParamNode(ParamNode* node) = 0;
-    virtual void visitSubprogramDeclNode(SubprogramDeclNode* node) = 0;
+    virtual void visit(ConstDeclNode* node);
+    virtual void visit(TypeDeclNode* node);
+    virtual void visit(VarDeclNode* node);
+    virtual void visit(ParamNode* node);
+    virtual void visit(SubprogramDeclNode* node);
 
     // Type nodes
-    virtual void visitNamedTypeNode(NamedTypeNode* node) = 0;
-    virtual void visitArrayTypeNode(ArrayTypeNode* node) = 0;
-    virtual void visitRecordTypeNode(RecordTypeNode* node) = 0;
-    virtual void visitRangeNode(RangeNode* node) = 0;
-    virtual void visitEnumNode(EnumNode* node) = 0;
+    virtual void visit(NamedTypeNode* node);
+    virtual void visit(ArrayTypeNode* node);
+    virtual void visit(RecordTypeNode* node);
+    virtual void visit(RangeNode* node);
+    virtual void visit(EnumNode* node);
 
     // Statement nodes
-    virtual void visitAssignNode(AssignNode* node) = 0;
-    virtual void visitIfNode(IfNode* node) = 0;
-    virtual void visitCaseNode(CaseNode* node) = 0;
-    virtual void visitCaseBlockNode(CaseBlockNode* node) = 0;
-    virtual void visitWhileNode(WhileNode* node) = 0;
-    virtual void visitRepeatNode(RepeatNode* node) = 0;
-    virtual void visitForNode(ForNode* node) = 0;
-    virtual void visitProcCallNode(ProcCallNode* node) = 0;
+    virtual void visit(AssignNode* node);
+    virtual void visit(IfNode* node);
+    virtual void visit(CaseNode* node);
+    virtual void visit(CaseBlockNode* node);
+    virtual void visit(WhileNode* node);
+    virtual void visit(RepeatNode* node);
+    virtual void visit(ForNode* node);
+    virtual void visit(ProcCallNode* node);
 
     // Variable / access nodes
-    virtual void visitVarNode(VarNode* node) = 0;
-    virtual void visitArrayAccessNode(ArrayAccessNode* node) = 0;
-    virtual void visitRecordAccessNode(RecordAccessNode* node) = 0;
+    virtual void visit(VarNode* node);
+    virtual void visit(ArrayAccessNode* node);
+    virtual void visit(RecordAccessNode* node);
 
     // Expression / literal nodes
-    virtual void visitBinOpNode(BinOpNode* node) = 0;
-    virtual void visitUnaryOpNode(UnaryOpNode* node) = 0;
-    virtual void visitNumberNode(NumberNode* node) = 0;
-    virtual void visitStringNode(StringNode* node) = 0;
-    virtual void visitCharNode(CharNode* node) = 0;
+    virtual void visit(BinOpNode* node);
+    virtual void visit(UnaryOpNode* node);
+    virtual void visit(NumberNode* node);
+    virtual void visit(StringNode* node);
+    virtual void visit(CharNode* node);
 };
-
-#endif
