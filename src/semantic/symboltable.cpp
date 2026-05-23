@@ -1,9 +1,15 @@
 #include "symboltable.hpp"
 #include "../utils/exception.hpp"
 
+using namespace std;
+
 SymbolTable::SymbolTable(){
     currentLevel = 0;
-    //push null??
+    lastTab = NULL;
+    currentBlock = NULL;
+    tab = vector<TabEntry>();
+    atab = vector<ATabEntry>();
+    btab = vector<BTabEntry>();
     tab.push_back(TabEntry("AND"    , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
     tab.push_back(TabEntry("ARRAY"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
     tab.push_back(TabEntry("BEGIN"  , NULL, SymbolType::KEYWORD, BaseType::VOID    , NULL, 1, 0, 0));
@@ -40,35 +46,17 @@ SymbolTable::SymbolTable(){
     tab.push_back(TabEntry("FALSE"  , NULL, SymbolType::CONSTANT, BaseType::BOOLEAN, NULL, 1, 0, 0));
 }
 
-    void SymbolTable::insert(const std::string& name, SymbolType object, BaseType type, bool nrm){
+    TabEntry* SymbolTable::insertTab(const string& name, SymbolType object, BaseType type, bool nrm){
         if (existsCurrentLevel(name)){
             throw IdentRedeclarationError(name);
         }
         
-        TabEntry* ref = NULL;
-
-        if (type == BaseType::ARRAY){
-            insertATab(ATabEntry(
-                atab.size(),
-                type, //TODO: xtype
-                type,
-                lastTab,
-                0, //TODO low
-                10, //TODO high
-                4, //TDO elsz,
-                10 //TODO size
-            ));
-        }
-        else if (type == BaseType::RECORD || object == SymbolType::FUNCTION || object == SymbolType::PROCEDURE){
-            //TODO
-        }
-
-        insertTab(TabEntry(
+        tab.push_back(TabEntry(
             name,
             lastTab,
             object,
             type,
-            ref,
+            NULL,
             nrm,
             currentLevel,
             0 //TODO: adr
@@ -76,23 +64,35 @@ SymbolTable::SymbolTable(){
         lastTab = &tab.back();
     }
 
-    int SymbolTable::insertTab(const TabEntry& entry){
-        if (existsCurrentLevel(entry.identifier)){
-            throw IdentRedeclarationError(entry.identifier);
+    ATabEntry* SymbolTable::insertATab(BaseType xtype, BaseType etype, int low, int high){
+        int elsz = 0; //TODO: getSize(etype);
+        atab.push_back(ATabEntry(
+            atab.size(),
+            xtype,
+            etype,
+            &tab.back(), //TODO: Harus selalu dipanggil setelah insert
+            low,
+            high,
+            elsz,
+            0
+        ));
+    }
+
+    BTabEntry* SymbolTable::insertBTab(vector<TEntry*> parList){
+        int psze = 0;
+        for (TEntry* par : parList){
+            
         }
-
-        tab.push_back(entry);
+        btab.push_back(BTabEntry(
+            btab.size(),
+            NULL,
+            &tab.back(), //TODO: lpar harus selalu ada di paling belakang
+            psze,
+            0
+        ));
     }
 
-    int SymbolTable::insertATab(const ATabEntry& entry){
-        atab.push_back(entry);
-    }
-
-    int SymbolTable::insertBTab(const BTabEntry& entry){
-        btab.push_back(entry);
-    }
-
-    TabEntry* SymbolTable::lookup(const std::string& name){
+    TabEntry* SymbolTable::lookup(const string& name){
         TabEntry* next = &tab.back(); //FIXME: kasus tab.back setelah leaveScope?
         while (next != NULL){
             if (next->identifier == name){
@@ -103,7 +103,7 @@ SymbolTable::SymbolTable(){
         return NULL;
     }
 
-    bool SymbolTable::existsCurrentLevel(const std::string& name){
+    bool SymbolTable::existsCurrentLevel(const string& name){
         TabEntry* next = &tab.back();
         while (next != NULL && next->lev == currentLevel){
             if (next->identifier == name){

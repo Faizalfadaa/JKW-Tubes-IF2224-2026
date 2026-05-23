@@ -125,19 +125,17 @@ private:
     //Atribut
     int currentLevel;
     TabEntry* lastTab;
-    
+    BTabEntry* currentBlock;
     std::vector<TabEntry> tab;
     std::vector<ATabEntry> atab;
     std::vector<BTabEntry> btab;
 
-    int insertTab(const TabEntry& entry);
-    int insertATab(const ATabEntry& entry);
-    int insertBTab(const BTabEntry& entry);
-
 public:
     SymbolTable();
 
-    void insert(const std::string& name, SymbolType object, BaseType type, bool nrm = true);
+    TabEntry* insertTab(const std::string& name, SymbolType object, BaseType type, bool nrm = true);
+    ATabEntry* insertATab(BaseType xtype, BaseType etype, int low, int high);
+    BTabEntry* insertBTab(vector<TEntry*> parList);
 
     TabEntry* lookup(const std::string& name);
 

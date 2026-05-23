@@ -42,6 +42,7 @@ private:
 
 public:
     IdentRedeclarationError(const std::string& identName){
+        this->identName = identName;
         message = identName + " already declared.";
     }
 
