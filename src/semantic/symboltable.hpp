@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <vector>
 #include <string>
 
@@ -63,7 +64,7 @@ public:
 //Elemen dari atab
 class ATabEntry : public TEntry {
 public:
-    int arrays; //TODO: template??
+    int arrays;
     BaseType xtyp;
     BaseType etyp;
     TEntry* eref;
@@ -123,17 +124,24 @@ class SymbolTable {
 private:
     //Atribut
     int currentLevel;
+    int nextAdr;
     TabEntry* lastTab;
     BTabEntry* currentBlock;
+
     std::vector<TabEntry> tab;
     std::vector<ATabEntry> atab;
     std::vector<BTabEntry> btab;
 
+    std::vector<TabEntry*> scopeLast;
+    std::vector<BTabEntry*> blockStack;
+
+    int getSize(BaseType type);
+
 public:
     SymbolTable();
 
-    TabEntry* insertTab(const std::string& name, SymbolType object, BaseType type, bool nrm = true);
-    ATabEntry* insertATab(BaseType xtype, BaseType etype, int low, int high);
+    TabEntry* insertTab(const std::string& name, SymbolType object, BaseType type, bool nrm = true, TEntry* ref = nullptr);
+    ATabEntry* insertATab(BaseType xtype, BaseType etype, int low, int high, TEntry* eref = nullptr);
     BTabEntry* insertBTab();
 
     TabEntry* lookup(const std::string& name);
@@ -141,8 +149,18 @@ public:
     bool existsCurrentLevel(const std::string& name);
 
     void enterScope();
-
     void leaveScope();
 
+    int getCurrentLevel();
+    int indexOf(const TabEntry* entry);
+    int indexOf(const ATabEntry* entry);
+    int indexOf(const BTabEntry* entry);
+
     BaseType toBaseType(const std::string& string);
+    std::string toString(SymbolType type);
+    std::string toString(BaseType type);
+
+    const std::vector<TabEntry>& getTab();
+    const std::vector<ATabEntry>& getATab();
+    const std::vector<BTabEntry>& getBTab();
 };
