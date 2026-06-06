@@ -1,11 +1,13 @@
 #include "stackinterpreter.hpp"
 
+//Validasi target lompat berada dalam rentang kode
 void StackInterpreter::validateInstructionPointer(int target) const {
     if (target < 0 || target >= static_cast<int>(code.size())){
         throw InterpreterRuntimeError("InvalidJumpTarget: target " + std::to_string(target) + " di luar intermediate code");
     }
 }
 
+//Push nilai ke stack dengan pengecekan overflow
 void StackInterpreter::push(const Value& value){
     if (stack.size() >= maxStackSize){
         throw InterpreterRuntimeError("StackOverflow: stack melebihi batas interpreter");
@@ -13,6 +15,7 @@ void StackInterpreter::push(const Value& value){
     stack.push_back(value);
 }
 
+//Pop nilai dari stack dengan pengecekan underflow
 Value StackInterpreter::pop(){
     if (stack.empty()){
         throw InterpreterRuntimeError("StackUnderflow: pop pada stack kosong");
@@ -23,6 +26,7 @@ Value StackInterpreter::pop(){
     return value;
 }
 
+//Load nilai dari alamat tertentu di stack
 Value StackInterpreter::load(int address) const {
     if (address < 0 || address >= static_cast<int>(stack.size())){
         throw InterpreterRuntimeError("IndexOutOfBoundsException: address " + std::to_string(address) + " tidak ada di stack");
@@ -31,6 +35,7 @@ Value StackInterpreter::load(int address) const {
     return stack[address];
 }
 
+//Store nilai ke alamat tertentu di stack
 void StackInterpreter::store(int address, const Value& value){
     if (address < 0 || address >= static_cast<int>(stack.size())){
         throw InterpreterRuntimeError("IndexOutOfBoundsException: address " + std::to_string(address) + " tidak ada di stack");
@@ -39,6 +44,7 @@ void StackInterpreter::store(int address, const Value& value){
     stack[address] = value;
 }
 
+//Pastikan hasil operasi integer berada dalam batas 32-bit
 void StackInterpreter::ensureInt32(long long value){
     if (value > std::numeric_limits<int32_t>::max()) {
         throw InterpreterRuntimeError("OverflowError: hasil integer melebihi batas 32-bit");
@@ -48,6 +54,7 @@ void StackInterpreter::ensureInt32(long long value){
     }
 }
 
+//Lakukan operasi aritmatika atau string concatenation berdasarkan jenis operand
 Value StackInterpreter::numericBinary(const Value& left, const Value& right, int operation){
     if (!left.isNumeric() || !right.isNumeric()){
         if (operation == 2){
@@ -106,6 +113,7 @@ Value StackInterpreter::numericBinary(const Value& left, const Value& right, int
     return Value::integer(result);
 }
 
+//Lakukan operasi perbandingan berdasarkan jenis operand
 Value StackInterpreter::compareValues(const Value& left, const Value& right, int operation){
     bool result = false;
     if (left.isNumeric() && right.isNumeric()){
@@ -158,6 +166,7 @@ Value StackInterpreter::compareValues(const Value& left, const Value& right, int
     return Value::boolean(result);
 }
 
+//Eksekusi OPR berdasarkan kode operasi
 void StackInterpreter::executeOperation(int operation){
     if (operation == 1){
         Value value = pop();
@@ -211,6 +220,7 @@ void StackInterpreter::executeOperation(int operation){
     throw InterpreterRuntimeError("OPR tidak dikenal: " + std::to_string(operation));
 }
 
+//Jalankan interpreter untuk mengeksekusi kode intermediate dan menghasilkan output
 std::string StackInterpreter::run() {
     stack.clear();
     output.str("");
