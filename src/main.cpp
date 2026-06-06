@@ -75,7 +75,7 @@ int main(){
             cout << astTreeOutput;
 
             cout << "\n===== SYMBOL TABLE =====\n";
-            cout << symbolTableOutput;
+            cout << symbolTableOutput << endl;
 
             ofstream output3("test/milestone-3/output.txt");
             output3 << "===== DECORATED AST =====\n";
@@ -97,8 +97,10 @@ int main(){
             result << "\n===== PROGRAM OUTPUT =====\n";
             result << programOutput;
 
+            cout << result.str();
+
             ofstream output4("test/milestone-4/output.txt");
-            output4 << result.str();
+            output4 << result.str() << endl;
             output4.close();
         }
         catch (std::exception& e){
