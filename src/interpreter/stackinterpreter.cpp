@@ -259,7 +259,7 @@ std::string StackInterpreter::run() {
                 ++ip;
                 break;
             case OpCode::CAL:
-                throw InterpreterRuntimeError("CAL/function call belum diimplementasikan di interpreter sederhana ini");
+                throw InterpreterRuntimeError("terjadi kesalahan saat pemanggilan fungsi/prosedur"); //TODO:
             case OpCode::RET:
                 return output.str();
         }
