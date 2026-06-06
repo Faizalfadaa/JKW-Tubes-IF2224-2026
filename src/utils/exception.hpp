@@ -1,3 +1,5 @@
+#pragma once
+
 #include <exception>
 #include <vector>
 #include <string>
@@ -72,6 +74,34 @@ private:
 public:
     SemanticError(const std::string& msg){
         message = "Semantic Error: " + msg;
+    }
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
+class InterpreterRuntimeError : public std::exception {
+    private:
+    std::string message;
+
+    public:
+    InterpreterRuntimeError(const std::string& msg){
+        message = "Interpreter runtime error: " + msg;
+    }
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
+class InterpreterGenerateError : public std::exception {
+    private:
+    std::string message;
+
+    public:
+    InterpreterGenerateError(const std::string& msg){
+        message = "Interpreter generate error: " + msg;
     }
 
     const char* what() const noexcept override {
