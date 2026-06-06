@@ -19,24 +19,6 @@ struct Instruction {
         op(OpCode::LIT), level(0), operand(0), literal(literalValue), hasLiteral(true) {}
 };
 
-std::string instructionToString(const Instruction& instruction, int index) {
-    std::ostringstream oss;
-    oss << index << " " << opcodeName(instruction.op);
-    if (instruction.op == OpCode::RET) {
-        return oss.str();
-    }
-    if (instruction.op == OpCode::LIT && instruction.hasLiteral) {
-        oss << " " << instruction.level << " " << instruction.literal.toCodeLiteral();
-    } else {
-        oss << " " << instruction.level << " " << instruction.operand;
-    }
-    return oss.str();
-}
+std::string instructionToString(const Instruction& instruction, int index);
 
-std::string instructionsToString(const std::vector<Instruction>& code) {
-    std::ostringstream oss;
-    for (size_t i = 0; i < code.size(); ++i) {
-        oss << instructionToString(code[i], static_cast<int>(i)) << "\n";
-    }
-    return oss.str();
-}
+std::string instructionsToString(const std::vector<Instruction>& code);

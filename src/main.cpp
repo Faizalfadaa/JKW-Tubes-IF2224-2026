@@ -4,6 +4,8 @@
 #include "semantic/asttree.hpp"
 #include "semantic/astvisitor.hpp"
 #include "semantic/astprinter.hpp"
+#include "interpreter/irgenerator.hpp"
+#include "interpreter/stackinterpreter.hpp"
 #include <vector>
 #include <exception>
 
@@ -41,6 +43,7 @@ int main(){
             parserTokens.push_back(token);
         }
         output.close();
+
 
         // Milestone 2
         ofstream output2("test/milestone-2/output.txt");
@@ -80,10 +83,23 @@ int main(){
             output3 << "\n===== SYMBOL TABLE =====\n";
             output3 << symbolTableOutput;
             output3.close();
+            
 
-            ofstream outputSymbol("test/milestone-3/table_output.txt");
-            outputSymbol << symbolTableOutput;
-            outputSymbol.close();
+        // Milestone 4
+            IntermediateCodeGenerator generator;
+            std::vector<Instruction> code = generator.generate(astRoot.get());
+            StackInterpreter interpreter(code);
+            std::string programOutput = interpreter.run();
+
+            std::ostringstream result;
+            result << "===== INSTRUCTION =====\n";
+            result << instructionsToString(code);
+            result << "\n===== PROGRAM OUTPUT =====\n";
+            result << programOutput;
+
+            ofstream output4("test/milestone-4/output.txt");
+            output4 << result.str();
+            output4.close();
         }
         catch (std::exception& e){
             std::cout << e.what() << std::endl;

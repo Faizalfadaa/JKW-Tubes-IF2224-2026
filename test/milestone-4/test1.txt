@@ -1,0 +1,11 @@
+program M4Arithmetic;
+
+var
+  a, b, c: integer;
+
+begin
+  a := 5;
+  b := a + 10;
+  c := (a + b) * 2;
+  writeln('c=', c)
+end.

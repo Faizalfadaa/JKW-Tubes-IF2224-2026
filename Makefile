@@ -11,7 +11,11 @@ SRC = src/main.cpp \
 	  src/semantic/astprinter.cpp \
 	  src/semantic/asttree.cpp \
 	  src/semantic/astvisitor.cpp \
-	  src/semantic/symboltable.cpp
+	  src/semantic/symboltable.cpp \
+	  src/interpreter/irgenerator.cpp \
+	  src/interpreter/stackinterpreter.cpp \
+	  src/interpreter/instruction.cpp \
+	  src/interpreter/opcode.cpp
 
 ifeq ($(OS),Windows_NT)
 	TARGET = main.exe
