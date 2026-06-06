@@ -4,3 +4,4 @@
 
 std::string toLower(const std::string& str);
 std::string toUpper(const std::string& str);
+std::string stripQuotes(const std::string& str);

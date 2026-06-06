@@ -17,3 +17,10 @@ string toUpper(const string& str) {
     }
     return upper;
 }
+
+string stripQuotes(const std::string& str) {
+    if (str.size() >= 2 && str.front() == '\'' && str.back() == '\'') {
+        return str.substr(1, str.size() - 2);
+    }
+    return str;
+}
