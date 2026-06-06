@@ -1,0 +1,16 @@
+program M4ConstBoolean;
+
+const
+  LIMIT == 4;
+  MSG == 'ok';
+
+var
+  i: integer;
+
+begin
+  i := LIMIT;
+  if (i == 4) and not (i < 0) then
+    writeln(MSG)
+  else
+    writeln('fail')
+end.
