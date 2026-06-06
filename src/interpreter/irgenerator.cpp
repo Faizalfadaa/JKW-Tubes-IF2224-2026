@@ -22,7 +22,24 @@ std::string IntermediateCodeGenerator::variableName(ASTNode* node) {
         return toUpper(var->name);
     }
 
-    throw InterpreterGenerateError("assignment hanya mendukung target variabel sederhana untuk versi ini");
+    if (auto* arr = dynamic_cast<ArrayAccessNode*>(node)) {
+        std::string name = variableName(arr->arrayVar.get());
+
+        for (auto& idx : arr->indices) {
+            Value v = literalValue(idx.get());
+            name += "[" + v.toOutputString() + "]";
+        }
+
+        return name;
+    }
+
+    if (auto* rec = dynamic_cast<RecordAccessNode*>(node)) {
+        return variableName(rec->recordVar.get()) +
+               "." +
+               toUpper(rec->fieldName);
+    }
+
+    throw InterpreterGenerateError("target assignment tidak valid");
 }
 
 int IntermediateCodeGenerator::addressOf(const std::string& rawName) const {
@@ -107,7 +124,7 @@ int IntermediateCodeGenerator::operationCodeFor(const std::string& op) const {
     if (op == "<=") return 12;
     if (op == "and") return 15;
     if (op == "or")  return 16;
-    throw InterpreterGenerateError("operator belum didukung: " + op);
+    throw InterpreterGenerateError("operator tidak valid: " + op);
 }
 
 void IntermediateCodeGenerator::generateExpression(ASTNode* node) {
@@ -164,14 +181,21 @@ void IntermediateCodeGenerator::generateExpression(ASTNode* node) {
     }
 
     if (auto* call = dynamic_cast<ProcCallNode*>(node)) {
-        throw InterpreterGenerateError("pemanggilan fungsi pada ekspresi belum didukung: " + call->procName);
+        throw InterpreterGenerateError("terjadi kesalahan pada pemanggilan fungsi: " + call->procName); //TODO: 
     }
 
-    if (dynamic_cast<ArrayAccessNode*>(node) || dynamic_cast<RecordAccessNode*>(node)) {
-        throw InterpreterGenerateError("akses array/record belum didukung oleh interpreter milestone 4 ini");
+    if (auto* arr = dynamic_cast<ArrayAccessNode*>(node)) {
+        std::string name = variableName(arr);
+        emit(Instruction(OpCode::LOD, 0, addressOf(name)));
+        return;
     }
 
-    throw InterpreterGenerateError("jenis ekspresi belum didukung");
+    if (auto* rec = dynamic_cast<RecordAccessNode*>(node)) {
+        emit(Instruction(OpCode::LOD, 0, addressOf(variableName(rec))));
+        return;
+    }
+
+    throw InterpreterGenerateError("jenis ekspresi tidak valid");
 }
 
 void IntermediateCodeGenerator::generateStatement(ASTNode* node) {
@@ -287,10 +311,10 @@ void IntermediateCodeGenerator::generateStatement(ASTNode* node) {
             return;
         }
 
-        throw InterpreterGenerateError("procedure/function call belum didukung: " + procCall->procName);
+        throw InterpreterGenerateError("terjadi kesalahan saat pemanggilan fungsi/prosedur: " + procCall->procName); //TODO: 
     }
 
-    throw InterpreterGenerateError("jenis statement belum didukung");
+    throw InterpreterGenerateError("jenis statement tidak valid");
 }
 
 std::vector<Instruction> IntermediateCodeGenerator::generate(ASTNode* root) {

@@ -22,7 +22,7 @@ private:
 
     int currentLine() const;
 
-    static std::string variableName(ASTNode* node);
+    std::string variableName(ASTNode* node);
 
     int addressOf(const std::string& rawName) const;
 
