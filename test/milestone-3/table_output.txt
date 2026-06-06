@@ -1,0 +1,70 @@
+===== TAB =====
+idx  identifier        obj         type        ref     nrm   lev   adr   link  
+-------------------------------------------------------------------------------
+0    AND               keyword     void        null    1     0     0     -1    
+1    ARRAY             keyword     void        null    1     0     0     -1    
+2    BEGIN             keyword     void        null    1     0     0     -1    
+3    CASE              keyword     void        null    1     0     0     -1    
+4    CONST             keyword     void        null    1     0     0     -1    
+5    DIV               keyword     void        null    1     0     0     -1    
+6    DOWNTO            keyword     void        null    1     0     0     -1    
+7    DO                keyword     void        null    1     0     0     -1    
+8    ELSE              keyword     void        null    1     0     0     -1    
+9    END               keyword     void        null    1     0     0     -1    
+10   FOR               keyword     void        null    1     0     0     -1    
+11   FUNCTION          keyword     void        null    1     0     0     -1    
+12   IF                keyword     void        null    1     0     0     -1    
+13   MOD               keyword     void        null    1     0     0     -1    
+14   NOT               keyword     void        null    1     0     0     -1    
+15   OF                keyword     void        null    1     0     0     -1    
+16   OR                keyword     void        null    1     0     0     -1    
+17   PROCEDURE         keyword     void        null    1     0     0     -1    
+18   PROGRAM           keyword     void        null    1     0     0     -1    
+19   RECORD            keyword     void        null    1     0     0     -1    
+20   REPEAT            keyword     void        null    1     0     0     -1    
+21   INTEGER           type        integer     null    1     0     0     -1    
+22   REAL              type        real        null    1     0     0     -1    
+23   BOOLEAN           type        boolean     null    1     0     0     -1    
+24   CHAR              type        char        null    1     0     0     -1    
+25   STRING            type        string      null    1     0     0     -1    
+26   THEN              keyword     void        null    1     0     0     -1    
+27   TO                keyword     void        null    1     0     0     -1    
+28   TYPE              keyword     void        null    1     0     0     -1    
+29   UNTIL             keyword     void        null    1     0     0     -1    
+30   VAR               keyword     void        null    1     0     0     -1    
+31   WHILE             keyword     void        null    1     0     0     -1    
+32   TRUE              constant    boolean     null    1     0     0     -1    
+33   FALSE             constant    boolean     null    1     0     0     32    
+34   READ              procedure   void        null    1     0     0     33    
+35   READLN            procedure   void        null    1     0     0     34    
+36   WRITE             procedure   void        null    1     0     0     35    
+37   WRITELN           procedure   void        null    1     0     0     36    
+38   X                 variable    integer     null    1     1     0     -1    
+39   Y                 variable    integer     null    1     1     1     38    
+40   LABEL             variable    string      null    1     1     2     39    
+41   POINT             type        record      null    1     0     0     37    
+42   NAME              variable    string      null    1     1     0     -1    
+43   AGE               variable    integer     null    1     1     1     42    
+44   HEIGHT            variable    real        null    1     1     2     43    
+45   PERSON            type        record      null    1     0     0     41    
+46   INTARRAY          type        array       null    1     0     0     45    
+47   MATRIX            type        array       null    1     0     0     46    
+48   CHARMAP           type        array       null    1     0     0     47    
+49   I                 variable    integer     null    1     0     0     48    
+50   X                 variable    real        null    1     0     1     49    
+
+===== ATAB =====
+idx     xtyp        etyp        eref    low     high    elsz    size    
+------------------------------------------------------------------------
+0       unknown     unknown     null    0       0       0       0       
+1       unknown     unknown     null    0       0       0       0       
+2       unknown     unknown     null    0       0       0       0       
+
+===== BTAB =====
+idx     last    lpar    psze    vsze    
+----------------------------------------
+0       37      -1      0       0       
+1       40      -1      0       3       
+2       41      -1      0       0       
+3       44      -1      0       3       
+4       50      -1      0       2       
