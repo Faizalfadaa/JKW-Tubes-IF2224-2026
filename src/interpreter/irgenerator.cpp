@@ -1,10 +1,12 @@
 #include "irgenerator.hpp"
 
+//Fungsi untuk menambahkan instruksi ke dalam kode intermediate
 int IntermediateCodeGenerator::emit(const Instruction& instruction) {
     code.push_back(instruction);
     return static_cast<int>(code.size()) - 1;
 }
 
+//Fungsi untuk memperbarui operand
 void IntermediateCodeGenerator::patchOperand(int index, int operand) {
     if (index < 0 || index >= static_cast<int>(code.size())) {
         throw InterpreterGenerateError("patch target intermediate code tidak valid");
@@ -13,10 +15,12 @@ void IntermediateCodeGenerator::patchOperand(int index, int operand) {
     code[index].operand = operand;
 }
 
+//Fungsi untuk mendapatkan nomor baris instruksi saat ini
 int IntermediateCodeGenerator::currentLine() const {
     return static_cast<int>(code.size());
 }
 
+//Fungsi untuk mendapatkan nama variabel dari node AST
 std::string IntermediateCodeGenerator::variableName(ASTNode* node) {
     if (auto* var = dynamic_cast<VarNode*>(node)) {
         return toUpper(var->name);
@@ -42,6 +46,7 @@ std::string IntermediateCodeGenerator::variableName(ASTNode* node) {
     throw InterpreterGenerateError("target assignment tidak valid");
 }
 
+//Fungsi untuk mendapatkan alamat variabel berdasarkan nama
 int IntermediateCodeGenerator::addressOf(const std::string& rawName) const {
     std::string name = toUpper(rawName);
     auto it = variableAddress.find(name);
@@ -52,6 +57,7 @@ int IntermediateCodeGenerator::addressOf(const std::string& rawName) const {
     return it->second;
 }
 
+//Fungsi untuk mengumpulkan deklarasi variabel dan konstanta dari AST
 void IntermediateCodeGenerator::collectDeclaration(ASTNode* node) {
     if (!node) return;
 
@@ -71,6 +77,7 @@ void IntermediateCodeGenerator::collectDeclaration(ASTNode* node) {
     }
 }
 
+//Fungsi untuk mengubah literal angka dari AST menjadi Value
 Value IntermediateCodeGenerator::parseNumberLiteral(const NumberNode* node) {
     if (!node) return Value::unknown();
     try {
@@ -83,6 +90,7 @@ Value IntermediateCodeGenerator::parseNumberLiteral(const NumberNode* node) {
     }
 }
 
+//Fungsi untuk mengevaluasi literal dari AST menjadi Value
 Value IntermediateCodeGenerator::literalValue(ASTNode* node) {
     if (!node) return Value::unknown();
 
@@ -109,6 +117,7 @@ Value IntermediateCodeGenerator::literalValue(ASTNode* node) {
     throw InterpreterGenerateError("konstanta tidak dapat dievaluasi saat generate intermediate code");
 }
 
+//Fungsi untuk mendapatkan kode operasi berdasarkan operator dalam AST
 int IntermediateCodeGenerator::operationCodeFor(const std::string& op) const {
     if (op == "+")  return 2;
     if (op == "-")  return 3;
@@ -127,6 +136,7 @@ int IntermediateCodeGenerator::operationCodeFor(const std::string& op) const {
     throw InterpreterGenerateError("operator tidak valid: " + op);
 }
 
+//Fungsi untuk menghasilkan kode intermediate dari ekspresi dalam AST
 void IntermediateCodeGenerator::generateExpression(ASTNode* node) {
     if (!node) throw InterpreterGenerateError("ekspresi kosong");
 
@@ -198,6 +208,7 @@ void IntermediateCodeGenerator::generateExpression(ASTNode* node) {
     throw InterpreterGenerateError("jenis ekspresi tidak valid");
 }
 
+//Fungsi untuk menghasilkan kode intermediate dari statement dalam AST
 void IntermediateCodeGenerator::generateStatement(ASTNode* node) {
     if (!node) return;
 
@@ -317,6 +328,7 @@ void IntermediateCodeGenerator::generateStatement(ASTNode* node) {
     throw InterpreterGenerateError("jenis statement tidak valid");
 }
 
+//Fungsi untuk menghasilkan rangkain instruksi dari AST root
 std::vector<Instruction> IntermediateCodeGenerator::generate(ASTNode* root) {
     code.clear();
     variableAddress.clear();
@@ -338,6 +350,7 @@ std::vector<Instruction> IntermediateCodeGenerator::generate(ASTNode* root) {
     return code;
 }
 
+//Fungsi untuk mendapatkan map alamat variabel
 const std::map<std::string, int>& IntermediateCodeGenerator::getVariableAddressMap() const {
     return variableAddress;
 }
